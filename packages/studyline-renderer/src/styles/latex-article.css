@@ -1,0 +1,157 @@
+/* ==============================================================================
+   ✦ StudyLine LaTeX Academic Markdown Article Stylesheet
+   Directly derived from Typora LaTeX Theme (Latin Modern Roman × Songti SC × 三线表)
+   ============================================================================== */
+
+@import url('https://cdn.jsdelivr.net/npm/@callmebill/lmodern-font@1.0.1/style.css');
+
+:root {
+  --base-latin-font: "Latin Modern Roman", "Latin Modern Roman 10", "Times New Roman", Times, serif;
+  --base-chinese-font: "Songti SC", "STSong", "Family Song", "SimSun", serif;
+  --quote-latin-font: "Latin Modern Roman", "Times New Roman", serif;
+  --quote-chinese-font: "STFangsong", "华文仿宋", "FangSong", serif;
+  --code-font: "Latin Modern Mono", "JetBrains Mono", "SF Mono", "Consolas", "Courier New", monospace;
+  --heading-latin-font: "Latin Modern Roman", "Times New Roman", serif;
+  --heading-chinese-font: "STHeitiBold", "PingFang SC", "Songti SC", sans-serif;
+  --base-line-height: 1.618em;
+}
+
+/* Academic Markdown Body (#write / .latex-article) */
+.latex-article, #write {
+  font-family: var(--base-latin-font), var(--base-chinese-font);
+  font-size: 15px;
+  line-height: var(--base-line-height);
+  color: #E2E2E8;
+  text-align: justify;
+}
+
+.latex-article h1, #write h1 {
+  font-family: var(--heading-latin-font), var(--heading-chinese-font);
+  font-size: 1.9em;
+  font-weight: 700;
+  text-align: center;
+  margin: 1.4em 0 0.8em 0;
+  color: #FBFBFD;
+  letter-spacing: -0.01em;
+}
+
+.latex-article h2, #write h2 {
+  font-family: var(--heading-latin-font), var(--heading-chinese-font);
+  font-size: 1.45em;
+  font-weight: 700;
+  margin: 1.6em 0 0.6em 0;
+  color: #D4AF37;
+  border-bottom: 0.8px solid rgba(212, 175, 55, 0.3);
+  padding-bottom: 4px;
+}
+
+.latex-article h3, #write h3 {
+  font-family: var(--heading-latin-font), var(--heading-chinese-font);
+  font-size: 1.22em;
+  font-weight: 600;
+  margin: 1.3em 0 0.5em 0;
+  color: #F3E5AB;
+}
+
+.latex-article h4, #write h4 {
+  font-size: 1.12em;
+  font-weight: 600;
+  margin: 1.1em 0 0.4em 0;
+  color: #E2E2E8;
+}
+
+.latex-article p, #write p {
+  margin: 0.9em 0;
+  line-height: var(--base-line-height);
+  text-indent: 0;
+}
+
+/* 引用块 (Blockquote) - 仿宋与 Latin Modern 结合 */
+.latex-article blockquote, #write blockquote {
+  font-family: var(--quote-latin-font), var(--quote-chinese-font);
+  font-size: 1.05em;
+  font-style: normal;
+  border-left: 3.5px solid #D4AF37;
+  background: rgba(212, 175, 55, 0.04);
+  padding: 12px 18px;
+  margin: 1.2em 0;
+  border-radius: 4px;
+  color: #E6D5AC;
+}
+
+.latex-article blockquote p, #write blockquote p {
+  margin: 0.4em 0;
+}
+
+/* 学术三线表 (Three-Line Table) */
+.latex-article table, #write table {
+  border-collapse: collapse;
+  margin: 1.6em auto;
+  border-top: 1.5pt solid #D4AF37;
+  border-bottom: 1.5pt solid #D4AF37;
+  font-size: 14px;
+  width: 100%;
+}
+
+.latex-article thead th, #write thead th {
+  border-bottom: 0.8pt solid rgba(212, 175, 55, 0.6);
+  font-weight: 700;
+  padding: 8px 12px;
+  text-align: center;
+  color: #F3E5AB;
+}
+
+.latex-article tbody td, #write tbody td {
+  padding: 7px 12px;
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
+  text-align: center;
+}
+
+.latex-article tbody tr:last-child td, #write tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* 行内代码与代码块 */
+.latex-article code, #write code {
+  font-family: var(--code-font);
+  font-size: 0.92em;
+  background: rgba(255, 255, 255, 0.07);
+  color: #10B981;
+  padding: 2px 5px;
+  border-radius: 3px;
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+}
+
+.latex-article pre, #write pre {
+  font-family: var(--code-font);
+  background: #101014;
+  border: 0.8px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  margin: 1.2em 0;
+}
+
+/* 列表系统 */
+.latex-article ul, #write ul {
+  list-style: disc;
+  padding-left: 2em;
+  margin: 0.8em 0;
+}
+
+.latex-article ol, #write ol {
+  list-style: decimal;
+  padding-left: 2em;
+  margin: 0.8em 0;
+}
+
+.latex-article li, #write li {
+  margin: 0.35em 0;
+}
+
+/* 脚注与参考文献 */
+.latex-article sup.footnote, #write sup.footnote {
+  font-size: 0.85em;
+  color: #D4AF37;
+  cursor: pointer;
+}

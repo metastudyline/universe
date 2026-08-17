@@ -41,6 +41,8 @@ export class CapsuleDrawer {
 
         const bodyEl = document.getElementById("drawer-article-body");
         if (bodyEl) {
+            bodyEl.className = "wsj-article latex-article";
+            bodyEl.id = "write";
             bodyEl.innerHTML = `
                 <h1>${detail.title}</h1>
                 <div class="bilingual-primary-box">
