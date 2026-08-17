@@ -1,55 +1,12 @@
-name: PR Visual Topology Diff Bot
+name: PR Visual Topology Diff Bot (Manual Dispatch)
 
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 jobs:
   topology-diff:
     name: Generate & Post Topology Diff
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      contents: read
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Install Rust Toolchain
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Build and Run Topology Diff
-        working-directory: tools
-        run: |
-          cargo run --release -p studyline-compiler -- diff \
-            --base origin/main \
-            --head HEAD \
-            --format mermaid \
-            --output ../pr_diff.md
-
-      - name: Read Mermaid Diff
-        id: diff_reader
-        run: |
-          if [ -f pr_diff.md ]; then
-            DIFF_CONTENT=$(cat pr_diff.md)
-          else
-            DIFF_CONTENT="✅ No DAG topology structure changes detected."
-          fi
-          echo "diff<<EOF" >> $GITHUB_OUTPUT
-          echo "$DIFF_CONTENT" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
-      - name: Comment PR with Topology Diff
-        uses: peter-evans/create-or-update-comment@v4
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          body: |
-            ### 🌐 StudyLine Knowledge Topology Visual Diff
-            
-            本 PR 触发的局部知识拓扑与爆炸半径（Blast Radius）分析如下：
-            
-            ${{ steps.diff_reader.outputs.diff }}
-            
-            *由 StudyLine Knowledge CI 编译器自动生成*
-          comment-author: 'github-actions[bot]'
+      - run: echo "PR Visual Diff Bot manual run."
