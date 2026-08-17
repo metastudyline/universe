@@ -1,9 +1,6 @@
 // =============================================================================
-// StudyLine Capsule Drawer Engine (Micro Capsule Reader)
-// Slide-over drawer with rich markdown, audio-sync timestamps, and criterion checks
+// StudyLine Capsule Drawer Engine (WSJ Editorial Academic Edition)
 // =============================================================================
-
-import { LexiconHUD, TermData } from "./LexiconHUD";
 
 export interface CapsuleDetail {
     id: string;
@@ -16,73 +13,67 @@ export interface CapsuleDetail {
 
 export class CapsuleDrawer {
     private container: HTMLElement;
-    private lexiconHud: LexiconHUD;
     private isOpen = false;
 
-    constructor(terms: TermData[]) {
-        this.lexiconHud = new LexiconHUD(terms);
+    constructor() {
+        let drawerEl = document.getElementById("lecture-drawer");
+        if (!drawerEl) {
+            drawerEl = document.createElement("aside");
+            drawerEl.id = "lecture-drawer";
+            drawerEl.className = "lecture-drawer";
+            document.body.appendChild(drawerEl);
+        }
+        this.container = drawerEl;
 
-        this.container = document.createElement("aside");
-        this.container.className = "studyline-capsule-drawer";
-        this.container.style.transform = "translateX(100%)";
-        document.body.appendChild(this.container);
+        const closeBtn = document.getElementById("drawer-close-btn");
+        closeBtn?.addEventListener("click", () => this.close());
     }
 
     public open(detail: CapsuleDetail): void {
         this.isOpen = true;
-        this.container.style.transform = "translateX(0%)";
+        this.container.classList.add("open");
 
-        const masteryLabels = ["0 无知", "1 未知", "2 了解", "3 使用", "4 掌握", "5 内化"];
-        const masteryLabel = masteryLabels[detail.mastery] || "了解";
+        const idTag = document.getElementById("drawer-node-id");
+        if (idTag) idTag.textContent = detail.id;
 
-        this.container.innerHTML = `
-            <div class="drawer-header">
-                <div class="drawer-badge-row">
-                    <span class="drawer-badge-id">${detail.id}</span>
-                    <span class="drawer-badge-genre">${detail.genre}</span>
-                    <span class="drawer-badge-mastery">🎯 要求: ${masteryLabel}</span>
+        const linesTag = document.getElementById("drawer-node-lines");
+        if (linesTag) linesTag.textContent = detail.lines || detail.genre;
+
+        const bodyEl = document.getElementById("drawer-article-body");
+        if (bodyEl) {
+            bodyEl.innerHTML = `
+                <h1>${detail.title}</h1>
+                <div class="bilingual-primary-box">
+                    <div class="greek-quote">« ἤτοι μὲν πρώτιστα Χάος γένετ' · αὐτὰρ ἔπειτα Γαῖ' εὐρύστερνος ... »</div>
+                    <div class="chinese-translation">「最初生成的是卡俄斯（虚空深渊），紧接着生成的是宽胸的大地盖亚……」—— 《神谱》116-117行</div>
                 </div>
-                <h2 class="drawer-title">${detail.title}</h2>
-                <div class="drawer-lines">📖 原典位置: ${detail.lines}</div>
-                <button class="drawer-close-btn" aria-label="Close">✕</button>
-            </div>
-            <div class="drawer-body markdown-body">
                 ${this.renderMarkdown(detail.contentMarkdown)}
-            </div>
-        `;
-
-        const closeBtn = this.container.querySelector(".drawer-close-btn");
-        closeBtn?.addEventListener("click", () => this.close());
-
-        // Bind lexicon HUD triggers in the newly rendered markdown
-        this.lexiconHud.bindContainer(this.container);
+            `;
+        }
     }
 
     public close(): void {
         this.isOpen = false;
-        this.container.style.transform = "translateX(100%)";
-        this.lexiconHud.hide();
+        this.container.classList.remove("open");
     }
 
     private renderMarkdown(md: string): string {
-        // Lightweight markdown parser for headers, lists, code, and bold
+        if (!md) return "<p>暂无精读讲义正文。</p>";
         let html = md
             .replace(/^### (.*$)/gim, "<h3>$1</h3>")
             .replace(/^## (.*$)/gim, "<h2>$1</h2>")
             .replace(/^# (.*$)/gim, "<h1>$1</h1>")
-            .replace(/\*\*(.*)\*\*/gim, "<strong>$1</strong>")
+            .replace(/\*\*(.*)\*\*/gim, "<strong style='color: var(--color-kintsugi-gold);'>$1</strong>")
             .replace(/\*(.*)\*/gim, "<em>$1</em>")
-            .replace(/`([^`]+)`/gim, "<code>$1</code>")
-            .replace(/\n\n/gim, "<p></p>")
+            .replace(/`([^`]+)`/gim, "<code style='font-family: var(--font-mono-data); color: var(--color-bamboo-green);'>$1</code>")
+            .replace(/\n\n/gim, "</p><p>")
             .replace(/^\- (.*$)/gim, "<li>$1</li>");
 
-        // Auto-wrap known Greek keywords for LexiconHUD trigger
-        const greekKeywords = ["δίκη", "ὕβρις", "τιμή", "Χάος", "ἀρχή", "οὐσία", "ψυχή", "νοῦς", "λόγος", "ἀλήθεια"];
-        for (const kw of greekKeywords) {
-            const regex = new RegExp(`(${kw})`, "g");
-            html = html.replace(regex, `<span class="studyline-term" data-term-id="$1">$1</span>`);
+        const terms = ["ἄπειρον", "δίκη", "ὕβρις", "τιμή", "Χάος", "ἀρχή", "οὐσία", "ψυχή", "νοῦς", "λόγος", "ἀλήθεια", "ἔστιν"];
+        for (const t of terms) {
+            const reg = new RegExp(`(${t})`, "g");
+            html = html.replace(reg, `<span class="greek-term-token" data-greek="$1">$1</span>`);
         }
-
-        return html;
+        return `<p>${html}</p>`;
     }
 }

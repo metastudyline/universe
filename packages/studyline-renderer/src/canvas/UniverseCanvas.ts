@@ -1,6 +1,6 @@
 // =============================================================================
-// StudyLine Universe Canvas Engine (Macro Cosmic View)
-// 60FPS hardware-accelerated canvas with golden learning path pulses
+// StudyLine Universe Canvas Engine (Zen WSJ Edition)
+// 60FPS hardware-accelerated canvas with Kintsugi Gold learning pulses
 // =============================================================================
 
 import { SpatialIndex, SpatialItem } from "./SpatialIndex";
@@ -49,7 +49,7 @@ export class UniverseCanvas {
     private highlightedPath = new Set<string>();
     private onNodeSelectCallback?: (node: NodeVisual) => void;
 
-    // Animation state
+    // Animation & Pulse state
     private pulseOffset = 0;
     private isRunning = false;
 
@@ -62,14 +62,14 @@ export class UniverseCanvas {
 
         // Initialize spatial index
         this.spatialIndex = new SpatialIndex({
-            minX: -2000,
-            minY: -2000,
-            maxX: 2000,
-            maxY: 2000
+            minX: -3000,
+            minY: -3000,
+            maxX: 3000,
+            maxY: 3000
         });
 
         for (const node of data.nodes) {
-            node.radius = node.spine ? 14 : 8;
+            node.radius = node.spine ? 18 : 10;
             this.spatialIndex.insert(node);
         }
 
@@ -85,11 +85,41 @@ export class UniverseCanvas {
         this.highlightedPath = new Set(nodeIds);
     }
 
+    public clearHighlight(): void {
+        this.highlightedPath.clear();
+    }
+
     public focusNode(nodeId: string): void {
         const target = this.data.nodes.find(n => n.id === nodeId);
         if (!target) return;
-        this.offsetX = this.canvas.width / 2 - target.x * this.zoom;
-        this.offsetY = this.canvas.height / 2 - target.y * this.zoom;
+        this.offsetX = this.canvas.clientWidth / 2 - target.x * this.zoom;
+        this.offsetY = this.canvas.clientHeight / 2 - target.y * this.zoom;
+    }
+
+    public fitView(): void {
+        if (this.data.nodes.length === 0) return;
+        let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+        for (const n of this.data.nodes) {
+            minX = Math.min(minX, n.x);
+            maxX = Math.max(maxX, n.x);
+            minY = Math.min(minY, n.y);
+            maxY = Math.max(maxY, n.y);
+        }
+        const w = this.canvas.clientWidth;
+        const h = this.canvas.clientHeight;
+        const dx = maxX - minX + 200;
+        const dy = maxY - minY + 200;
+        this.zoom = Math.min(Math.max(Math.min(w / dx, h / dy), 0.4), 1.6);
+        this.offsetX = w / 2 - ((minX + maxX) / 2) * this.zoom;
+        this.offsetY = h / 2 - ((minY + maxY) / 2) * this.zoom;
+    }
+
+    public zoomIn(): void {
+        this.zoom = Math.min(this.zoom * 1.25, 3.5);
+    }
+
+    public zoomOut(): void {
+        this.zoom = Math.max(this.zoom * 0.8, 0.2);
     }
 
     public start(): void {
@@ -97,7 +127,7 @@ export class UniverseCanvas {
         this.isRunning = true;
         const loop = () => {
             if (!this.isRunning) return;
-            this.pulseOffset = (this.pulseOffset + 0.03) % (Math.PI * 2);
+            this.pulseOffset = (this.pulseOffset + 0.025) % (Math.PI * 2);
             this.render();
             requestAnimationFrame(loop);
         };
@@ -113,8 +143,7 @@ export class UniverseCanvas {
         this.canvas.width = this.canvas.clientWidth * dpr;
         this.canvas.height = this.canvas.clientHeight * dpr;
         this.ctx.scale(dpr, dpr);
-        this.offsetX = this.canvas.clientWidth / 2;
-        this.offsetY = this.canvas.clientHeight / 2;
+        this.fitView();
     }
 
     private initEvents(): void {
@@ -143,11 +172,12 @@ export class UniverseCanvas {
 
         this.canvas.addEventListener("wheel", (e) => {
             e.preventDefault();
-            const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+            const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
             const newZoom = Math.min(Math.max(this.zoom * zoomFactor, 0.15), 3.5);
 
-            const mouseX = e.clientX - this.canvas.getBoundingClientRect().left;
-            const mouseY = e.clientY - this.canvas.getBoundingClientRect().top;
+            const rect = this.canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
 
             this.offsetX = mouseX - (mouseX - this.offsetX) * (newZoom / this.zoom);
             this.offsetY = mouseY - (mouseY - this.offsetY) * (newZoom / this.zoom);
@@ -172,7 +202,7 @@ export class UniverseCanvas {
         const hit = this.data.nodes.find(n => {
             const dx = n.x - worldX;
             const dy = n.y - worldY;
-            return Math.sqrt(dx * dx + dy * dy) <= (n.radius + 6);
+            return Math.sqrt(dx * dx + dy * dy) <= (n.radius + 8);
         });
 
         this.hoveredNode = hit || null;
@@ -180,35 +210,39 @@ export class UniverseCanvas {
     }
 
     private render(): void {
-        const { width, height } = this.canvas.getBoundingClientRect();
+        const { clientWidth: width, clientHeight: height } = this.canvas;
         this.ctx.clearRect(0, 0, width, height);
 
-        // 1. Draw Deep Space Background Grid
+        // 1. Draw Zen Cosmic Deep Background & Golden Dust
         this.drawSpaceBackground(width, height);
 
         const lod = this.lodManager.getLODState(this.zoom);
 
-        // 2. Draw Galaxy Halos (LOD 0)
+        // 2. Draw Cluster Nebula Halos
         for (const cluster of this.data.clusters) {
             this.drawClusterHalo(cluster);
         }
 
-        // 3. Draw Dependency Edges & Golden Learning Path
+        // 3. Draw Kintsugi Gold Dependency Edges
         this.drawEdges(lod);
 
-        // 4. Draw Visible Nodes with Frustum Culling
+        // 4. Draw Nodes with Dual Rings & Mastery Arc
         this.drawNodes(lod, width, height);
     }
 
     private drawSpaceBackground(w: number, h: number): void {
         this.ctx.save();
-        this.ctx.fillStyle = "#0a0c10";
+        // Base Deep Graphite
+        const bgGrad = this.ctx.createRadialGradient(w / 2, h / 2, 50, w / 2, h / 2, Math.max(w, h));
+        bgGrad.addColorStop(0, "#121215");
+        bgGrad.addColorStop(1, "#0B0B0C");
+        this.ctx.fillStyle = bgGrad;
         this.ctx.fillRect(0, 0, w, h);
 
-        // Subtle cosmic dust grid
-        this.ctx.strokeStyle = "rgba(255, 255, 255, 0.02)";
-        this.ctx.lineWidth = 1;
-        const gridSize = 80 * this.zoom;
+        // Subtle Kintsugi Golden Dust Grid
+        this.ctx.strokeStyle = "rgba(212, 175, 55, 0.03)";
+        this.ctx.lineWidth = 0.8;
+        const gridSize = 100 * this.zoom;
         const startX = this.offsetX % gridSize;
         const startY = this.offsetY % gridSize;
 
@@ -232,19 +266,20 @@ export class UniverseCanvas {
         const screenY = cluster.y * this.zoom + this.offsetY;
 
         this.ctx.save();
-        const gradient = this.ctx.createRadialGradient(screenX, screenY, 10, screenX, screenY, 260 * this.zoom);
-        gradient.addColorStop(0, "rgba(200, 160, 90, 0.12)");
-        gradient.addColorStop(1, "rgba(200, 160, 90, 0.0)");
+        const gradient = this.ctx.createRadialGradient(screenX, screenY, 20, screenX, screenY, 320 * this.zoom);
+        gradient.addColorStop(0, "rgba(212, 175, 55, 0.08)");
+        gradient.addColorStop(0.6, "rgba(212, 175, 55, 0.02)");
+        gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
         this.ctx.fillStyle = gradient;
         this.ctx.beginPath();
-        this.ctx.arc(screenX, screenY, 260 * this.zoom, 0, Math.PI * 2);
+        this.ctx.arc(screenX, screenY, 320 * this.zoom, 0, Math.PI * 2);
         this.ctx.fill();
 
         if (this.zoom < 0.6) {
-            this.ctx.font = "bold 13px -apple-system, sans-serif";
-            this.ctx.fillStyle = "rgba(230, 210, 170, 0.7)";
+            this.ctx.font = "bold 12px Newsreader, serif";
+            this.ctx.fillStyle = "rgba(212, 175, 55, 0.65)";
             this.ctx.textAlign = "center";
-            this.ctx.fillText(cluster.title, screenX, screenY - 40 * this.zoom);
+            this.ctx.fillText(cluster.title, screenX, screenY - 60 * this.zoom);
         }
         this.ctx.restore();
     }
@@ -266,32 +301,36 @@ export class UniverseCanvas {
 
             this.ctx.beginPath();
             if (isGolden) {
-                this.ctx.strokeStyle = "rgba(224, 185, 95, 0.85)";
-                this.ctx.lineWidth = 2.5 * Math.min(this.zoom, 1.5);
+                // Kintsugi Gold Pulse Stream
+                this.ctx.strokeStyle = "#D4AF37";
+                this.ctx.lineWidth = 2.4;
+                this.ctx.shadowColor = "rgba(212, 175, 55, 0.6)";
+                this.ctx.shadowBlur = 12;
                 this.ctx.setLineDash([]);
             } else if (edge.type === "supporting") {
-                this.ctx.strokeStyle = "rgba(120, 140, 160, 0.25)";
-                this.ctx.lineWidth = 1;
+                this.ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+                this.ctx.lineWidth = 0.9;
                 this.ctx.setLineDash([4, 4]);
             } else {
-                this.ctx.strokeStyle = `rgba(160, 175, 195, ${0.35 * lod.alphaSpine})`;
+                this.ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
                 this.ctx.lineWidth = 1.2;
                 this.ctx.setLineDash([]);
             }
 
-            // Curve control point
             const midX = (x1 + x2) / 2;
-            const midY = (y1 + y2) / 2 - 15 * this.zoom;
+            const midY = (y1 + y2) / 2 - 20 * this.zoom;
             this.ctx.quadraticCurveTo(midX, midY, x2, y2);
             this.ctx.stroke();
 
-            // Golden flowing particle
+            // Golden flowing light particle
             if (isGolden) {
-                const t = (Math.sin(this.pulseOffset + from.x) + 1) / 2;
+                const t = (Math.sin(this.pulseOffset * 1.5 + from.x) + 1) / 2;
                 const px = (1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * midX + t * t * x2;
                 const py = (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * midY + t * t * y2;
 
-                this.ctx.fillStyle = "#fff";
+                this.ctx.fillStyle = "#FFF";
+                this.ctx.shadowColor = "#D4AF37";
+                this.ctx.shadowBlur = 8;
                 this.ctx.beginPath();
                 this.ctx.arc(px, py, 3, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -318,38 +357,53 @@ export class UniverseCanvas {
 
             this.ctx.save();
 
-            // Outer pulse halo for highlighted/hovered node
-            if (isHighlighted || isHovered) {
-                this.ctx.fillStyle = "rgba(224, 185, 95, 0.3)";
+            // 1. Outer Breath Glow for Spine or Selected Nodes
+            if (node.spine || isHighlighted || isHovered) {
+                const glowRadius = (node.radius + (isHovered ? 12 : 6)) * this.zoom;
+                const glow = this.ctx.createRadialGradient(screenX, screenY, node.radius * this.zoom, screenX, screenY, glowRadius);
+                glow.addColorStop(0, "rgba(212, 175, 55, 0.45)");
+                glow.addColorStop(1, "rgba(212, 175, 55, 0)");
+                this.ctx.fillStyle = glow;
                 this.ctx.beginPath();
-                this.ctx.arc(screenX, screenY, (node.radius + 8) * this.zoom, 0, Math.PI * 2);
+                this.ctx.arc(screenX, screenY, glowRadius, 0, Math.PI * 2);
                 this.ctx.fill();
             }
 
-            // Core node body
+            // 2. Node Core Solid Disc
             this.ctx.beginPath();
             this.ctx.arc(screenX, screenY, node.radius * this.zoom, 0, Math.PI * 2);
 
             if (node.genre === "synthesis") {
-                this.ctx.fillStyle = "#d4af37"; // Kintsugi Gold for Synthesis
+                this.ctx.fillStyle = "#D4AF37"; // Kintsugi Gold for Synthesis / Exit Exam
             } else if (node.genre === "spinoff") {
-                this.ctx.fillStyle = "#6b8299"; // Slate for Spinoff
+                this.ctx.fillStyle = "#4B5563"; // Elegant Slate
             } else {
-                this.ctx.fillStyle = node.spine ? "#3b82f6" : "#60a5fa"; // Azure for Core
+                this.ctx.fillStyle = node.spine ? "#1E293B" : "#0F172A"; // Deep Sapphire Charcoal
             }
             this.ctx.fill();
 
-            // Border
-            this.ctx.strokeStyle = isHovered ? "#ffffff" : "rgba(255, 255, 255, 0.4)";
-            this.ctx.lineWidth = isHovered ? 2 : 1;
+            // 3. Kintsugi Gold Dual Ring Outline
+            this.ctx.strokeStyle = isHovered ? "#FFF" : (node.spine ? "#D4AF37" : "rgba(255, 255, 255, 0.35)");
+            this.ctx.lineWidth = node.spine ? 2 : 1;
             this.ctx.stroke();
 
-            // Label rendering at LOD 1 & 2
-            if (this.zoom >= 0.45) {
-                this.ctx.font = node.spine ? "bold 11px -apple-system, sans-serif" : "10px -apple-system, sans-serif";
-                this.ctx.fillStyle = isHovered ? "#ffffff" : "rgba(220, 230, 240, 0.85)";
+            // 4. Mastery Circular Progress Arc (Bamboo Green for Mastery)
+            if (node.mastery > 0) {
+                const startAngle = -Math.PI / 2;
+                const endAngle = startAngle + (Math.PI * 2 * (node.mastery / 5));
+                this.ctx.strokeStyle = "#10B981";
+                this.ctx.lineWidth = 2.5;
+                this.ctx.beginPath();
+                this.ctx.arc(screenX, screenY, (node.radius + 3) * this.zoom, startAngle, endAngle);
+                this.ctx.stroke();
+            }
+
+            // 5. WSJ Editorial Typography Labels
+            if (this.zoom >= 0.4) {
+                this.ctx.font = node.spine ? "600 12px Newsreader, serif" : "11px -apple-system, sans-serif";
+                this.ctx.fillStyle = isHovered ? "#FFFFFF" : (node.spine ? "#F3E5AB" : "#A1A1A8");
                 this.ctx.textAlign = "center";
-                this.ctx.fillText(node.id, screenX, screenY + (node.radius + 12) * this.zoom);
+                this.ctx.fillText(`${node.id} · ${node.title.slice(0, 8)}`, screenX, screenY + (node.radius + 16) * this.zoom);
             }
 
             this.ctx.restore();
