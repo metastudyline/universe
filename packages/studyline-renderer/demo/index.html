@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyLine Universe — 哲学史 0 段宏观知识星云与微观胶囊</title>
+    <link rel="stylesheet" href="styles/universe.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Top Navigation -->
+        <header class="top-bar">
+            <div class="brand-title">
+                <span>✦</span> StudyLine Universe · 0段神话与语言起步 (94期)
+            </div>
+            <div class="path-planner-box">
+                <select id="target-node-select" class="path-select">
+                    <option value="E27">目标：E27 《劳作与时日》收束 (正义演进)</option>
+                    <option value="E37">目标：E37 《伊利亚特》卷九使团 (荣誉不可代偿)</option>
+                    <option value="E67">目标：E67 《奥瑞斯忒亚》收束 (法庭审判)</option>
+                    <option value="E82">目标：E82 第一季总收束 (通向A段本原说)</option>
+                </select>
+                <button id="btn-plan-path" class="btn-plan">点亮最短学线</button>
+            </div>
+        </header>
+
+        <!-- Macro Cosmic Canvas -->
+        <canvas id="universe-canvas"></canvas>
+    </div>
+
+    <!-- Application Script -->
+    <script type="module">
+        import { UniverseCanvas } from "../src/canvas/UniverseCanvas.js";
+        import { CapsuleDrawer } from "../src/reader/CapsuleDrawer.js";
+
+        async function init() {
+            // Load Stage 0 dataset
+            const resp = await fetch("data/stage0_dataset.json");
+            const data = await resp.json();
+
+            // Transform raw data into canvas visual format
+            const allNodes = [];
+            for (const course of data.courses) {
+                for (const ep of course.episodes) {
+                    allNodes.push({
+                        ...ep,
+                        clusterId: course.id,
+                        radius: ep.spine ? 14 : 8
+                    });
+                }
+            }
+
+            const canvasEl = document.getElementById("universe-canvas");
+            const universeData = {
+                nodes: allNodes,
+                edges: data.edges,
+                clusters: data.courses.map(c => ({ id: c.id, title: c.title, x: c.cluster_x, y: c.cluster_y }))
+            };
+
+            const canvas = new UniverseCanvas(canvasEl, universeData);
+            const drawer = new CapsuleDrawer(data.terms);
+
+            // Node click handler
+            canvas.setOnNodeSelect((node) => {
+                let markdown = `# ${node.title}\n\n`;
+                if (node.id === "E01") {
+                    markdown += `## 一、 核心元问题\n一条学习路线的顺序能不能被客观地确定？\n\n## 二、 掌握六层次\n从 0-无知 到 5-内化，每个节点都必须具备**不看原文能做出的动作**。\n\n## 三、 贯穿术语\n在赫西俄德与荷马的世界中，δίκη (正义) 与 ὕβρις (狂妄) 展开了最原初的冲突；而 τιμή (荣誉) 构成了整个城邦共同体的分配枢纽。`;
+                } else if (node.id === "E27") {
+                    markdown += `## 一、 核心命题\n正义 (δίκη) 为什么比暴力 (ὕβriς) 更有利？\n\n## 二、 论证重构\n赫西俄德通过鹰与夜莺寓言证明：宙斯赋予人类正义作为特权，依赖强权掠夺必将引来宙斯的使者与反身性毁灭。`;
+                } else {
+                    markdown += `## 一、 教学定位\n本期属于 ${node.genre} 体裁，重点处理文本 ${node.lines}。\n\n## 二、 关键概念\n注意核对希腊专名 Χάος、ἀρχή 与 οὐσία 的原文字面义。`;
+                }
+
+                drawer.open({
+                    id: node.id,
+                    title: node.title,
+                    genre: node.genre,
+                    mastery: node.mastery,
+                    lines: node.lines,
+                    contentMarkdown: markdown
+                });
+            });
+
+            // Path planner interaction
+            document.getElementById("btn-plan-path").addEventListener("click", () => {
+                const target = document.getElementById("target-node-select").value;
+                if (target === "E27") {
+                    canvas.highlightShortestPath(["E01", "E02", "E03", "E04", "E05", "E07", "E08", "E11", "E16", "E17", "E18", "E22", "E27"]);
+                } else if (target === "E37") {
+                    canvas.highlightShortestPath(["E01", "E02", "E03", "E04", "E28", "E29", "E37"]);
+                } else if (target === "E67") {
+                    canvas.highlightShortestPath(["E01", "E04", "E17", "E27", "E59", "E66", "E67"]);
+                } else if (target === "E82") {
+                    canvas.highlightShortestPath(["E01", "E04", "E17", "E27", "E53", "E59", "E67", "E82"]);
+                }
+                canvas.focusNode(target);
+            });
+
+            canvas.start();
+        }
+
+        window.addEventListener("DOMContentLoaded", init);
+    </script>
+</body>
+</html>

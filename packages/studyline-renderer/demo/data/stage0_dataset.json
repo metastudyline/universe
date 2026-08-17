@@ -1,0 +1,151 @@
+{
+  "stage_id": "0_myth_and_language",
+  "stage_title": "第一阶段：语言起步与神话思维 (94期)",
+  "courses": [
+    {
+      "id": "course_1",
+      "title": "课程一《世界从混沌里长出来》",
+      "cluster_x": -300,
+      "cluster_y": -150,
+      "episodes": [
+        { "id": "E01", "title": "E01 元规划｜我们要用多久做什么，为什么这么排", "genre": "lead", "spine": true, "x": -450, "y": -220, "mastery": 4, "lines": "导论全文" },
+        { "id": "E02", "title": "E02 字母表：从腓尼基辅音到希腊元音", "genre": "lead", "spine": true, "x": -380, "y": -200, "mastery": 3, "lines": "认读起步" },
+        { "id": "E03", "title": "E03 拼读：气息、重音与多调输入法", "genre": "reading", "spine": true, "x": -320, "y": -200, "mastery": 3, "lines": "拼读实操" },
+        { "id": "E04", "title": "E04 收束：我们凭什么知道两千年前怎么念", "genre": "synthesis", "spine": true, "x": -260, "y": -200, "mastery": 4, "lines": "五类证据" },
+        { "id": "E05", "title": "E05 导读｜赫西俄德是谁：署名的农人诗人", "genre": "lead", "spine": true, "x": -380, "y": -120, "mastery": 3, "lines": "背景地图" },
+        { "id": "E06", "title": "E06 《神谱》1-115：缪斯的召唤", "genre": "reading", "spine": false, "x": -320, "y": -140, "mastery": 2, "lines": "1-115行" },
+        { "id": "E07", "title": "E07 《神谱》116-153：最初的生成 (Χάος / Γαῖα / Ἔρος)", "genre": "reading", "spine": true, "x": -260, "y": -120, "mastery": 4, "lines": "116-153行" },
+        { "id": "E08", "title": "E08 《神谱》154-210：阉割与空间分裂", "genre": "reading", "spine": true, "x": -200, "y": -130, "mastery": 3, "lines": "154-210行" },
+        { "id": "E11", "title": "E11 《神谱》453-506：吞食与诞生 (时间吞噬孩子)", "genre": "reading", "spine": true, "x": -140, "y": -120, "mastery": 3, "lines": "453-506行" },
+        { "id": "E16", "title": "E16 《神谱》881-1022：宙斯的婚姻与分职 (秩序建制)", "genre": "reading", "spine": true, "x": -80, "y": -120, "mastery": 4, "lines": "881-1022行" },
+        { "id": "E17", "title": "E17 《神谱》收束：谱系作为一种解释形式", "genre": "synthesis", "spine": true, "x": -20, "y": -120, "mastery": 4, "lines": "收束与判据" },
+        { "id": "E18", "title": "E18 导读｜一首写给弟弟的诗", "genre": "lead", "spine": true, "x": -260, "y": -40, "mastery": 3, "lines": "背景地图" },
+        { "id": "E22", "title": "E22 《劳作与时日》202-285：鹰与夜莺 (正义之城)", "genre": "reading", "spine": true, "x": -180, "y": -40, "mastery": 4, "lines": "202-285行" },
+        { "id": "E27", "title": "E27 《劳作与时日》收束：δίκη 从判决到正义的语义扩张", "genre": "synthesis", "spine": true, "x": -80, "y": -40, "mastery": 5, "lines": "论证重构①" },
+        { "id": "X01", "title": "X01 番外｜线形文字 B 的破译与迈锡尼宫廷经济", "genre": "spinoff", "spine": false, "x": -420, "y": -280, "mastery": 2, "lines": "泛学科考古" },
+        { "id": "X02", "title": "X02 番外｜赫梯库马尔比史诗与三代神更迭的对照", "genre": "spinoff", "spine": false, "x": -160, "y": -200, "mastery": 2, "lines": "比较神话" }
+      ]
+    },
+    {
+      "id": "course_2",
+      "title": "课程二《愤怒、荣誉与命运》",
+      "cluster_x": 100,
+      "cluster_y": -150,
+      "episodes": [
+        { "id": "E28", "title": "E28 导读｜荷马问题：一部没有作者的作品怎么读", "genre": "lead", "spine": true, "x": 50, "y": -200, "mastery": 3, "lines": "荷马问题" },
+        { "id": "E29", "title": "E29 《伊利亚特》卷一：份额 (τιμή) 被公开剥夺为什么不是私事", "genre": "reading", "spine": true, "x": 120, "y": -180, "mastery": 4, "lines": "卷1" },
+        { "id": "E37", "title": "E37 《伊利亚特》卷九：使团 (阿基琉斯对物品补偿的反驳)", "genre": "reading", "spine": true, "x": 200, "y": -180, "mastery": 5, "lines": "卷9(全书关节)" },
+        { "id": "E46", "title": "E46 《伊利亚特》卷十八：阿基琉斯之盾 (战争与和平两座城)", "genre": "reading", "spine": true, "x": 280, "y": -180, "mastery": 4, "lines": "卷18" },
+        { "id": "E52", "title": "E52 《伊利亚特》卷二十四：普里阿摩斯 (怜悯为什么是终点)", "genre": "reading", "spine": true, "x": 360, "y": -180, "mastery": 4, "lines": "卷24" },
+        { "id": "E53", "title": "E53 收束｜τιμή 与 μοῖρα：分配正义的前哲学形态", "genre": "synthesis", "spine": true, "x": 420, "y": -180, "mastery": 5, "lines": "论证重构②" },
+        { "id": "E56", "title": "E56 《奥德赛》卷九：独眼巨人与无法无城邦的生活", "genre": "reading", "spine": false, "x": 180, "y": -100, "mastery": 3, "lines": "卷9" },
+        { "id": "E57", "title": "E57 《奥德赛》卷十一：冥府与 ψυχή (灵魂概念元材料)", "genre": "reading", "spine": true, "x": 260, "y": -100, "mastery": 4, "lines": "卷11" },
+        { "id": "X05", "title": "X05 番外｜施里曼、特洛伊九层与考古学的地层学", "genre": "spinoff", "spine": false, "x": 100, "y": -260, "mastery": 2, "lines": "地层考古" }
+      ]
+    },
+    {
+      "id": "course_3",
+      "title": "课程三《城邦的裂缝》",
+      "cluster_x": -100,
+      "cluster_y": 150,
+      "episodes": [
+        { "id": "E59", "title": "E59 导读｜悲剧是什么：城邦制度中的公共思考装置", "genre": "lead", "spine": true, "x": -250, "y": 120, "mastery": 3, "lines": "戏剧制度" },
+        { "id": "E66", "title": "E66 《欧墨尼得斯》法庭辩论与平票裁决", "genre": "reading", "spine": true, "x": -150, "y": 120, "mastery": 5, "lines": "战神山法庭" },
+        { "id": "E67", "title": "E67 《奥瑞斯忒亚》收束：从血亲复仇到法庭审判", "genre": "synthesis", "spine": true, "x": -50, "y": 120, "mastery": 5, "lines": "论证重构③" },
+        { "id": "E72", "title": "E72 《安提戈涅》：成文法 (nomos) 与神圣不成文法的冲突", "genre": "reading", "spine": true, "x": 50, "y": 120, "mastery": 4, "lines": "埋葬禁令" },
+        { "id": "E75", "title": "E75 《俄狄浦斯王》：知与不知 (他一直在找的是自己)", "genre": "reading", "spine": true, "x": 150, "y": 120, "mastery": 4, "lines": "精神分析元材料" },
+        { "id": "E82", "title": "E82 第一季总收束｜正义的三个前哲学版本与拓扑校订", "genre": "synthesis", "spine": true, "x": 250, "y": 120, "mastery": 5, "lines": "通向A段本原说" }
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "E01", "to": "E02", "type": "strict", "golden": true },
+    { "from": "E02", "to": "E03", "type": "strict", "golden": true },
+    { "from": "E03", "to": "E04", "type": "strict", "golden": true },
+    { "from": "E04", "to": "E05", "type": "strict", "golden": true },
+    { "from": "E05", "to": "E07", "type": "strict", "golden": true },
+    { "from": "E07", "to": "E08", "type": "strict", "golden": true },
+    { "from": "E08", "to": "E11", "type": "strict", "golden": true },
+    { "from": "E11", "to": "E16", "type": "strict", "golden": true },
+    { "from": "E16", "to": "E17", "type": "strict", "golden": true },
+    { "from": "E17", "to": "E18", "type": "strict", "golden": true },
+    { "from": "E18", "to": "E22", "type": "strict", "golden": true },
+    { "from": "E22", "to": "E27", "type": "strict", "golden": true },
+    { "from": "E04", "to": "E28", "type": "strict", "golden": true },
+    { "from": "E28", "to": "E29", "type": "strict", "golden": true },
+    { "from": "E29", "to": "E37", "type": "strict", "golden": true },
+    { "from": "E37", "to": "E46", "type": "strict", "golden": true },
+    { "from": "E46", "to": "E52", "type": "strict", "golden": true },
+    { "from": "E52", "to": "E53", "type": "strict", "golden": true },
+    { "from": "E27", "to": "E59", "type": "strict", "golden": true },
+    { "from": "E53", "to": "E59", "type": "strict", "golden": true },
+    { "from": "E59", "to": "E66", "type": "strict", "golden": true },
+    { "from": "E66", "to": "E67", "type": "strict", "golden": true },
+    { "from": "E67", "to": "E82", "type": "strict", "golden": true },
+    { "from": "E01", "to": "X01", "type": "supporting", "golden": false },
+    { "from": "E08", "to": "X02", "type": "supporting", "golden": false },
+    { "from": "E28", "to": "X05", "type": "supporting", "golden": false }
+  ],
+  "terms": [
+    {
+      "id": "dike",
+      "greek": "δίκη",
+      "translit": "dikē",
+      "ipa": "/dí.kɛː/",
+      "literal": "划界、判决、诉讼程序",
+      "cn": "正义、习俗法则",
+      "en": "justice, customary right",
+      "note": "赫西俄德对抗 hybris 的核心武器，阿那克西曼德'相互补偿其不义'的母本"
+    },
+    {
+      "id": "hybris",
+      "greek": "ὕβρις",
+      "translit": "hybris",
+      "ipa": "/hý.bris/",
+      "literal": "狂暴、越界、傲慢放肆",
+      "cn": "狂妄、越界",
+      "en": "wanton violence, insolence",
+      "note": "破坏尺度招致毁灭的根本原因"
+    },
+    {
+      "id": "time",
+      "greek": "τιμή",
+      "translit": "timē",
+      "ipa": "/tiː.mɛ̌ː/",
+      "literal": "荣誉、社会份额、价值评估",
+      "cn": "荣誉、份额",
+      "en": "honor, rightful share",
+      "note": "《伊利亚特》全书冲突的枢纽，公共分配正义的原型"
+    },
+    {
+      "id": "chaos",
+      "greek": "Χάος",
+      "translit": "Chaos",
+      "ipa": "/kʰá.os/",
+      "literal": "裂口、张开的深渊",
+      "cn": "卡俄斯、混沌",
+      "en": "chasm, void, abyss",
+      "note": "在《神谱》116行最初生成，不是混乱，而是裂开的空间"
+    },
+    {
+      "id": "arche",
+      "greek": "ἀρχή",
+      "translit": "archē",
+      "ipa": "/ar.kʰɛ̌ː/",
+      "literal": "开端、本原、支配统治",
+      "cn": "本原、始基",
+      "en": "beginning, first principle",
+      "note": "通向前苏格拉底自然哲学的核心概念"
+    },
+    {
+      "id": "ousia",
+      "greek": "οὐσία",
+      "translit": "ousia",
+      "ipa": "/uː.sí.aː/",
+      "literal": "真正是其所是之物、家业、财产",
+      "cn": "实体、本质",
+      "en": "substance, true being",
+      "note": "亚里士多德《范畴篇》与第一哲学的核心概念"
+    }
+  ]
+}
