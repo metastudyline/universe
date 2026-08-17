@@ -6,7 +6,7 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
-# Ensure standard environment paths (Homebrew, fnm, nvm, cargo)
+# Ensure standard environment paths (Homebrew, fnm, nvm, cargo, node)
 export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 
 # Colors
@@ -57,14 +57,9 @@ trap cleanup SIGINT SIGTERM EXIT
 
 sleep 1
 
-# 3. 检查前端依赖并启动 Web 服务
+# 3. 启动前端星云画布
 echo -e "${BLUE}[3/3] 🌐 正在启动前端星云画布 (http://localhost:3000)...${RESET}"
 cd "$SCRIPT_DIR/packages/studyline-renderer"
-
-if [ ! -d "node_modules" ] || [ ! -f "node_modules/.bin/vite" ]; then
-    echo -e "${YELLOW}[INFO] 📦 正在自愈安装前端依赖 (npm install)...${RESET}"
-    npm install
-fi
 
 echo -e "${GREEN}======================================================================${RESET}"
 echo -e "${BOLD}  🚀 StudyLine Universe 已成功启动！${RESET}"
@@ -74,14 +69,5 @@ echo -e "  • 本地文件监听: ${CYAN}${DOMAINS_DIR}${RESET} (50ms 防抖实
 echo -e "  💡 提示: 按下 ${BOLD}Ctrl + C${RESET} 即可安全停止所有服务。"
 echo -e "${GREEN}======================================================================${RESET}\n"
 
-# 优先使用本地 vite 二进制启动，若失败则回退到 npm run dev
-if [ -f "./node_modules/.bin/vite" ]; then
-    ./node_modules/.bin/vite demo --port 3000 --open
-elif command -v npm &> /dev/null; then
-    npm run dev
-else
-    # 终极无依赖 Fallback (Python3 原生静态服务)
-    echo -e "${YELLOW}[FALLBACK] 正在使用 Python3 静态服务器拉起...${RESET}"
-    open "http://localhost:3000/demo/index.html"
-    python3 -m http.server 3000
-fi
+# 启动本地 Vite 开发服务器
+./node_modules/.bin/vite demo --port 3000 --open
