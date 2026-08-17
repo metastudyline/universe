@@ -1,0 +1,10 @@
+*.pdf
+*.epub
+*.djvu
+*.mobi
+*.mp4
+.DS_Store
+*/.DS_Store
+*.zip
+*.dmg
+node_modules/

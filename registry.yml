@@ -1,0 +1,25 @@
+registry_version: "1.0.0"
+last_updated: "2026-08-17T23:30:00Z"
+domain_repositories:
+  - namespace: "philosophy"
+    repository_url: "https://github.com/studyline/domain-philosophy.git"
+    target_branch: "main"
+    pinned_release_tag: "v1.0.0"
+    pinned_commit_sha: "7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b"
+    domain_category: "philosophy"
+    maintainer_team:
+      - "@kevin-tung"
+    exported_node_prefix: "philosophy"
+    node_count: 94
+    status: "active"
+  - namespace: "mathematics"
+    repository_url: "https://github.com/studyline/domain-mathematics.git"
+    target_branch: "main"
+    pinned_release_tag: "v0.8.0"
+    pinned_commit_sha: "1f2e3d4c5b6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c"
+    domain_category: "mathematics"
+    maintainer_team:
+      - "@kevin-tung"
+    exported_node_prefix: "mathematics"
+    node_count: 52
+    status: "active"

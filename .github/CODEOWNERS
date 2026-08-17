@@ -1,0 +1,11 @@
+# Global Technical Steering Committee (TSC) & Infrastructure
+/schemas/               @kevin-tung @studyline-tsc
+/.github/workflows/     @kevin-tung @studyline-dev-infra
+/tools/                 @kevin-tung @studyline-compiler-team
+/registry.yml           @kevin-tung @studyline-tsc
+
+# Official Domain Repositories & Submodules Governance
+/domains/philosophy/          @kevin-tung @reviewer-philosophy
+/domains/computer_science/    @kevin-tung @reviewer-cs
+/domains/mathematics/         @kevin-tung @reviewer-math
+/domains/life_hacker/         @kevin-tung @reviewer-life-hacker

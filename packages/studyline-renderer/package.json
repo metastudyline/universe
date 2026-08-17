@@ -1,0 +1,21 @@
+{
+  "name": "@studyline/renderer",
+  "version": "0.1.0",
+  "description": "Pluggable Multimodal Sandboxed Renderer & WebVTT Sync Engine for StudyLine",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "dompurify": "^3.1.2",
+    "katex": "^0.16.10",
+    "mermaid": "^10.9.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "vitest": "^1.5.0"
+  }
+}

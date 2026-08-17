@@ -1,0 +1,43 @@
+name: "🚨 教学断层与认知卡点反馈 (Pedagogical Breakage Report)"
+description: "学习过程中在此节点遭遇无法理解的概念跃迁、缺失的前置依赖或逻辑断裂"
+title: "[卡点] <node_id>: <简短卡点描述>"
+labels: ["pedagogical-breakage", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您为人类知识网络提交教学卡点反馈！
+        机制优于英雄：您的卡点数据将驱动社区对该知识节点及其前置依赖网络进行自愈修复。
+  - type: input
+    id: current_node_id
+    attributes:
+      label: 当前所在知识节点 ID
+      description: 发生卡点的节点 URI（例如 `philosophy.ancient-greek.arche`）
+      placeholder: "domain.topic.node_id"
+    validations:
+      required: true
+  - type: textarea
+    id: breakage_description
+    attributes:
+      label: 具体卡点与认知断裂点描述
+      description: 您在哪一步推导、哪个概念或哪条论据上产生了困惑？
+      placeholder: "在阅读第 2 节时，直接使用了'实体（Substance）'这一概念，但此前未曾定义，且本节点前置中未包含《范畴篇》..."
+    validations:
+      required: true
+  - type: input
+    id: missing_prerequisite_suggestion
+    attributes:
+      label: 建议补充的前置依赖节点或概念（选填）
+      placeholder: "建议将 'philosophy.ancient-greek.categories' 设为前置依赖"
+    validations:
+      required: false
+  - type: dropdown
+    id: current_mastery_level
+    attributes:
+      label: 您当前的掌握度自评
+      options:
+        - "0 - 完全无法理解 (Ignorance)"
+        - "1 - 听说过但无法串联 (Unknown)"
+        - "2 - 能看懂文字但无法逻辑推演 (Awareness)"
+    validations:
+      required: true

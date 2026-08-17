@@ -1,0 +1,75 @@
+name: Knowledge CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  pre-flight:
+    name: Pre-Flight Change Detection
+    runs-on: ubuntu-latest
+    outputs:
+      has_changes: ${{ steps.filter.outputs.schemas == 'true' || steps.filter.outputs.domains == 'true' }}
+      domains_changed: ${{ steps.filter.outputs.domains }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            schemas:
+              - 'schemas/**'
+            domains:
+              - 'domains/**'
+            tools:
+              - 'tools/**'
+
+  validate-and-lint:
+    name: Schema & Global DAG Lint (<28s)
+    needs: pre-flight
+    if: needs.pre-flight.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust Build
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: tools -> tools/target
+
+      - name: Run Knowledge Compiler Check
+        working-directory: tools
+        run: |
+          cargo run --release -p studyline-compiler -- check \
+            --schemas-dir ../schemas \
+            --domains-dir ../domains \
+            --strict
+
+      - name: Calculate Blast Radius & Generate PR Diff
+        if: github.event_name == 'pull_request'
+        working-directory: tools
+        run: |
+          cargo run --release -p studyline-compiler -- diff \
+            --base origin/main \
+            --head HEAD \
+            --format mermaid \
+            --output ../target/pr_diff_report.json
+
+  markdown-link-check:
+    name: External & Inter-Node Link Verification
+    needs: pre-flight
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Link Checker
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: --cache --max-concurrency 64 './domains/**/*.md' './schemas/**/*.json'
+          fail: true

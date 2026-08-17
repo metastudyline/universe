@@ -1,0 +1,186 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://studyline.org/schemas/v1/node-manifest.schema.json",
+  "title": "StudyLineKnowledgeNodeManifest",
+  "description": "Schema for StudyLine Universal Knowledge Node Manifest (manifest.yml / spec.json)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "domain",
+    "summary",
+    "schema_version",
+    "content_hash",
+    "license",
+    "maintainers",
+    "prerequisites",
+    "assets",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+(\\.[a-z0-9-]+)*$",
+      "description": "Global unique semantic URI for the knowledge node"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 120,
+      "description": "Display title of the knowledge node"
+    },
+    "domain": {
+      "type": "string",
+      "enum": [
+        "philosophy",
+        "mathematics",
+        "computer_science",
+        "natural_science",
+        "life_hacker",
+        "social_science"
+      ],
+      "description": "Top-level academic/practical domain"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 500,
+      "description": "Concise pedagogical and academic summary"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic versioning of the manifest specification"
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$",
+      "description": "SHA-256 hash of all node bundle contents"
+    },
+    "license": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 50,
+      "description": "Open knowledge license identifier (e.g. CC-BY-SA-4.0)"
+    },
+    "maintainers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^@[a-zA-Z0-9_-]+$",
+        "description": "GitHub handle of responsible maintainer"
+      },
+      "description": "List of domain maintainer handles for codeowner assignment"
+    },
+    "prerequisites": {
+      "type": "array",
+      "description": "Directed dependency edges pointing to prerequisite nodes",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target_node_id",
+          "dependency_type",
+          "min_mastery_level"
+        ],
+        "properties": {
+          "target_node_id": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+(\\.[a-z0-9-]+)*$",
+            "description": "URI of the prerequisite knowledge node"
+          },
+          "dependency_type": {
+            "type": "string",
+            "enum": ["strict", "supporting"],
+            "description": "Strictness of prerequisite relationship"
+          },
+          "min_mastery_level": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5,
+            "description": "Minimum mastery level required: 0(Ignorance), 1(Unknown), 2(Awareness), 3(Application), 4(Mastery), 5(Internalization)"
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 300,
+            "description": "Pedagogical or logical justification for this edge"
+          }
+        }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "minItems": 1,
+      "description": "Multimodal asset bundle entries associated with this node",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "asset_id",
+          "role",
+          "mime_type",
+          "relative_path",
+          "checksum",
+          "file_size_bytes"
+        ],
+        "properties": {
+          "asset_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique identifier or relative path for asset"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "lecture",
+              "proof",
+              "widget",
+              "dataset",
+              "notebook",
+              "raw_archive",
+              "media"
+            ],
+            "description": "Functional role of the multimodal asset"
+          },
+          "mime_type": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "description": "Standard MIME type for renderer dispatch"
+          },
+          "relative_path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Relative filesystem path within the node container"
+          },
+          "checksum": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "SHA-256 checksum of the asset file"
+          },
+          "file_size_bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Size in bytes"
+          }
+        }
+      }
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 creation timestamp"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 update timestamp"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+id: "mathematics.linear-algebra.eigenvalues"
+title: "特征值与特征向量：线性变换的不变量与主轴定理"
+domain: "mathematics"
+summary: "从几何直观（向量缩放）与代数推导（特征多项式）理解矩阵特征分解，并包含基于 NumPy/SymPy 的交互式特征空间可视化。"
+schema_version: "1.0.0"
+content_hash: "b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3"
+license: "CC-BY-SA-4.0"
+maintainers:
+  - "@kevin-tung"
+prerequisites:
+  - target_node_id: "mathematics.linear-algebra.matrix-multiplication"
+    dependency_type: "strict"
+    min_mastery_level: 3
+    rationale: "计算特征方程 det(A - lambda*I) = 0 必须熟练掌握矩阵乘法与行列式展开"
+assets:
+  - asset_id: "interactive_notebook"
+    role: "notebook"
+    mime_type: "application/x-ipynb+json"
+    relative_path: "eigenvalues.ipynb"
+    checksum: "f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6b7a8f9e0d1c2b3a4f5e6d7c8b9a0f1e2"
+    file_size_bytes: 8192
+created_at: "2026-08-17T21:00:00Z"
+updated_at: "2026-08-17T21:00:00Z"

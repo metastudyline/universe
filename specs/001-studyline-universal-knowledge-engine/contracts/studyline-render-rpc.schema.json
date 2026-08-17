@@ -1,0 +1,106 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://studyline.org/schemas/v1/studyline-render-rpc.schema.json",
+  "title": "StudyLineRenderRPCSchema",
+  "description": "JSON-RPC 2.0 communication contract between host UI and sandboxed renderers (IFrame / Web Worker)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["jsonrpc", "id"],
+  "properties": {
+    "jsonrpc": {
+      "type": "string",
+      "enum": ["2.0"]
+    },
+    "id": {
+      "type": "string",
+      "description": "Unique correlation request ID"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "render:mount_asset",
+        "render:resize_notify",
+        "render:execute_code_sandbox",
+        "media:seek_timestamp",
+        "media:cue_highlight_change"
+      ],
+      "description": "RPC method name"
+    },
+    "params": {
+      "type": "object",
+      "description": "Method parameters tagged by method",
+      "oneOf": [
+        {
+          "title": "MountAssetParams",
+          "additionalProperties": false,
+          "required": ["node_id", "asset_id", "mime_type", "raw_content", "sandbox_tier"],
+          "properties": {
+            "node_id": { "type": "string" },
+            "asset_id": { "type": "string" },
+            "mime_type": { "type": "string" },
+            "raw_content": { "type": "string" },
+            "sandbox_tier": { "type": "string", "enum": ["tier_1", "tier_2", "tier_3"] }
+          }
+        },
+        {
+          "title": "ResizeNotifyParams",
+          "additionalProperties": false,
+          "required": ["rendered_height_px", "rendered_width_px"],
+          "properties": {
+            "rendered_height_px": { "type": "number", "minimum": 0 },
+            "rendered_width_px": { "type": "number", "minimum": 0 }
+          }
+        },
+        {
+          "title": "ExecuteCodeSandboxParams",
+          "additionalProperties": false,
+          "required": ["language", "code_snippet", "timeout_ms"],
+          "properties": {
+            "language": { "type": "string", "enum": ["python", "lean4", "webr"] },
+            "code_snippet": { "type": "string" },
+            "timeout_ms": { "type": "integer", "minimum": 500, "maximum": 30000 }
+          }
+        },
+        {
+          "title": "MediaSyncParams",
+          "additionalProperties": false,
+          "required": ["timestamp_seconds", "active_cue_id"],
+          "properties": {
+            "timestamp_seconds": { "type": "number", "minimum": 0 },
+            "active_cue_id": { "type": "string" }
+          }
+        }
+      ]
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "success": { "type": "boolean" },
+        "execution_stdout": { "type": "string" },
+        "execution_data_metrics": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["key", "value"],
+            "properties": {
+              "key": { "type": "string" },
+              "value": { "type": "number" }
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "type": "integer" },
+        "message": { "type": "string" },
+        "data": { "type": "string" }
+      }
+    }
+  }
+}

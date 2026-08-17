@@ -1,0 +1,181 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://studyline.org/schemas/v1/knowledge-pr-webhook.schema.json",
+  "title": "KnowledgePRWebhookTriadContract",
+  "description": "Triad protocol contract for Knowledge Pull Request events, CI status updates, and Bot notifications",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["protocol_version", "message_type", "timestamp", "payload"],
+  "properties": {
+    "protocol_version": {
+      "type": "string",
+      "enum": ["1.0.0"],
+      "description": "Version of the webhook protocol"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": ["pr_event", "ci_status_report", "broadcast_event"],
+      "description": "Discriminated message type"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Event timestamp in ISO-8601"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Payload constrained by message_type",
+      "oneOf": [
+        {
+          "title": "PREventPayload",
+          "additionalProperties": false,
+          "required": [
+            "pr_id",
+            "repository",
+            "action",
+            "author",
+            "base_branch",
+            "head_branch",
+            "changed_files"
+          ],
+          "properties": {
+            "pr_id": {
+              "type": "string",
+              "pattern": "^PR-[0-9]+$"
+            },
+            "repository": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]+/[a-zA-Z0-9_-]+$"
+            },
+            "action": {
+              "type": "string",
+              "enum": ["opened", "synchronize", "reopened", "closed", "merged"]
+            },
+            "author": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9_-]+$"
+            },
+            "base_branch": {
+              "type": "string",
+              "minLength": 1
+            },
+            "head_branch": {
+              "type": "string",
+              "minLength": 1
+            },
+            "changed_files": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        {
+          "title": "CIStatusReportPayload",
+          "additionalProperties": false,
+          "required": [
+            "pr_id",
+            "overall_status",
+            "execution_time_ms",
+            "schema_check_passed",
+            "dag_check_passed",
+            "blast_radius",
+            "errors"
+          ],
+          "properties": {
+            "pr_id": {
+              "type": "string",
+              "pattern": "^PR-[0-9]+$"
+            },
+            "overall_status": {
+              "type": "string",
+              "enum": ["pending", "passed", "failed"]
+            },
+            "execution_time_ms": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "schema_check_passed": {
+              "type": "boolean"
+            },
+            "dag_check_passed": {
+              "type": "boolean"
+            },
+            "blast_radius": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "direct_changed_nodes",
+                "affected_downstream_nodes",
+                "has_cycle"
+              ],
+              "properties": {
+                "direct_changed_nodes": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "affected_downstream_nodes": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "has_cycle": {
+                  "type": "boolean"
+                },
+                "cycle_path": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                },
+                "mermaid_graph": {
+                  "type": "string"
+                }
+              }
+            },
+            "errors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["error_code", "message", "file_path"],
+                "properties": {
+                  "error_code": {
+                    "type": "string",
+                    "enum": [
+                      "SCHEMA_VALIDATION_ERROR",
+                      "DAG_CYCLE_DETECTED",
+                      "DANGLING_PREREQUISITE_REF",
+                      "SCIENTIFIC_REPRODUCIBILITY_FAILED",
+                      "DEAD_LINK_DETECTED"
+                    ]
+                  },
+                  "message": { "type": "string" },
+                  "file_path": { "type": "string" },
+                  "line_number": { "type": "integer", "minimum": 1 }
+                }
+              }
+            }
+          }
+        },
+        {
+          "title": "BroadcastEventPayload",
+          "additionalProperties": false,
+          "required": ["event_name", "target_domain", "published_release_tag", "snapshot_content_hash"],
+          "properties": {
+            "event_name": {
+              "type": "string",
+              "enum": ["KNOWLEDGE_BASE_RELEASED", "PEDAGOGICAL_BREAKAGE_RESOLVED"]
+            },
+            "target_domain": {
+              "type": "string"
+            },
+            "published_release_tag": {
+              "type": "string"
+            },
+            "snapshot_content_hash": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

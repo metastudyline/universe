@@ -1,0 +1,13 @@
+{
+  "name": "@studyline/schemas",
+  "version": "1.0.0",
+  "description": "Standard Draft-07 JSON Schemas and Contracts for StudyLine Knowledge Infrastructure",
+  "main": "index.json",
+  "scripts": {
+    "test": "node test-schemas.js"
+  },
+  "devDependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1"
+  }
+}

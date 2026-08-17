@@ -1,0 +1,27 @@
+[workspace]
+members = [
+    "studyline-graph-core",
+    "studyline-compiler",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["StudyLine Core Team <infra@studyline.org>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/studyline/universe"
+
+[workspace.dependencies]
+petgraph = "0.6.5"
+roaring = "0.10.4"
+rkyv = { version = "0.7.44", features = ["validation"] }
+serde = { version = "1.0.203", features = ["derive"] }
+serde_json = "1.0.117"
+serde_yaml = "0.9.34"
+jsonschema = "0.18.0"
+rayon = "1.10.0"
+clap = { version = "4.5.4", features = ["derive"] }
+thiserror = "1.0.61"
+anyhow = "1.0.86"
+walkdir = "2.5.0"

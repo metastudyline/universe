@@ -1,0 +1,19 @@
+[package]
+name = "studyline-graph-core"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "High-performance DAG topology engine, cycle detector, and path planner for StudyLine"
+
+[dependencies]
+petgraph.workspace = true
+roaring.workspace = true
+rkyv.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+
+[dev-dependencies]
+criterion = "0.5.1"
