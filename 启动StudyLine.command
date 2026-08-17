@@ -6,8 +6,8 @@
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$SCRIPT_DIR"
 
-# Ensure Homebrew and standard environment paths
-export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.cargo/bin:$PATH"
+# Ensure standard environment paths (Homebrew, fnm, nvm, cargo)
+export PATH="/opt/homebrew/bin:/usr/local/bin:$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 
 # Colors
 BOLD="\033[1m"
@@ -30,7 +30,7 @@ DAEMON_BIN="$SCRIPT_DIR/tools/target/release/studyline-daemon"
 if [ ! -f "$DAEMON_BIN" ]; then
     echo -e "${YELLOW}[1/3] 🔨 首次运行，正在编译 Rust 高性能图引擎与守护进程...${RESET}"
     cd "$SCRIPT_DIR/tools"
-    cargo build --release
+    cargo build --release -p studyline-daemon
     cd "$SCRIPT_DIR"
     echo -e "${GREEN}  ✓ Rust 核心守护进程编译完成！${RESET}\n"
 else
@@ -57,8 +57,15 @@ trap cleanup SIGINT SIGTERM EXIT
 
 sleep 1
 
-# 3. 启动前端 Vite 开发服务器并在浏览器打开
+# 3. 检查前端依赖并启动 Web 服务
 echo -e "${BLUE}[3/3] 🌐 正在启动前端星云画布 (http://localhost:3000)...${RESET}"
+cd "$SCRIPT_DIR/packages/studyline-renderer"
+
+if [ ! -d "node_modules" ] || [ ! -f "node_modules/.bin/vite" ]; then
+    echo -e "${YELLOW}[INFO] 📦 正在自愈安装前端依赖 (npm install)...${RESET}"
+    npm install
+fi
+
 echo -e "${GREEN}======================================================================${RESET}"
 echo -e "${BOLD}  🚀 StudyLine Universe 已成功启动！${RESET}"
 echo -e "  • 网页画布地址: ${CYAN}http://localhost:3000${RESET}"
@@ -67,5 +74,14 @@ echo -e "  • 本地文件监听: ${CYAN}${DOMAINS_DIR}${RESET} (50ms 防抖实
 echo -e "  💡 提示: 按下 ${BOLD}Ctrl + C${RESET} 即可安全停止所有服务。"
 echo -e "${GREEN}======================================================================${RESET}\n"
 
-cd "$SCRIPT_DIR/packages/studyline-renderer"
-npx vite demo --port 3000 --open
+# 优先使用本地 vite 二进制启动，若失败则回退到 npm run dev
+if [ -f "./node_modules/.bin/vite" ]; then
+    ./node_modules/.bin/vite demo --port 3000 --open
+elif command -v npm &> /dev/null; then
+    npm run dev
+else
+    # 终极无依赖 Fallback (Python3 原生静态服务)
+    echo -e "${YELLOW}[FALLBACK] 正在使用 Python3 静态服务器拉起...${RESET}"
+    open "http://localhost:3000/demo/index.html"
+    python3 -m http.server 3000
+fi
