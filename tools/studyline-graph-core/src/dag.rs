@@ -1,5 +1,6 @@
 use petgraph::graph::{DiGraph, NodeIndex};
 use petgraph::algo::toposort;
+use petgraph::visit::EdgeRef;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use thiserror::Error;
@@ -119,5 +120,43 @@ impl KnowledgeGraph {
 
     pub fn edge_count(&self) -> usize {
         self.graph.edge_count()
+    }
+
+    pub fn find_learning_path(&self, target_id: &str) -> Result<Vec<String>, GraphError> {
+        let target_idx = self
+            .node_indices
+            .get(target_id)
+            .copied()
+            .ok_or_else(|| GraphError::NodeNotFound(target_id.to_string()))?;
+
+        use petgraph::visit::Dfs;
+        use petgraph::visit::Reversed;
+        let mut dfs = Dfs::new(Reversed(&self.graph), target_idx);
+        let mut path_indices = Vec::new();
+        while let Some(nx) = dfs.next(Reversed(&self.graph)) {
+            path_indices.push(nx);
+        }
+
+        // Subgraph topological sort
+        let mut sub_graph = DiGraph::<String, ()>::new();
+        let mut idx_map = HashMap::new();
+        for &nx in &path_indices {
+            let id = self.graph[nx].id.clone();
+            let sub_idx = sub_graph.add_node(id);
+            idx_map.insert(nx, sub_idx);
+        }
+
+        for &nx in &path_indices {
+            for edge in self.graph.edges_directed(nx, petgraph::Direction::Outgoing) {
+                let target = edge.target();
+                if let (Some(&src_sub), Some(&tgt_sub)) = (idx_map.get(&nx), idx_map.get(&target)) {
+                    sub_graph.add_edge(src_sub, tgt_sub, ());
+                }
+            }
+        }
+
+        toposort(&sub_graph, None)
+            .map(|indices| indices.into_iter().map(|i| sub_graph[i].clone()).collect())
+            .map_err(|_| GraphError::CycleDetected)
     }
 }

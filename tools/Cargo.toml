@@ -2,6 +2,7 @@
 members = [
     "studyline-graph-core",
     "studyline-compiler",
+    "studyline-daemon",
 ]
 resolver = "2"
 
@@ -25,3 +26,9 @@ clap = { version = "4.5.4", features = ["derive"] }
 thiserror = "1.0.61"
 anyhow = "1.0.86"
 walkdir = "2.5.0"
+tokio = { version = "1.37.0", features = ["full"] }
+axum = { version = "0.7.5", features = ["ws"] }
+tower-http = { version = "0.5.2", features = ["cors", "trace"] }
+notify-debouncer-mini = "0.4.1"
+notify = "6.1.1"
+futures-util = "0.3.30"

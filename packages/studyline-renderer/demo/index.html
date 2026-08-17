@@ -3,8 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StudyLine Universe — 哲学史 0 段宏观知识星云与微观胶囊</title>
+    <title>StudyLine Universe — 哲学史宏观知识星云与微观胶囊</title>
     <link rel="stylesheet" href="styles/universe.css">
+    <style>
+        .bridge-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            transition: all 0.3s ease;
+        }
+        .bridge-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #eab308;
+            box-shadow: 0 0 8px rgba(234, 179, 8, 0.6);
+            transition: all 0.3s ease;
+        }
+        .bridge-dot.connected {
+            background: #10b981;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
+        }
+    </style>
 </head>
 <body>
     <div id="app">
@@ -13,14 +41,20 @@
             <div class="brand-title">
                 <span>✦</span> StudyLine Universe · 0段神话与语言起步 (94期)
             </div>
-            <div class="path-planner-box">
-                <select id="target-node-select" class="path-select">
-                    <option value="E27">目标：E27 《劳作与时日》收束 (正义演进)</option>
-                    <option value="E37">目标：E37 《伊利亚特》卷九使团 (荣誉不可代偿)</option>
-                    <option value="E67">目标：E67 《奥瑞斯忒亚》收束 (法庭审判)</option>
-                    <option value="E82">目标：E82 第一季总收束 (通向A段本原说)</option>
-                </select>
-                <button id="btn-plan-path" class="btn-plan">点亮最短学线</button>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div id="bridge-status-badge" class="bridge-badge">
+                    <span id="bridge-status-dot" class="bridge-dot"></span>
+                    <span id="bridge-status-text">连接中...</span>
+                </div>
+                <div class="path-planner-box">
+                    <select id="target-node-select" class="path-select">
+                        <option value="E27">目标：E27 《劳作与时日》收束 (正义演进)</option>
+                        <option value="E37">目标：E37 《伊利亚特》卷九使团 (荣誉不可代偿)</option>
+                        <option value="E67">目标：E67 《奥瑞斯忒亚》收束 (法庭审判)</option>
+                        <option value="E82">目标：E82 第一季总收束 (通向A段本原说)</option>
+                    </select>
+                    <button id="btn-plan-path" class="btn-plan">点亮最短学线</button>
+                </div>
             </div>
         </header>
 
@@ -30,8 +64,9 @@
 
     <!-- Application Script -->
     <script type="module">
-        import { UniverseCanvas } from "../src/canvas/UniverseCanvas.js";
-        import { CapsuleDrawer } from "../src/reader/CapsuleDrawer.js";
+        import { UniverseCanvas } from "../src/canvas/UniverseCanvas.ts";
+        import { CapsuleDrawer } from "../src/reader/CapsuleDrawer.ts";
+        import { StudyLineBridgeClient } from "../src/bridge/StudyLineBridgeClient.ts";
 
         async function init() {
             // Load Stage 0 dataset
@@ -59,6 +94,31 @@
 
             const canvas = new UniverseCanvas(canvasEl, universeData);
             const drawer = new CapsuleDrawer(data.terms);
+            const bridge = new StudyLineBridgeClient("ws://127.0.0.1:3001/ws");
+
+            // Bridge status indicator
+            const dotEl = document.getElementById("bridge-status-dot");
+            const textEl = document.getElementById("bridge-status-text");
+
+            bridge.onStateChange((state) => {
+                if (state === "CONNECTED") {
+                    dotEl.className = "bridge-dot connected";
+                    textEl.innerText = "🟢 Rust 守护进程已直连 (3001)";
+                } else if (state === "RECONNECTING" || state === "CONNECTING") {
+                    dotEl.className = "bridge-dot";
+                    textEl.innerText = "🟡 正在握手本地 Rust 后端...";
+                } else {
+                    dotEl.className = "bridge-dot";
+                    textEl.innerText = "🟡 离线静态模式 (Local Fallback)";
+                }
+            });
+
+            // Live Knowledge HMR
+            bridge.on("GRAPH_UPDATED", (payload) => {
+                console.log("[Bridge] ⚡ Live Knowledge HMR received:", payload);
+            });
+
+            bridge.connect();
 
             // Node click handler
             canvas.setOnNodeSelect((node) => {
@@ -82,16 +142,26 @@
             });
 
             // Path planner interaction
-            document.getElementById("btn-plan-path").addEventListener("click", () => {
+            document.getElementById("btn-plan-path").addEventListener("click", async () => {
                 const target = document.getElementById("target-node-select").value;
-                if (target === "E27") {
-                    canvas.highlightShortestPath(["E01", "E02", "E03", "E04", "E05", "E07", "E08", "E11", "E16", "E17", "E18", "E22", "E27"]);
-                } else if (target === "E37") {
-                    canvas.highlightShortestPath(["E01", "E02", "E03", "E04", "E28", "E29", "E37"]);
-                } else if (target === "E67") {
-                    canvas.highlightShortestPath(["E01", "E04", "E17", "E27", "E59", "E66", "E67"]);
-                } else if (target === "E82") {
-                    canvas.highlightShortestPath(["E01", "E04", "E17", "E27", "E53", "E59", "E67", "E82"]);
+                try {
+                    const res = await bridge.calculatePath(target);
+                    if (res.path_nodes && res.path_nodes.length > 1) {
+                        canvas.highlightShortestPath(res.path_nodes);
+                    } else {
+                        // Local fallback paths
+                        if (target === "E27") {
+                            canvas.highlightShortestPath(["E01", "E02", "E03", "E04", "E05", "E07", "E08", "E11", "E16", "E17", "E18", "E22", "E27"]);
+                        } else if (target === "E37") {
+                            canvas.highlightShortestPath(["E01", "E02", "E03", "E04", "E28", "E29", "E37"]);
+                        } else if (target === "E67") {
+                            canvas.highlightShortestPath(["E01", "E04", "E17", "E27", "E59", "E66", "E67"]);
+                        } else if (target === "E82") {
+                            canvas.highlightShortestPath(["E01", "E04", "E17", "E27", "E53", "E59", "E67", "E82"]);
+                        }
+                    }
+                } catch (e) {
+                    console.warn("Path fallback", e);
                 }
                 canvas.focusNode(target);
             });
