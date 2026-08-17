@@ -1,15 +1,19 @@
 // =============================================================================
-// StudyLine Universe Workbench Orchestrator (Demo Entry)
+// StudyLine Universe Workbench Orchestrator (First-Principles Edition)
 // =============================================================================
 
 import { UniverseCanvas, UniverseData, NodeVisual } from "../src/canvas/UniverseCanvas";
 import { CapsuleDrawer } from "../src/reader/CapsuleDrawer";
+import { LexiconHUD } from "../src/reader/LexiconHUD";
+import { ExitExamModal } from "../src/exam/ExitExamModal";
 import { StudyLineBridgeClient } from "../src/bridge/StudyLineBridgeClient";
 import stage0Dataset from "./data/stage0_dataset.json";
 
-// Initialize Data & Canvas
+// Initialize Core Components
 const canvasEl = document.getElementById("universe-canvas") as HTMLCanvasElement;
 const drawer = new CapsuleDrawer();
+const lexiconHud = new LexiconHUD();
+const exitExam = new ExitExamModal();
 
 const universeData: UniverseData = {
     nodes: (stage0Dataset.nodes as any[]).map(n => ({
@@ -41,14 +45,14 @@ const universeData: UniverseData = {
 const universeCanvas = new UniverseCanvas(canvasEl, universeData);
 universeCanvas.start();
 
-// Handle Node Selection -> Open Drawer
+// Handle Node Selection -> Open WSJ/LaTeX Drawer
 universeCanvas.setOnNodeSelect((node: NodeVisual) => {
     drawer.open({
         id: node.id,
         title: `${node.id} · ${node.title}`,
         genre: node.genre,
         mastery: node.mastery,
-        lines: node.lines || "一手原典",
+        lines: node.lines || "Loeb Classical Library",
         contentMarkdown: `
 ## 核心哲学问题与一手原典考据
 
@@ -56,9 +60,17 @@ universeCanvas.setOnNodeSelect((node: NodeVisual) => {
 
 ### 核心论证三段论 (Syllogism)
 
-1. **大前提 (P1)**: 宇宙万物的本原不可归约为任何单一经验质料；
-2. **小前提 (P2)**: 凡有限有定之物皆处于相反者的相互逾界与补偿之中；
-3. **结论 (C)**: 必须设立永恒不竭的 **ἄπειρον** 与客观法则 **δίκη**。
+1. **大前提 (P1)**: 宇宙万物的终极本原不可归约为任何单一经验质料（火、水、气）；
+2. **小前提 (P2)**: 凡有限有定之物皆处于相反者的相互逾界（ὕβρις）与补偿之中；
+3. **结论 (C)**: 必须设立永恒不竭的 **ἄπειρον**（无定）与客观正义尺度 **δίκη**。
+
+### 学术三线表：核心范畴演进对照
+
+| 概念范畴 (Greek) | 字面含义 | DK/一手文献出处 | 哲学史本体论意义 |
+| :---: | :---: | :---: | :---: |
+| **ἄπειρον** | 无界限 / 无定 | DK 12 B1 | 先于一切性质对立的永恒母体 |
+| **δίκη** | 宇宙正义尺度 | 赫西俄德《劳作》275 | 惩治逾界并强制守恒的铁律 |
+| **ἔστιν** | 存在者存在 | DK 28 B2, B8 | 西方形而上学本体论第一奠基公理 |
         `
     });
 });
@@ -72,7 +84,6 @@ document.getElementById("btn-fit-view")?.addEventListener("click", () => univers
 const targetSelect = document.getElementById("target-node-select") as HTMLSelectElement;
 document.getElementById("calculate-path-btn")?.addEventListener("click", () => {
     const target = targetSelect.value;
-    // Highlight shortest path to target
     const samplePaths: Record<string, string[]> = {
         "E82": ["E01", "E07", "E29", "E37", "E66", "E72", "E82"],
         "E66": ["E01", "E07", "E29", "E66"],
@@ -88,6 +99,11 @@ document.getElementById("calculate-path-btn")?.addEventListener("click", () => {
 
 document.getElementById("clear-path-btn")?.addEventListener("click", () => {
     universeCanvas.clearHighlight();
+});
+
+// Exit Exam Modal Trigger
+document.getElementById("btn-open-exit-exam")?.addEventListener("click", () => {
+    exitExam.open();
 });
 
 // Command+K Search Modal
@@ -119,6 +135,7 @@ window.addEventListener("keydown", (e) => {
     } else if (e.key === "Escape") {
         closeSearch();
         drawer.close();
+        exitExam.close();
     }
 });
 

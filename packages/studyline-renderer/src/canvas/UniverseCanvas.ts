@@ -1,6 +1,6 @@
 // =============================================================================
-// StudyLine Universe Canvas Engine (Zen WSJ Edition)
-// 60FPS hardware-accelerated canvas with Kintsugi Gold learning pulses
+// StudyLine Universe Canvas Engine (First-Principles High-Performance Edition)
+// 60FPS zero-GC particle pool, Smootherstep LOD, and Kintsugi Gold learning pulses
 // =============================================================================
 
 import { SpatialIndex, SpatialItem } from "./SpatialIndex";
@@ -29,6 +29,11 @@ export interface UniverseData {
     clusters: { id: string; title: string; x: number; y: number }[];
 }
 
+// Interleaved Particle Structure in Float32Array:
+// [progress_t, speed, from_x, from_y, to_x, to_y] (STRIDE = 6)
+const PARTICLE_STRIDE = 6;
+const MAX_PARTICLES = 2048;
+
 export class UniverseCanvas {
     private canvas: HTMLCanvasElement;
     private ctx: CanvasRenderingContext2D;
@@ -49,8 +54,12 @@ export class UniverseCanvas {
     private highlightedPath = new Set<string>();
     private onNodeSelectCallback?: (node: NodeVisual) => void;
 
-    // Animation & Pulse state
-    private pulseOffset = 0;
+    // Zero-GC Particle Pool
+    private particlePool = new Float32Array(MAX_PARTICLES * PARTICLE_STRIDE);
+    private activeParticleCount = 0;
+
+    // Animation & Loop state
+    private pulsePhase = 0;
     private isRunning = false;
 
     constructor(canvas: HTMLCanvasElement, data: UniverseData) {
@@ -73,8 +82,35 @@ export class UniverseCanvas {
             this.spatialIndex.insert(node);
         }
 
+        this.initParticlePool();
         this.initEvents();
         this.resize();
+    }
+
+    private initParticlePool(): void {
+        const goldenEdges = this.data.edges.filter(e => e.golden);
+        const nodeMap = new Map(this.data.nodes.map(n => [n.id, n]));
+        let pIndex = 0;
+
+        for (const edge of goldenEdges) {
+            const from = nodeMap.get(edge.from);
+            const to = nodeMap.get(edge.to);
+            if (!from || !to) continue;
+
+            // Allocate 2 particles per golden edge
+            for (let k = 0; k < 2; k++) {
+                if (pIndex >= MAX_PARTICLES) break;
+                const offset = pIndex * PARTICLE_STRIDE;
+                this.particlePool[offset + 0] = (k * 0.5 + Math.random() * 0.2) % 1.0; // t
+                this.particlePool[offset + 1] = 0.008 + Math.random() * 0.004;         // speed
+                this.particlePool[offset + 2] = from.x;                                 // from_x
+                this.particlePool[offset + 3] = from.y;                                 // from_y
+                this.particlePool[offset + 4] = to.x;                                   // to_x
+                this.particlePool[offset + 5] = to.y;                                   // to_y
+                pIndex++;
+            }
+        }
+        this.activeParticleCount = pIndex;
     }
 
     public setOnNodeSelect(callback: (node: NodeVisual) => void): void {
@@ -83,10 +119,39 @@ export class UniverseCanvas {
 
     public highlightShortestPath(nodeIds: string[]): void {
         this.highlightedPath = new Set(nodeIds);
+        this.rebuildPathParticles();
     }
 
     public clearHighlight(): void {
         this.highlightedPath.clear();
+        this.initParticlePool();
+    }
+
+    private rebuildPathParticles(): void {
+        const nodeMap = new Map(this.data.nodes.map(n => [n.id, n]));
+        let pIndex = 0;
+
+        for (const edge of this.data.edges) {
+            const isPath = this.highlightedPath.has(edge.from) && this.highlightedPath.has(edge.to);
+            if (!isPath && !edge.golden) continue;
+
+            const from = nodeMap.get(edge.from);
+            const to = nodeMap.get(edge.to);
+            if (!from || !to) continue;
+
+            for (let k = 0; k < 3; k++) {
+                if (pIndex >= MAX_PARTICLES) break;
+                const offset = pIndex * PARTICLE_STRIDE;
+                this.particlePool[offset + 0] = (k * 0.33 + Math.random() * 0.1) % 1.0;
+                this.particlePool[offset + 1] = 0.012 + Math.random() * 0.004;
+                this.particlePool[offset + 2] = from.x;
+                this.particlePool[offset + 3] = from.y;
+                this.particlePool[offset + 4] = to.x;
+                this.particlePool[offset + 5] = to.y;
+                pIndex++;
+            }
+        }
+        this.activeParticleCount = pIndex;
     }
 
     public focusNode(nodeId: string): void {
@@ -127,11 +192,21 @@ export class UniverseCanvas {
         this.isRunning = true;
         const loop = () => {
             if (!this.isRunning) return;
-            this.pulseOffset = (this.pulseOffset + 0.025) % (Math.PI * 2);
+            this.pulsePhase = (this.pulsePhase + 0.025) % (Math.PI * 2);
+            this.updateParticles();
             this.render();
             requestAnimationFrame(loop);
         };
         requestAnimationFrame(loop);
+    }
+
+    private updateParticles(): void {
+        for (let i = 0; i < this.activeParticleCount; i++) {
+            const offset = i * PARTICLE_STRIDE;
+            let t = this.particlePool[offset + 0] + this.particlePool[offset + 1];
+            if (t > 1.0) t -= 1.0;
+            this.particlePool[offset + 0] = t;
+        }
     }
 
     public stop(): void {
@@ -213,34 +288,37 @@ export class UniverseCanvas {
         const { clientWidth: width, clientHeight: height } = this.canvas;
         this.ctx.clearRect(0, 0, width, height);
 
-        // 1. Draw Zen Cosmic Deep Background & Golden Dust
+        // 1. Draw Zen Cosmic Deep Background & Golden Dust Grid
         this.drawSpaceBackground(width, height);
 
         const lod = this.lodManager.getLODState(this.zoom);
 
-        // 2. Draw Cluster Nebula Halos
-        for (const cluster of this.data.clusters) {
-            this.drawClusterHalo(cluster);
+        // 2. Draw Cluster Nebula Halos (LOD 0 Smootherstep Alpha)
+        if (lod.alphaGalaxy > 0.01) {
+            for (const cluster of this.data.clusters) {
+                this.drawClusterHalo(cluster, lod.alphaGalaxy);
+            }
         }
 
-        // 3. Draw Kintsugi Gold Dependency Edges
+        // 3. Draw Kintsugi Gold Dependency Edges & Golden Stream
         this.drawEdges(lod);
 
-        // 4. Draw Nodes with Dual Rings & Mastery Arc
+        // 4. Batch Draw Gold Flowing Stream Particles (Zero-GC)
+        this.drawStreamParticles();
+
+        // 5. Draw Nodes with Dual Rings & Mastery Arc (LOD 1 & 2)
         this.drawNodes(lod, width, height);
     }
 
     private drawSpaceBackground(w: number, h: number): void {
         this.ctx.save();
-        // Base Deep Graphite
         const bgGrad = this.ctx.createRadialGradient(w / 2, h / 2, 50, w / 2, h / 2, Math.max(w, h));
         bgGrad.addColorStop(0, "#121215");
         bgGrad.addColorStop(1, "#0B0B0C");
         this.ctx.fillStyle = bgGrad;
         this.ctx.fillRect(0, 0, w, h);
 
-        // Subtle Kintsugi Golden Dust Grid
-        this.ctx.strokeStyle = "rgba(212, 175, 55, 0.03)";
+        this.ctx.strokeStyle = "rgba(212, 175, 55, 0.025)";
         this.ctx.lineWidth = 0.8;
         const gridSize = 100 * this.zoom;
         const startX = this.offsetX % gridSize;
@@ -261,14 +339,14 @@ export class UniverseCanvas {
         this.ctx.restore();
     }
 
-    private drawClusterHalo(cluster: { id: string; title: string; x: number; y: number }): void {
+    private drawClusterHalo(cluster: { id: string; title: string; x: number; y: number }, alpha: number): void {
         const screenX = cluster.x * this.zoom + this.offsetX;
         const screenY = cluster.y * this.zoom + this.offsetY;
 
         this.ctx.save();
         const gradient = this.ctx.createRadialGradient(screenX, screenY, 20, screenX, screenY, 320 * this.zoom);
-        gradient.addColorStop(0, "rgba(212, 175, 55, 0.08)");
-        gradient.addColorStop(0.6, "rgba(212, 175, 55, 0.02)");
+        gradient.addColorStop(0, `rgba(212, 175, 55, ${0.08 * alpha})`);
+        gradient.addColorStop(0.6, `rgba(212, 175, 55, ${0.02 * alpha})`);
         gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
         this.ctx.fillStyle = gradient;
         this.ctx.beginPath();
@@ -277,14 +355,14 @@ export class UniverseCanvas {
 
         if (this.zoom < 0.6) {
             this.ctx.font = "bold 12px Newsreader, serif";
-            this.ctx.fillStyle = "rgba(212, 175, 55, 0.65)";
+            this.ctx.fillStyle = `rgba(212, 175, 55, ${0.65 * alpha})`;
             this.ctx.textAlign = "center";
             this.ctx.fillText(cluster.title, screenX, screenY - 60 * this.zoom);
         }
         this.ctx.restore();
     }
 
-    private drawEdges(lod: { level: LODLevel; alphaSpine: number }): void {
+    private drawEdges(lod: { level: LODLevel; alphaSpine: number; alphaLeaf: number }): void {
         this.ctx.save();
         const nodeMap = new Map(this.data.nodes.map(n => [n.id, n]));
 
@@ -301,18 +379,17 @@ export class UniverseCanvas {
 
             this.ctx.beginPath();
             if (isGolden) {
-                // Kintsugi Gold Pulse Stream
                 this.ctx.strokeStyle = "#D4AF37";
                 this.ctx.lineWidth = 2.4;
                 this.ctx.shadowColor = "rgba(212, 175, 55, 0.6)";
                 this.ctx.shadowBlur = 12;
                 this.ctx.setLineDash([]);
             } else if (edge.type === "supporting") {
-                this.ctx.strokeStyle = "rgba(255, 255, 255, 0.12)";
+                this.ctx.strokeStyle = `rgba(255, 255, 255, ${0.12 * lod.alphaLeaf})`;
                 this.ctx.lineWidth = 0.9;
                 this.ctx.setLineDash([4, 4]);
             } else {
-                this.ctx.strokeStyle = "rgba(255, 255, 255, 0.22)";
+                this.ctx.strokeStyle = `rgba(255, 255, 255, ${0.22 * lod.alphaSpine})`;
                 this.ctx.lineWidth = 1.2;
                 this.ctx.setLineDash([]);
             }
@@ -321,25 +398,40 @@ export class UniverseCanvas {
             const midY = (y1 + y2) / 2 - 20 * this.zoom;
             this.ctx.quadraticCurveTo(midX, midY, x2, y2);
             this.ctx.stroke();
-
-            // Golden flowing light particle
-            if (isGolden) {
-                const t = (Math.sin(this.pulseOffset * 1.5 + from.x) + 1) / 2;
-                const px = (1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * midX + t * t * x2;
-                const py = (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * midY + t * t * y2;
-
-                this.ctx.fillStyle = "#FFF";
-                this.ctx.shadowColor = "#D4AF37";
-                this.ctx.shadowBlur = 8;
-                this.ctx.beginPath();
-                this.ctx.arc(px, py, 3, 0, Math.PI * 2);
-                this.ctx.fill();
-            }
         }
         this.ctx.restore();
     }
 
-    private drawNodes(lod: { level: LODLevel; alphaDetail: number }, w: number, h: number): void {
+    private drawStreamParticles(): void {
+        if (this.activeParticleCount === 0) return;
+        this.ctx.save();
+        this.ctx.fillStyle = "#FFFFFF";
+        this.ctx.shadowColor = "#D4AF37";
+        this.ctx.shadowBlur = 10;
+        this.ctx.beginPath();
+
+        for (let i = 0; i < this.activeParticleCount; i++) {
+            const offset = i * PARTICLE_STRIDE;
+            const t = this.particlePool[offset + 0];
+            const fx = this.particlePool[offset + 2] * this.zoom + this.offsetX;
+            const fy = this.particlePool[offset + 3] * this.zoom + this.offsetY;
+            const tx = this.particlePool[offset + 4] * this.zoom + this.offsetX;
+            const ty = this.particlePool[offset + 5] * this.zoom + this.offsetY;
+
+            const midX = (fx + tx) / 2;
+            const midY = (fy + ty) / 2 - 20 * this.zoom;
+
+            const px = (1 - t) * (1 - t) * fx + 2 * (1 - t) * t * midX + t * t * tx;
+            const py = (1 - t) * (1 - t) * fy + 2 * (1 - t) * t * midY + t * t * ty;
+
+            this.ctx.moveTo(px + 2.5, py);
+            this.ctx.arc(px, py, 2.5, 0, Math.PI * 2);
+        }
+        this.ctx.fill();
+        this.ctx.restore();
+    }
+
+    private drawNodes(lod: { level: LODLevel; alphaDetail: number; alphaLeaf: number }, w: number, h: number): void {
         const viewportBox = {
             minX: (-this.offsetX) / this.zoom,
             minY: (-this.offsetY) / this.zoom,
@@ -357,7 +449,7 @@ export class UniverseCanvas {
 
             this.ctx.save();
 
-            // 1. Outer Breath Glow for Spine or Selected Nodes
+            // 1. Outer Breath Glow
             if (node.spine || isHighlighted || isHovered) {
                 const glowRadius = (node.radius + (isHovered ? 12 : 6)) * this.zoom;
                 const glow = this.ctx.createRadialGradient(screenX, screenY, node.radius * this.zoom, screenX, screenY, glowRadius);
@@ -374,11 +466,11 @@ export class UniverseCanvas {
             this.ctx.arc(screenX, screenY, node.radius * this.zoom, 0, Math.PI * 2);
 
             if (node.genre === "synthesis") {
-                this.ctx.fillStyle = "#D4AF37"; // Kintsugi Gold for Synthesis / Exit Exam
+                this.ctx.fillStyle = "#D4AF37";
             } else if (node.genre === "spinoff") {
-                this.ctx.fillStyle = "#4B5563"; // Elegant Slate
+                this.ctx.fillStyle = "#4B5563";
             } else {
-                this.ctx.fillStyle = node.spine ? "#1E293B" : "#0F172A"; // Deep Sapphire Charcoal
+                this.ctx.fillStyle = node.spine ? "#1E293B" : "#0F172A";
             }
             this.ctx.fill();
 
@@ -387,7 +479,7 @@ export class UniverseCanvas {
             this.ctx.lineWidth = node.spine ? 2 : 1;
             this.ctx.stroke();
 
-            // 4. Mastery Circular Progress Arc (Bamboo Green for Mastery)
+            // 4. Mastery Circular Progress Arc
             if (node.mastery > 0) {
                 const startAngle = -Math.PI / 2;
                 const endAngle = startAngle + (Math.PI * 2 * (node.mastery / 5));
@@ -398,7 +490,7 @@ export class UniverseCanvas {
                 this.ctx.stroke();
             }
 
-            // 5. WSJ Editorial Typography Labels
+            // 5. WSJ Editorial Typography Labels (Smootherstep LOD 2)
             if (this.zoom >= 0.4) {
                 this.ctx.font = node.spine ? "600 12px Newsreader, serif" : "11px -apple-system, sans-serif";
                 this.ctx.fillStyle = isHovered ? "#FFFFFF" : (node.spine ? "#F3E5AB" : "#A1A1A8");
