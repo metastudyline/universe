@@ -1,0 +1,30 @@
+# StudyLine Dual-License & Open Source Commercial Matrix
+# Copyright (c) 2026 MetaStudyLine Inc. All rights reserved.
+
+The StudyLine Universal Knowledge Infrastructure is distributed under a tiered dual-licensing framework to guarantee open academic accessibility while strictly prohibiting third-party commercial exploitation.
+
+---
+
+## 1. Knowledge Content, Topologies & Manuscripts
+All pedagogical content, curricula, node manifests, lecture notes, terminology cards, argument reconstructions, DAG topologies, and markdown manuscripts residing in this repository are licensed under:
+
+**Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)**
+- **Attribution (BY)**: You must give appropriate credit to StudyLine and the respective contributors.
+- **Non-Commercial (NC)**: 🔴 STRICTLY PROHIBITED. You may NOT use the material for commercial purposes, paid paywalls, commercial courses, or commercial derivative products.
+- **ShareAlike (SA)**: If you remix, transform, or build upon the material, you must distribute your contributions under the same license.
+
+Full legal text: https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+---
+
+## 2. Compilers, Graph Engines & Toolchain
+All source code in `tools/` and `packages/` (including `studyline-graph-core`, `studyline-compiler`, `sci-sandbox`, and `@studyline/renderer`) is licensed under the **Business Source License 1.1 (BSL 1.1)** or **PolyForm Noncommercial License 1.0.0**:
+
+- **Permitted Use**: You are free to view, download, compile, modify, and run the software locally for private, academic, educational, and non-commercial purposes.
+- **Commercial Restriction**: 🔴 You may NOT offer this software, graph engine, or compiler as a commercial SaaS, cloud API service, or paid software product competing with MetaStudyLine Inc.
+- **Official Commercial Operator**: MetaStudyLine Inc. reserves the exclusive right to commercial operations and developer revenue-sharing.
+
+---
+
+## 3. Contributor License Agreement (CLA)
+By submitting a Pull Request to any repository under `@metastudyline`, contributors agree to the [StudyLine Contributor License Agreement (CLA.md)](CLA.md). Contributors retain original authorship while granting MetaStudyLine the commercial publishing and distribution mandate under the defined revenue-sharing model (40% Author / 15% Reviewer / 15% Bounty / 30% Infrastructure).
