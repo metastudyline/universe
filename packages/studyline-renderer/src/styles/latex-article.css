@@ -14,144 +14,381 @@
   --heading-latin-font: "Latin Modern Roman", "Times New Roman", serif;
   --heading-chinese-font: "STHeitiBold", "PingFang SC", "Songti SC", sans-serif;
   --base-line-height: 1.618em;
+
+  /* Theme Palette: Dark Mode Default */
+  --bg-paper: #141418;
+  --text-primary: #E2E2E8;
+  --text-secondary: #9898A6;
+  --text-tertiary: #6E6E7A;
+  --color-gold: #D4AF37;
+  --color-gold-glow: rgba(212, 175, 55, 0.4);
+  --border-gold: rgba(212, 175, 55, 0.3);
+  --bg-quote: rgba(212, 175, 55, 0.05);
+  --paper-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+/* Light Theme: 和纸白 (Washi White) */
+[data-theme="washi"] {
+  --bg-paper: #FCFAF6;
+  --text-primary: #1C1C20;
+  --text-secondary: #52525E;
+  --text-tertiary: #848492;
+  --color-gold: #A67C1E;
+  --color-gold-glow: rgba(166, 124, 30, 0.3);
+  --border-gold: rgba(166, 124, 30, 0.35);
+  --bg-quote: rgba(166, 124, 30, 0.06);
+  --paper-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
 }
 
 /* Academic Markdown Body (#write / .latex-article) */
 .latex-article, #write {
   font-family: var(--base-latin-font), var(--base-chinese-font);
-  font-size: 15px;
+  font-size: 15.5px;
   line-height: var(--base-line-height);
-  color: #E2E2E8;
+  color: var(--text-primary);
   text-align: justify;
+  text-justify: inter-ideograph;
+  max-width: 760px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 32px 36px 80px 36px;
+  background: var(--bg-paper);
+  box-shadow: var(--paper-shadow);
+  border-radius: 12px;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 .latex-article h1, #write h1 {
   font-family: var(--heading-latin-font), var(--heading-chinese-font);
-  font-size: 1.9em;
+  font-size: 1.85em;
   font-weight: 700;
   text-align: center;
-  margin: 1.4em 0 0.8em 0;
-  color: #FBFBFD;
-  letter-spacing: -0.01em;
+  color: var(--color-gold);
+  margin: 1.6em 0 1.2em 0;
+  letter-spacing: 0.04em;
+  border-bottom: 1.2pt solid var(--border-gold);
+  padding-bottom: 0.4em;
 }
 
 .latex-article h2, #write h2 {
   font-family: var(--heading-latin-font), var(--heading-chinese-font);
-  font-size: 1.45em;
+  font-size: 1.35em;
   font-weight: 700;
-  margin: 1.6em 0 0.6em 0;
-  color: #D4AF37;
-  border-bottom: 0.8px solid rgba(212, 175, 55, 0.3);
-  padding-bottom: 4px;
+  color: var(--color-gold);
+  margin: 1.8em 0 0.8em 0;
+  border-bottom: 0.8pt solid var(--border-gold);
+  padding-bottom: 0.3em;
+  scroll-margin-top: 24px;
 }
 
 .latex-article h3, #write h3 {
   font-family: var(--heading-latin-font), var(--heading-chinese-font);
-  font-size: 1.22em;
-  font-weight: 600;
-  margin: 1.3em 0 0.5em 0;
-  color: #F3E5AB;
+  font-size: 1.15em;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 1.4em 0 0.6em 0;
+  scroll-margin-top: 24px;
 }
 
 .latex-article h4, #write h4 {
-  font-size: 1.12em;
-  font-weight: 600;
-  margin: 1.1em 0 0.4em 0;
-  color: #E2E2E8;
+  font-size: 1.0em;
+  font-weight: 700;
+  color: var(--text-secondary);
+  margin: 1.2em 0 0.5em 0;
 }
 
-.latex-article p, #write p {
-  margin: 0.9em 0;
-  line-height: var(--base-line-height);
-  text-indent: 0;
+.latex-article p, #write p, .latex-paragraph {
+  margin: 1.1em 0;
+  text-indent: 2em;
 }
 
-/* 引用块 (Blockquote) - 仿宋与 Latin Modern 结合 */
-.latex-article blockquote, #write blockquote {
+.latex-bold {
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+.latex-italic {
+  font-style: italic;
+}
+
+/* 引用块 (Blockquote) -> 华文仿宋 */
+.latex-article blockquote, #write blockquote, .latex-blockquote {
   font-family: var(--quote-latin-font), var(--quote-chinese-font);
-  font-size: 1.05em;
-  font-style: normal;
-  border-left: 3.5px solid #D4AF37;
-  background: rgba(212, 175, 55, 0.04);
+  font-size: 0.96em;
+  color: var(--text-secondary);
+  background: var(--bg-quote);
+  border-left: 3.5px solid var(--color-gold);
+  margin: 1.4em 0;
   padding: 12px 18px;
-  margin: 1.2em 0;
-  border-radius: 4px;
-  color: #E6D5AC;
+  border-radius: 0 8px 8px 0;
 }
 
 .latex-article blockquote p, #write blockquote p {
-  margin: 0.4em 0;
+  text-indent: 0;
+  margin: 0.3em 0;
 }
 
 /* 学术三线表 (Three-Line Table) */
-.latex-article table, #write table {
+.latex-table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1.8em auto;
+}
+
+.latex-article table, #write table, .latex-three-line-table {
   border-collapse: collapse;
-  margin: 1.6em auto;
-  border-top: 1.5pt solid #D4AF37;
-  border-bottom: 1.5pt solid #D4AF37;
+  margin: 0 auto;
+  border-top: 1.5pt solid var(--color-gold);
+  border-bottom: 1.5pt solid var(--color-gold);
   font-size: 14px;
   width: 100%;
+  border-left: none;
+  border-right: none;
 }
 
-.latex-article thead th, #write thead th {
-  border-bottom: 0.8pt solid rgba(212, 175, 55, 0.6);
+.latex-article thead th, #write thead th, .latex-three-line-table thead th {
+  border-bottom: 0.8pt solid var(--border-gold);
   font-weight: 700;
-  padding: 8px 12px;
+  padding: 10px 14px;
   text-align: center;
-  color: #F3E5AB;
+  color: var(--color-gold);
+  border-left: none;
+  border-right: none;
 }
 
-.latex-article tbody td, #write tbody td {
-  padding: 7px 12px;
+.latex-article tbody td, #write tbody td, .latex-three-line-table tbody td {
+  padding: 8px 14px;
   border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
   text-align: center;
+  border-left: none;
+  border-right: none;
 }
 
-.latex-article tbody tr:last-child td, #write tbody tr:last-child td {
+.latex-article tbody tr:last-child td, #write tbody tr:last-child td, .latex-three-line-table tbody tr:last-child td {
   border-bottom: none;
 }
 
-/* 行内代码与代码块 */
-.latex-article code, #write code {
+/* 一手原典双语对照框 (Bilingual Primary Source Block) */
+.bilingual-primary-box {
+  background: var(--bg-quote);
+  border: 1px solid var(--border-gold);
+  border-left: 3.5px solid var(--color-gold);
+  border-radius: 0 10px 10px 0;
+  margin: 1.8em 0;
+  padding: 16px 20px;
+}
+
+.bilingual-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 720px) {
+  .bilingual-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+.bilingual-col-greek {
+  font-family: var(--base-latin-font);
+  font-size: 15px;
+  line-height: 1.6;
+  color: #F3E5AB;
+}
+
+.bilingual-col-trans {
+  font-family: var(--quote-chinese-font);
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.bilingual-badge {
+  display: inline-block;
+  font-size: 10px;
   font-family: var(--code-font);
-  font-size: 0.92em;
-  background: rgba(255, 255, 255, 0.07);
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--color-gold);
+  margin-right: 6px;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.bilingual-badge.trans {
+  background: rgba(16, 185, 129, 0.15);
   color: #10B981;
-  padding: 2px 5px;
-  border-radius: 3px;
-  border: 0.5px solid rgba(255, 255, 255, 0.1);
 }
 
-.latex-article pre, #write pre {
+/* 形式化三段论卡片 (Syllogism Step Row) */
+.syllogism-step-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 8px 12px;
+  margin: 6px 0;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 0.8px solid rgba(255, 255, 255, 0.05);
+}
+
+.syllogism-step-row.is-conclusion {
+  background: rgba(212, 175, 55, 0.08);
+  border: 1px solid var(--color-gold);
+}
+
+.syllogism-tag {
   font-family: var(--code-font);
-  background: #101014;
-  border: 0.8px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
-  padding: 14px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.syllogism-badge-premise {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60A5FA;
+}
+
+.syllogism-badge-reductio {
+  background: rgba(239, 68, 68, 0.15);
+  color: #F87171;
+}
+
+.syllogism-badge-conclusion {
+  background: var(--color-gold);
+  color: #0B0B0C;
+}
+
+.syllogism-text {
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+/* LaTeX 公式容器 */
+.latex-display-math {
+  margin: 1.6em auto;
+  text-align: center;
   overflow-x: auto;
-  margin: 1.2em 0;
+  padding: 8px 0;
 }
 
-/* 列表系统 */
-.latex-article ul, #write ul {
-  list-style: disc;
-  padding-left: 2em;
-  margin: 0.8em 0;
+.latex-inline-math {
+  padding: 0 2px;
 }
 
-.latex-article ol, #write ol {
-  list-style: decimal;
-  padding-left: 2em;
-  margin: 0.8em 0;
+/* 脚注与参考文献双向回跳 */
+.academic-footnote-ref {
+  font-size: 0.82em;
+  vertical-align: super;
+  line-height: 0;
 }
 
-.latex-article li, #write li {
-  margin: 0.35em 0;
+.footnote-ref-link {
+  color: var(--color-gold);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0 2px;
 }
 
-/* 脚注与参考文献 */
-.latex-article sup.footnote, #write sup.footnote {
-  font-size: 0.85em;
-  color: #D4AF37;
-  cursor: pointer;
+.footnote-ref-link:hover {
+  text-decoration: underline;
+}
+
+.academic-footnotes-section {
+  margin-top: 48px;
+  border-top: 1px solid var(--border-gold);
+  padding-top: 20px;
+}
+
+.footnotes-heading {
+  font-family: var(--heading-latin-font), var(--heading-chinese-font);
+  font-size: 14px;
+  color: var(--color-gold);
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.footnotes-list {
+  padding-left: 20px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.footnote-item {
+  margin-bottom: 8px;
+  scroll-margin-top: 40px;
+  transition: background 0.5s ease;
+}
+
+.footnote-item:target {
+  background: rgba(212, 175, 55, 0.18);
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+
+.footnote-backref {
+  color: var(--color-gold);
+  text-decoration: none;
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+/* 阅读器顶部进度指示条 */
+.reading-progress-bar-container {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2.5px;
+  background: rgba(255, 255, 255, 0.05);
+  z-index: 100;
+}
+
+.reading-progress-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #D4AF37, #10B981);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  transition: transform 0.05s ease-out;
+}
+
+/* 浮动大纲目录树 (TOC) */
+.academic-toc-panel {
+  position: sticky;
+  top: 40px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  padding: 16px;
+  background: var(--bg-paper);
+  border: 1px solid var(--border-gold);
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.toc-heading-item {
+  display: block;
+  padding: 6px 8px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.toc-heading-item.level-1 { font-weight: 700; color: var(--color-gold); }
+.toc-heading-item.level-2 { padding-left: 14px; }
+.toc-heading-item.level-3 { padding-left: 24px; font-size: 12px; }
+
+.toc-heading-item:hover, .toc-heading-item.active {
+  color: #FFFFFF;
+  background: rgba(212, 175, 55, 0.15);
 }

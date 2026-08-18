@@ -1,17 +1,21 @@
 // =============================================================================
-// StudyLine Universe Workbench Orchestrator (First-Principles Edition)
+// StudyLine Universe Workbench Orchestrator (Typora Academic Edition)
 // =============================================================================
 
 import { UniverseCanvas, UniverseData, NodeVisual } from "../src/canvas/UniverseCanvas";
 import { CapsuleDrawer } from "../src/reader/CapsuleDrawer";
 import { LexiconHUD } from "../src/reader/LexiconHUD";
+import { ZenReaderView } from "../src/reader/ZenReaderView";
+import { LectureLoader } from "../src/reader/LectureLoader";
 import { ExitExamModal } from "../src/exam/ExitExamModal";
 import { StudyLineBridgeClient } from "../src/bridge/StudyLineBridgeClient";
 import stage0Dataset from "./data/stage0_dataset.json";
 
-// Initialize Core Components
+// Initialize Core Components & Services
 const canvasEl = document.getElementById("universe-canvas") as HTMLCanvasElement;
 const drawer = new CapsuleDrawer();
+const zenReader = new ZenReaderView();
+const lectureLoader = LectureLoader.getInstance();
 const lexiconHud = new LexiconHUD();
 const exitExam = new ExitExamModal();
 
@@ -45,33 +49,43 @@ const universeData: UniverseData = {
 const universeCanvas = new UniverseCanvas(canvasEl, universeData);
 universeCanvas.start();
 
-// Handle Node Selection -> Open WSJ/LaTeX Drawer
-universeCanvas.setOnNodeSelect((node: NodeVisual) => {
+// Wire Zen Fullscreen Mode Request from Capsule Drawer
+drawer.setOnZenModeRequest((nodeId, markdown) => {
+    zenReader.open(nodeId, markdown);
+});
+
+// Handle Node Selection -> Load Real Canonical Lecture from LectureLoader
+universeCanvas.setOnNodeSelect(async (node: NodeVisual) => {
+    const rawLectureMarkdown = await lectureLoader.getLecture(node.id);
     drawer.open({
         id: node.id,
         title: `${node.id} · ${node.title}`,
         genre: node.genre,
         mastery: node.mastery,
-        lines: node.lines || "Loeb Classical Library",
-        contentMarkdown: `
-## 核心哲学问题与一手原典考据
+        lines: node.lines || "Loeb Classical Library / Diels-Kranz",
+        contentMarkdown: rawLectureMarkdown
+    });
+});
 
-本节点在知识拓扑中处于核心枢纽地位。通过对希腊一手原典的细读，揭示概念体系的发生学流变。
-
-### 核心论证三段论 (Syllogism)
-
-1. **大前提 (P1)**: 宇宙万物的终极本原不可归约为任何单一经验质料（火、水、气）；
-2. **小前提 (P2)**: 凡有限有定之物皆处于相反者的相互逾界（ὕβρις）与补偿之中；
-3. **结论 (C)**: 必须设立永恒不竭的 **ἄπειρον**（无定）与客观正义尺度 **δίκη**。
-
-### 学术三线表：核心范畴演进对照
-
-| 概念范畴 (Greek) | 字面含义 | DK/一手文献出处 | 哲学史本体论意义 |
-| :---: | :---: | :---: | :---: |
-| **ἄπειρον** | 无界限 / 无定 | DK 12 B1 | 先于一切性质对立的永恒母体 |
-| **δίκη** | 宇宙正义尺度 | 赫西俄德《劳作》275 | 惩治逾界并强制守恒的铁律 |
-| **ἔστιν** | 存在者存在 | DK 28 B2, B8 | 西方形而上学本体论第一奠基公理 |
-        `
+// Left Discipline Sidebar Item Clicks
+document.querySelectorAll(".discipline-tree-node").forEach(treeNode => {
+    treeNode.addEventListener("click", async () => {
+        document.querySelectorAll(".discipline-tree-node").forEach(n => n.classList.remove("active"));
+        treeNode.classList.add("active");
+        const nodeId = (treeNode as HTMLElement).dataset.id || "A04";
+        universeCanvas.focusNode(nodeId);
+        const node = universeData.nodes.find(n => n.id === nodeId);
+        if (node) {
+            const rawLectureMarkdown = await lectureLoader.getLecture(node.id);
+            drawer.open({
+                id: node.id,
+                title: `${node.id} · ${node.title}`,
+                genre: node.genre,
+                mastery: node.mastery,
+                lines: node.lines,
+                contentMarkdown: rawLectureMarkdown
+            });
+        }
     });
 });
 
@@ -136,6 +150,7 @@ window.addEventListener("keydown", (e) => {
         closeSearch();
         drawer.close();
         exitExam.close();
+        zenReader.close();
     }
 });
 
@@ -157,19 +172,20 @@ function renderSearchResults(query: string) {
     `).join("");
 
     resultsList.querySelectorAll(".command-result-row").forEach(row => {
-        row.addEventListener("click", () => {
+        row.addEventListener("click", async () => {
             const id = (row as HTMLElement).dataset.id;
             if (id) {
                 universeCanvas.focusNode(id);
                 const node = universeData.nodes.find(n => n.id === id);
                 if (node) {
+                    const rawLectureMarkdown = await lectureLoader.getLecture(node.id);
                     drawer.open({
                         id: node.id,
                         title: `${node.id} · ${node.title}`,
                         genre: node.genre,
                         mastery: node.mastery,
                         lines: node.lines,
-                        contentMarkdown: `## 节点 ${node.id}: ${node.title}\n\n已成功从 Command+K 全局快速导航进入。`
+                        contentMarkdown: rawLectureMarkdown
                     });
                 }
             }
@@ -198,3 +214,4 @@ const bridgeClient = new StudyLineBridgeClient({
     }
 });
 bridgeClient.connect();
+lectureLoader.attachBridge(bridgeClient);

@@ -1,726 +1,305 @@
 /* ==============================================================================
-   ✦ StudyLine Zen WSJ Design System (TTZip DNA)
-   Zen Philosophy × WSJ Editorial Typography × Apple Silicon Glassmorphism
+   ✦ StudyLine Universe & Zen Academic Reader Workspace Stylesheet
+   Design Philosophy: Zen Minimalism × WSJ Editorial Serif × Kintsugi Gold
    ============================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap');
-@import "../../src/styles/latex-article.css";
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;0,6..72,700;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/@callmebill/lmodern-font@1.0.1/style.css');
 
 :root {
-    /* TTZip Core Color Tokens */
-    --color-ink-black: #0B0B0C;
-    --color-deep-graphite: #141416;
-    --color-charcoal-elevated: #1C1C1F;
-    --color-surface-card: rgba(255, 255, 255, 0.035);
-    --color-surface-hover: rgba(255, 255, 255, 0.07);
-    --color-surface-active: rgba(212, 175, 55, 0.12);
-
-    /* Kintsugi Gold System */
-    --color-kintsugi-gold: #D4AF37;
-    --color-kintsugi-gold-bright: #F3E5AB;
-    --color-kintsugi-gold-dim: #997D25;
-    --color-kintsugi-gold-glow: rgba(212, 175, 55, 0.4);
-    --color-kintsugi-gold-subtle: rgba(212, 175, 55, 0.15);
-
-    /* Functional Accents */
-    --color-bamboo-green: #10B981;
-    --color-bamboo-green-glow: rgba(16, 185, 129, 0.35);
-    --color-cinnabar-red: #E05A47;
-    --color-cinnabar-red-glow: rgba(224, 90, 71, 0.35);
-
-    /* Typography Colors (Washi Paper & Alabaster) */
-    --text-primary: #FBFBFD;
-    --text-secondary: #A1A1A8;
-    --text-tertiary: #6E6E77;
-    --text-gold: #D4AF37;
-
-    /* Hairline Borders & Shadows */
-    --border-hairline: rgba(255, 255, 255, 0.08);
-    --border-gold-rule: 1.5px solid var(--color-kintsugi-gold);
-    --shadow-glass: 0 12px 32px 0 rgba(0, 0, 0, 0.45);
-    --shadow-gold-glow: 0 0 20px rgba(212, 175, 55, 0.25);
-
-    /* Typography Stacks */
-    --font-serif-editorial: "Newsreader", "Playfair Display", "Georgia", "GFS Didot", serif;
-    --font-sans-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
-    --font-greek-classical: "SBL Greek", "GFS Didot", "Newsreader", "Times New Roman", serif;
-    --font-mono-data: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
-
-    /* Dimensions */
-    --header-height: 52px;
-    --sidebar-width: 280px;
-    --drawer-width: 560px;
+  --color-ink-black: #0B0B0C;
+  --color-deep-graphite: #141416;
+  --color-surface-card: #1A1A1E;
+  --color-surface-hover: #222228;
+  --color-surface-active: #2A2A32;
+  --color-kintsugi-gold: #D4AF37;
+  --color-kintsugi-gold-dim: rgba(212, 175, 55, 0.4);
+  --color-bamboo-green: #10B981;
+  --color-cinnabar-red: #E05A47;
+  --text-primary: #FBFBFD;
+  --text-secondary: #A1A1A8;
+  --text-tertiary: #6E6E7A;
+  --border-hairline: rgba(255, 255, 255, 0.08);
+  --border-gold-subtle: rgba(212, 175, 55, 0.25);
+  --font-serif-editorial: "Newsreader", "Latin Modern Roman", Georgia, serif;
+  --font-mono-data: "JetBrains Mono", "SF Mono", monospace;
+  --header-height: 52px;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body, html {
+  width: 100%; height: 100%;
+  background-color: var(--color-ink-black);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
-body {
-    background-color: var(--color-ink-black);
-    color: var(--text-primary);
-    font-family: var(--font-sans-ui);
-    overflow: hidden;
-    height: 100vh;
-    width: 100vw;
-    user-select: none;
+/* App Root Grid */
+.app-container {
+  display: grid;
+  grid-template-rows: var(--header-height) 1fr;
+  width: 100vw; height: 100vh;
 }
 
-/* ==============================================================================
-   1. Workbench App Shell (Three-Column Layout)
-   ============================================================================== */
-
-#app-container {
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    width: 100vw;
-    background: radial-gradient(circle at 50% 30%, #17171C 0%, #0B0B0C 100%);
+/* Top Navigation Bar */
+.top-nav-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 24px;
+  background: rgba(18, 18, 22, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 0.8px solid var(--border-hairline);
+  position: relative; z-index: 50;
 }
-
-/* 52pt Top Header with Y=90pt Golden Rule */
-.workbench-header {
-    height: var(--header-height);
-    background: rgba(11, 11, 12, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    border-bottom: 1px solid var(--border-hairline);
-    position: relative;
-    z-index: 100;
+.brand-section { display: flex; align-items: center; gap: 12px; }
+.brand-kintsugi-badge {
+  width: 24px; height: 24px; border-radius: 6px;
+  background: linear-gradient(135deg, #D4AF37 0%, #8C6D1F 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: #000; font-weight: 900; font-size: 13px;
 }
-
-.workbench-header::after {
-    content: '';
-    position: absolute;
-    bottom: -1.5px;
-    left: 0;
-    right: 0;
-    height: 1.5px;
-    background: linear-gradient(90deg, transparent 0%, var(--color-kintsugi-gold) 20%, var(--color-kintsugi-gold) 80%, transparent 100%);
-    opacity: 0.85;
-}
-
-.brand-section {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.brand-badge {
-    font-family: var(--font-serif-editorial);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 2.5px;
-    color: var(--color-kintsugi-gold);
-    text-transform: uppercase;
-}
-
 .brand-title {
-    font-family: var(--font-serif-editorial);
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--text-primary);
-    letter-spacing: -0.01em;
+  font-family: var(--font-serif-editorial);
+  font-size: 17px; font-weight: 700;
+  letter-spacing: 0.05em; color: #FFF;
 }
+.brand-subtitle { font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.08em; text-transform: uppercase; }
 
-/* Search Bar (Command+K) */
+.center-command-box { display: flex; align-items: center; gap: 8px; }
 .search-trigger-btn {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: var(--color-surface-card);
-    border: 0.8px solid var(--border-hairline);
-    padding: 6px 14px;
-    border-radius: 20px;
-    color: var(--text-secondary);
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 14px; border-radius: 8px;
+  background: var(--color-surface-card);
+  border: 0.8px solid var(--border-hairline);
+  color: var(--text-secondary); font-size: 12px;
+  cursor: pointer; transition: all 0.2s ease;
+}
+.search-trigger-btn:hover { border-color: var(--border-gold-subtle); color: #FFF; }
+.shortcut-badge {
+  font-family: var(--font-mono-data); font-size: 10px;
+  padding: 1px 5px; border-radius: 4px;
+  background: rgba(255,255,255,0.06); color: var(--text-tertiary);
 }
 
-.search-trigger-btn:hover {
-    background: var(--color-surface-hover);
-    border-color: var(--color-kintsugi-gold-subtle);
-    color: var(--text-primary);
+.right-status-section { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--text-secondary); }
+.status-indicator-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--color-cinnabar-red); }
+.status-indicator-dot.connected { background: var(--color-bamboo-green); box-shadow: 0 0 8px var(--color-bamboo-green); }
+
+/* Main Three-Column Workspace Layout */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  width: 100%; height: calc(100vh - var(--header-height));
+  position: relative;
 }
 
-.search-shortcut {
-    font-family: var(--font-mono-data);
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 6px;
-    background: rgba(255, 255, 255, 0.08);
-    border: 0.5px solid rgba(255, 255, 255, 0.12);
+/* Left Sidebar: Knowledge Discipline Tree */
+.discipline-sidebar {
+  background: var(--color-deep-graphite);
+  border-right: 0.8px solid var(--border-hairline);
+  display: flex; flex-direction: column;
+  overflow-y: auto;
+}
+.sidebar-header {
+  padding: 16px 20px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-tertiary);
+  border-bottom: 0.8px solid var(--border-hairline);
+}
+.discipline-tree-node {
+  padding: 10px 20px;
+  font-size: 13px; color: var(--text-secondary);
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; transition: background 0.15s ease;
+  border-left: 2px solid transparent;
+}
+.discipline-tree-node:hover { background: var(--color-surface-hover); color: #FFF; }
+.discipline-tree-node.active {
+  background: var(--color-surface-active); color: var(--color-kintsugi-gold);
+  border-left-color: var(--color-kintsugi-gold); font-weight: 600;
+}
+.tree-node-badge {
+  font-family: var(--font-mono-data); font-size: 10px;
+  color: var(--text-tertiary); padding: 1px 5px;
+  border-radius: 3px; background: rgba(255,255,255,0.04);
 }
 
-.header-right-actions {
-    display: flex;
-    align-items: center;
-    gap: 14px;
+/* Center Stage: Universe Canvas */
+.canvas-container { position: relative; width: 100%; height: 100%; overflow: hidden; }
+#universe-canvas { width: 100%; height: 100%; display: block; }
+
+/* Canvas Floating Controls */
+.canvas-floating-controls {
+  position: absolute; bottom: 24px; left: 24px;
+  display: flex; gap: 8px; z-index: 20;
+}
+.btn-floating-tool {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: rgba(26, 26, 30, 0.85);
+  backdrop-filter: blur(10px);
+  border: 0.8px solid var(--border-hairline);
+  color: var(--text-primary); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; transition: all 0.2s ease;
+}
+.btn-floating-tool:hover {
+  border-color: var(--color-kintsugi-gold);
+  background: var(--color-surface-hover);
 }
 
-.status-capsule {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-size: 11px;
-    font-weight: 600;
-    font-family: var(--font-mono-data);
-    background: var(--color-surface-card);
-    border: 0.8px solid var(--border-hairline);
+/* Canvas Floating Path Solver Toolbar */
+.floating-path-solver {
+  position: absolute; top: 20px; left: 24px;
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 10px;
+  background: rgba(26, 26, 30, 0.85);
+  backdrop-filter: blur(16px);
+  border: 0.8px solid var(--border-hairline);
+  z-index: 20;
 }
-
-.status-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: #eab308;
-    box-shadow: 0 0 8px rgba(234, 179, 8, 0.6);
+.select-dark {
+  background: var(--color-surface-card);
+  border: 0.8px solid var(--border-hairline);
+  color: var(--text-primary); font-size: 12px;
+  padding: 5px 10px; border-radius: 6px; outline: none;
 }
-
-.status-dot.connected {
-    background: var(--color-bamboo-green);
-    box-shadow: 0 0 10px var(--color-bamboo-green-glow);
-}
-
-/* Main Body Columns */
-.workbench-body {
-    display: flex;
-    flex: 1;
-    height: calc(100vh - var(--header-height));
-    position: relative;
-    overflow: hidden;
-}
-
-/* ==============================================================================
-   2. Left Sidebar (Academic Tree & Filters - 280px)
-   ============================================================================== */
-
-.workbench-sidebar {
-    width: var(--sidebar-width);
-    background: rgba(14, 14, 16, 0.92);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border-right: 1px solid var(--border-hairline);
-    display: flex;
-    flex-direction: column;
-    z-index: 50;
-    overflow-y: auto;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.sidebar-section {
-    padding: 18px 16px;
-    border-bottom: 1px solid var(--border-hairline);
-}
-
-.sidebar-section-title {
-    font-family: var(--font-serif-editorial);
-    font-size: 9px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    color: var(--color-kintsugi-gold);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-}
-
-.tree-node-group {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.tree-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 13px;
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.15s ease;
-}
-
-.tree-item:hover {
-    background: var(--color-surface-hover);
-    color: var(--text-primary);
-}
-
-.tree-item.active {
-    background: var(--color-surface-active);
-    color: var(--color-kintsugi-gold-bright);
-    font-weight: 600;
-    border-left: 2.5px solid var(--color-kintsugi-gold);
-}
-
-.tree-badge {
-    font-family: var(--font-mono-data);
-    font-size: 10px;
-    padding: 1px 6px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text-tertiary);
-}
-
-.filter-chip-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-}
-
-.filter-chip {
-    padding: 5px 10px;
-    border-radius: 14px;
-    font-size: 11px;
-    font-weight: 500;
-    background: var(--color-surface-card);
-    border: 0.8px solid var(--border-hairline);
-    color: var(--text-secondary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.filter-chip:hover {
-    background: var(--color-surface-hover);
-    color: var(--text-primary);
-}
-
-.filter-chip.active {
-    background: var(--color-kintsugi-gold-subtle);
-    border-color: var(--color-kintsugi-gold);
-    color: var(--color-kintsugi-gold-bright);
-    font-weight: 600;
-}
-
-/* ==============================================================================
-   3. Center Cosmic Canvas Viewport
-   ============================================================================== */
-
-.canvas-viewport-container {
-    flex: 1;
-    position: relative;
-    height: 100%;
-    overflow: hidden;
-}
-
-#universe-canvas {
-    width: 100%;
-    height: 100%;
-    display: block;
-    cursor: grab;
-}
-
-#universe-canvas:active {
-    cursor: grabbing;
-}
-
-/* Floating Control Islands (Apple Silicon Glassmorphism) */
-.floating-control-island {
-    position: absolute;
-    bottom: 24px;
-    left: 24px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: rgba(20, 20, 24, 0.75);
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px);
-    border: 0.8px solid var(--border-hairline);
-    border-radius: 16px;
-    box-shadow: var(--shadow-glass);
-    z-index: 40;
-}
-
-.control-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background: var(--color-surface-card);
-    border: 0.8px solid var(--border-hairline);
-    color: var(--text-secondary);
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.control-btn:hover {
-    background: var(--color-surface-hover);
-    color: var(--text-primary);
-    border-color: var(--color-kintsugi-gold-subtle);
-}
-
-.control-divider {
-    width: 1px;
-    height: 18px;
-    background: var(--border-hairline);
-    margin: 0 4px;
-}
-
-.path-planner-floating {
-    position: absolute;
-    top: 20px;
-    right: 24px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    background: rgba(20, 20, 24, 0.85);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 0.8px solid var(--border-hairline);
-    border-radius: 16px;
-    box-shadow: var(--shadow-glass);
-    z-index: 40;
-}
-
-.path-select-custom {
-    background: rgba(0, 0, 0, 0.4);
-    border: 0.8px solid var(--border-hairline);
-    color: var(--text-primary);
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-family: var(--font-sans-ui);
-    outline: none;
-}
-
-.path-select-custom option {
-    background: var(--color-deep-graphite);
-    color: var(--text-primary);
-}
-
 .btn-kintsugi-gold {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 16px;
-    border-radius: 10px;
-    font-size: 12px;
-    font-weight: 600;
-    background: linear-gradient(135deg, #D4AF37 0%, #AA8C2C 100%);
-    color: #0B0B0C;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 2px 10px var(--color-kintsugi-gold-glow);
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  background: linear-gradient(135deg, #D4AF37 0%, #A67C1E 100%);
+  color: #000; font-weight: 700; font-size: 12px;
+  padding: 6px 14px; border-radius: 6px; border: none;
+  cursor: pointer; transition: opacity 0.2s;
 }
+.btn-kintsugi-gold:hover { opacity: 0.9; }
 
-.btn-kintsugi-gold:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 16px var(--color-kintsugi-gold-glow);
-}
-
-/* ==============================================================================
-   4. Right Academic Lecture Drawer (WSJ Editorial - 560px)
-   ============================================================================== */
-
+/* Right Drawer: WSJ Editorial Lecture Drawer */
 .lecture-drawer {
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: var(--drawer-width);
-    background: rgba(15, 15, 18, 0.95);
-    backdrop-filter: blur(28px);
-    -webkit-backdrop-filter: blur(28px);
-    border-left: 1px solid var(--border-hairline);
-    box-shadow: -16px 0 40px rgba(0, 0, 0, 0.6);
-    display: flex;
-    flex-direction: column;
-    transform: translateX(100%);
-    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 80;
+  position: fixed; top: var(--header-height); right: -600px;
+  width: 580px; height: calc(100vh - var(--header-height));
+  background: rgba(18, 18, 22, 0.96);
+  backdrop-filter: blur(25px);
+  border-left: 0.8px solid var(--border-hairline);
+  box-shadow: -15px 0 40px rgba(0,0,0,0.6);
+  transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 40; display: flex; flex-direction: column;
+}
+.lecture-drawer.open { right: 0; }
+.drawer-header-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 0.8px solid var(--border-hairline);
+}
+.drawer-body-content {
+  flex: 1; overflow-y: auto; padding: 24px 32px 80px 32px;
 }
 
-.lecture-drawer.open {
-    transform: translateX(0);
-}
-
-.drawer-header {
-    height: 64px;
-    padding: 0 24px;
-    border-bottom: 1px solid var(--border-hairline);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-}
-
-.drawer-header::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 24px;
-    right: 24px;
-    height: 1px;
-    background: linear-gradient(90deg, var(--color-kintsugi-gold) 0%, transparent 100%);
-}
-
-.drawer-meta-badges {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.drawer-genre-pill {
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    background: var(--color-kintsugi-gold-subtle);
-    color: var(--color-kintsugi-gold);
-    border: 0.5px solid rgba(212, 175, 55, 0.3);
-}
-
-.drawer-lines-tag {
-    font-family: var(--font-mono-data);
-    font-size: 11px;
-    color: var(--text-secondary);
-}
-
-.drawer-close-btn {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--color-surface-card);
-    border: 0.8px solid var(--border-hairline);
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.drawer-close-btn:hover {
-    background: var(--color-surface-hover);
-    color: var(--text-primary);
-}
-
-.drawer-content-scroll {
-    flex: 1;
-    overflow-y: auto;
-    padding: 32px 28px;
-}
-
-/* WSJ Editorial Article Styles */
-.wsj-article h1 {
-    font-family: var(--font-serif-editorial);
-    font-size: 26px;
-    font-weight: 700;
-    line-height: 1.3;
-    color: var(--text-primary);
-    margin-bottom: 20px;
-    letter-spacing: -0.01em;
-}
-
-.wsj-article h2 {
-    font-family: var(--font-serif-editorial);
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--color-kintsugi-gold);
-    margin: 28px 0 12px 0;
-    border-left: 3px solid var(--color-kintsugi-gold);
-    padding-left: 10px;
-}
-
-.wsj-article p {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #D1D1D6;
-    margin-bottom: 16px;
-    letter-spacing: 0.01em;
-}
-
-/* Bilingual Greek Box */
-.bilingual-primary-box {
-    margin: 20px 0;
-    padding: 18px 20px;
-    background: rgba(212, 175, 55, 0.04);
-    border: 0.8px solid rgba(212, 175, 55, 0.2);
-    border-left: 3px solid var(--color-kintsugi-gold);
-    border-radius: 10px;
-}
-
-.greek-quote {
-    font-family: var(--font-greek-classical);
-    font-size: 16px;
-    line-height: 1.7;
-    color: var(--color-kintsugi-gold-bright);
-    margin-bottom: 10px;
-}
-
-.chinese-translation {
-    font-size: 14px;
-    line-height: 1.6;
-    color: var(--text-secondary);
-}
-
-/* Lexicon Word Pill */
-.greek-term-token {
-    display: inline-block;
-    padding: 0 4px;
-    border-bottom: 1.5px dashed var(--color-kintsugi-gold);
-    color: var(--color-kintsugi-gold-bright);
-    font-family: var(--font-greek-classical);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.greek-term-token:hover {
-    background: var(--color-kintsugi-gold-subtle);
-    border-radius: 4px;
-}
-
-/* Floating Lexicon HUD Card */
+/* Polytonic Greek Lexicon HUD Card */
 .lexicon-hud-card {
-    position: absolute;
-    width: 320px;
-    padding: 16px;
-    background: rgba(24, 24, 28, 0.95);
-    backdrop-filter: blur(24px);
-    -webkit-backdrop-filter: blur(24px);
-    border: 1px solid var(--color-kintsugi-gold);
-    border-radius: 14px;
-    box-shadow: var(--shadow-glass), var(--shadow-gold-glow);
-    z-index: 1000;
-    pointer-events: none;
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
+  position: absolute; z-index: 100;
+  width: 320px; padding: 16px 20px;
+  background: rgba(22, 22, 26, 0.96);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--color-kintsugi-gold);
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(212, 175, 55, 0.2);
+  display: none;
 }
-
-.lexicon-hud-card.visible {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-}
-
+.lexicon-hud-card.visible { display: block; }
 .hud-greek-headword {
-    font-family: var(--font-greek-classical);
-    font-size: 22px;
-    font-weight: 700;
-    color: var(--color-kintsugi-gold);
+  font-family: var(--font-serif-editorial);
+  font-size: 20px; font-weight: 700;
+  color: var(--color-kintsugi-gold); margin-bottom: 4px;
 }
+.hud-ipa { font-family: var(--font-mono-data); font-size: 11px; color: var(--text-tertiary); margin-bottom: 10px; }
+.hud-context { font-size: 13px; color: var(--text-secondary); line-height: 1.5; }
 
-.hud-ipa {
-    font-family: var(--font-mono-data);
-    font-size: 12px;
-    color: var(--color-bamboo-green);
-    margin: 4px 0 10px 0;
+/* Command+K Search Modal */
+.command-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+  backdrop-filter: blur(12px); z-index: 200;
+  display: none; align-items: flex-start; justify-content: center;
+  padding-top: 15vh;
 }
-
-.hud-context {
-    font-size: 13px;
-    line-height: 1.6;
-    color: #E2E2E6;
+.command-modal-overlay.open { display: flex; }
+.command-modal {
+  width: 600px; background: var(--color-surface-card);
+  border: 1px solid var(--border-gold-subtle);
+  border-radius: 14px; overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.8);
 }
+.command-search-input {
+  width: 100%; padding: 18px 22px;
+  background: transparent; border: none; outline: none;
+  font-size: 16px; color: #FFF;
+  border-bottom: 0.8px solid var(--border-hairline);
+}
+.command-results-list { max-height: 360px; overflow-y: auto; }
+.command-result-row {
+  padding: 12px 20px; display: flex; align-items: center; justify-content: space-between;
+  cursor: pointer; transition: background 0.15s;
+}
+.command-result-row:hover { background: var(--color-surface-hover); }
+.result-main { display: flex; align-items: center; gap: 12px; }
+.result-id-tag { font-family: var(--font-mono-data); font-size: 11px; color: var(--color-kintsugi-gold); }
+.result-title-text { font-size: 14px; color: #E2E2E8; }
 
 /* ==============================================================================
-   5. Command+K Modal Overlay
+   ✦ Zen Fullscreen Academic Reader Overlay
    ============================================================================== */
+.zen-reader-overlay {
+  position: fixed; inset: 0; z-index: 999;
+  background: #0B0B0E;
+  display: none; flex-direction: column;
+  overflow: hidden;
+}
+.zen-reader-overlay.open { display: flex; }
 
-.command-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    display: flex;
-    align-items: flex-start;
+.zen-header-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 32px;
+  background: rgba(18, 18, 22, 0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 0.8px solid var(--border-hairline);
+}
+.zen-header-left { display: flex; align-items: center; gap: 12px; }
+.zen-badge {
+  font-size: 11px; font-weight: 700;
+  padding: 2px 8px; border-radius: 4px;
+  background: rgba(212, 175, 55, 0.15); color: var(--color-kintsugi-gold);
+}
+.zen-header-actions { display: flex; align-items: center; gap: 12px; }
+.btn-zen-tool {
+  padding: 6px 14px; border-radius: 6px;
+  background: var(--color-surface-card);
+  border: 0.8px solid var(--border-hairline);
+  color: var(--text-primary); font-size: 12px;
+  cursor: pointer; transition: all 0.2s;
+}
+.btn-zen-tool:hover { border-color: var(--color-kintsugi-gold); color: #FFF; }
+
+.zen-scroll-container {
+  flex: 1; overflow-y: auto;
+  padding: 40px 20px 120px 20px;
+}
+.zen-layout-grid {
+  display: grid;
+  grid-template-columns: 240px minmax(auto, 760px) 1fr;
+  max-width: 1280px; margin: 0 auto; gap: 40px;
+}
+.zen-toc-sidebar {
+  grid-column: 1;
+}
+.zen-paper {
+  grid-column: 2;
+  margin: 0 auto;
+}
+
+@media (max-width: 1100px) {
+  .zen-layout-grid {
+    grid-template-columns: minmax(auto, 760px);
     justify-content: center;
-    padding-top: 14vh;
-    z-index: 2000;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.2s ease;
-}
-
-.command-modal-overlay.open {
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.command-modal {
-    width: 600px;
-    background: rgba(22, 22, 26, 0.95);
-    border: 1px solid var(--color-kintsugi-gold);
-    border-radius: 16px;
-    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.25);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-}
-
-.command-search-input {
-    width: 100%;
-    padding: 18px 22px;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid var(--border-hairline);
-    color: var(--text-primary);
-    font-size: 16px;
-    font-family: var(--font-sans-ui);
-    outline: none;
-}
-
-.command-results-list {
-    max-height: 360px;
-    overflow-y: auto;
-    padding: 10px 0;
-}
-
-.command-result-row {
-    padding: 10px 22px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    transition: background 0.15s ease;
-}
-
-.command-result-row:hover, .command-result-row.selected {
-    background: var(--color-surface-active);
-}
-
-.result-main {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.result-id-tag {
-    font-family: var(--font-mono-data);
-    font-size: 11px;
-    font-weight: 700;
-    color: var(--color-kintsugi-gold);
-    padding: 2px 6px;
-    border-radius: 4px;
-    background: var(--color-kintsugi-gold-subtle);
-}
-
-.result-title-text {
-    font-size: 14px;
-    color: var(--text-primary);
+  }
+  .zen-toc-sidebar { display: none; }
+  .zen-paper { grid-column: 1; }
 }

@@ -1,6 +1,8 @@
 // =============================================================================
-// StudyLine Capsule Drawer Engine (WSJ Editorial Academic Edition)
+// StudyLine Capsule Drawer Engine (Typora Academic Edition)
 // =============================================================================
+
+import { AcademicMarkdownParser } from "./AcademicMarkdownParser";
 
 export interface CapsuleDetail {
     id: string;
@@ -14,6 +16,8 @@ export interface CapsuleDetail {
 export class CapsuleDrawer {
     private container: HTMLElement;
     private isOpen = false;
+    private onZenModeRequest?: (nodeId: string, markdown: string) => void;
+    private currentDetail?: CapsuleDetail;
 
     constructor() {
         let drawerEl = document.getElementById("lecture-drawer");
@@ -27,10 +31,22 @@ export class CapsuleDrawer {
 
         const closeBtn = document.getElementById("drawer-close-btn");
         closeBtn?.addEventListener("click", () => this.close());
+
+        const zenBtn = document.getElementById("drawer-zen-btn");
+        zenBtn?.addEventListener("click", () => {
+            if (this.currentDetail && this.onZenModeRequest) {
+                this.onZenModeRequest(this.currentDetail.id, this.currentDetail.contentMarkdown);
+            }
+        });
+    }
+
+    public setOnZenModeRequest(cb: (nodeId: string, markdown: string) => void): void {
+        this.onZenModeRequest = cb;
     }
 
     public open(detail: CapsuleDetail): void {
         this.isOpen = true;
+        this.currentDetail = detail;
         this.container.classList.add("open");
 
         const idTag = document.getElementById("drawer-node-id");
@@ -39,43 +55,28 @@ export class CapsuleDrawer {
         const linesTag = document.getElementById("drawer-node-lines");
         if (linesTag) linesTag.textContent = detail.lines || detail.genre;
 
-        const bodyEl = document.getElementById("drawer-article-body");
+        const bodyEl = document.getElementById("drawer-body");
         if (bodyEl) {
-            bodyEl.className = "wsj-article latex-article";
-            bodyEl.id = "write";
+            const parsed = AcademicMarkdownParser.parse(detail.contentMarkdown);
             bodyEl.innerHTML = `
-                <h1>${detail.title}</h1>
-                <div class="bilingual-primary-box">
-                    <div class="greek-quote">« ἤτοι μὲν πρώτιστα Χάος γένετ' · αὐτὰρ ἔπειτα Γαῖ' εὐρύστερνος ... »</div>
-                    <div class="chinese-translation">「最初生成的是卡俄斯（虚空深渊），紧接着生成的是宽胸的大地盖亚……」—— 《神谱》116-117行</div>
+                <div class="drawer-reading-header">
+                    <button id="drawer-zen-action-btn" class="btn-kintsugi-gold" style="font-size: 11px; padding: 4px 10px; margin-bottom: 16px;">
+                        ⛶ 全屏 Zen 纸张研读
+                    </button>
                 </div>
-                ${this.renderMarkdown(detail.contentMarkdown)}
+                ${parsed.html}
             `;
+
+            document.getElementById("drawer-zen-action-btn")?.addEventListener("click", () => {
+                if (this.onZenModeRequest) {
+                    this.onZenModeRequest(detail.id, detail.contentMarkdown);
+                }
+            });
         }
     }
 
     public close(): void {
         this.isOpen = false;
         this.container.classList.remove("open");
-    }
-
-    private renderMarkdown(md: string): string {
-        if (!md) return "<p>暂无精读讲义正文。</p>";
-        let html = md
-            .replace(/^### (.*$)/gim, "<h3>$1</h3>")
-            .replace(/^## (.*$)/gim, "<h2>$1</h2>")
-            .replace(/^# (.*$)/gim, "<h1>$1</h1>")
-            .replace(/\*\*(.*)\*\*/gim, "<strong style='color: var(--color-kintsugi-gold);'>$1</strong>")
-            .replace(/\*(.*)\*/gim, "<em>$1</em>")
-            .replace(/`([^`]+)`/gim, "<code style='font-family: var(--font-mono-data); color: var(--color-bamboo-green);'>$1</code>")
-            .replace(/\n\n/gim, "</p><p>")
-            .replace(/^\- (.*$)/gim, "<li>$1</li>");
-
-        const terms = ["ἄπειρον", "δίκη", "ὕβρις", "τιμή", "Χάος", "ἀρχή", "οὐσία", "ψυχή", "νοῦς", "λόγος", "ἀλήθεια", "ἔστιν"];
-        for (const t of terms) {
-            const reg = new RegExp(`(${t})`, "g");
-            html = html.replace(reg, `<span class="greek-term-token" data-greek="$1">$1</span>`);
-        }
-        return `<p>${html}</p>`;
     }
 }
