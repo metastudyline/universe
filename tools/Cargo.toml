@@ -4,8 +4,9 @@ members = [
     "studyline-compiler",
     "studyline-daemon",
     "studyline-cabi",
-    "studyline-cli",
     "studyline-wasm",
+    "studyline-tui",
+    "studyline-cli",
 ]
 resolver = "2"
 
@@ -35,3 +36,14 @@ tower-http = { version = "0.5.2", features = ["cors", "trace"] }
 notify-debouncer-mini = "0.4.1"
 notify = "6.1.1"
 futures-util = "0.3.30"
+ratatui = "0.28.1"
+crossterm = "0.28.1"
+memmap2 = "0.9.4"
+unicode-width = "0.1.13"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = "symbols"

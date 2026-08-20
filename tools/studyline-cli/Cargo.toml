@@ -15,6 +15,7 @@ studyline-graph-core = { path = "../studyline-graph-core" }
 studyline-compiler = { path = "../studyline-compiler" }
 studyline-daemon = { path = "../studyline-daemon" }
 studyline-cabi = { path = "../studyline-cabi" }
+studyline-tui = { path = "../studyline-tui" }
 clap.workspace = true
 tokio.workspace = true
 serde.workspace = true
@@ -24,3 +25,4 @@ walkdir.workspace = true
 rayon.workspace = true
 anyhow.workspace = true
 thiserror.workspace = true
+memmap2.workspace = true
