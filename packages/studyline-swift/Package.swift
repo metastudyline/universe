@@ -23,7 +23,13 @@ let package = Package(
         .target(
             name: "StudyLine",
             dependencies: ["CStudyLine"],
-            path: "Sources/StudyLine"
+            path: "Sources/StudyLine",
+            linkerSettings: [
+                .unsafeFlags([
+                    "-L../../tools/target/release",
+                    "-lstudyline_cabi"
+                ])
+            ]
         ),
         .testTarget(
             name: "StudyLineTests",

@@ -1,0 +1,27 @@
+{
+  "object" : {
+    "artifacts" : [
+
+    ],
+    "dependencies" : [
+      {
+        "basedOn" : null,
+        "packageRef" : {
+          "identity" : "studyline-swift",
+          "kind" : "fileSystem",
+          "location" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift",
+          "name" : "StudyLineSwift"
+        },
+        "state" : {
+          "name" : "fileSystem",
+          "path" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift"
+        },
+        "subpath" : "studyline-swift"
+      }
+    ],
+    "prebuilts" : [
+
+    ]
+  },
+  "version" : 7
+}

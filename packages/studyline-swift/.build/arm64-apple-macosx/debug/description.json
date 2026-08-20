@@ -1,0 +1,651 @@
+{
+  "builtTestProducts" : [
+    {
+      "binaryPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.xctest/Contents/MacOS/StudyLineSwiftPackageTests",
+      "packagePath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift",
+      "productName" : "StudyLineSwiftPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.StudyLine-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLine.build/sources",
+      "importPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/StudyLine/StudyLineEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/CStudyLine.build/shim.c.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLine.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "StudyLine",
+      "moduleOutputPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules/StudyLine.swiftmodule",
+      "objects" : [
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLine.build/StudyLineEngine.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx13.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-j18",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-Xcc",
+        "-fmodule-map-file=/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/CStudyLine/include/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/CStudyLine/include",
+        "-module-cache-path",
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLine.build/include/StudyLine-Swift.h",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "studyline_swift"
+      ],
+      "outputFileMapPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLine.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLine.build/StudyLineEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules/StudyLine.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/StudyLine/StudyLineEngine.swift"
+      ],
+      "tempsPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLine.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.StudyLineSwiftPackageTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.build/sources",
+      "importPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.derived/runner.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules/StudyLineTests.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "StudyLineSwiftPackageTests",
+      "moduleOutputPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules/StudyLineSwiftPackageTests.swiftmodule",
+      "objects" : [
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.build/runner.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx13.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j18",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-Xcc",
+        "-fmodule-map-file=/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/CStudyLine/include/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/CStudyLine/include",
+        "-module-cache-path",
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.build/include/StudyLineSwiftPackageTests-Swift.h",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "studyline_swift"
+      ],
+      "outputFileMapPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules/StudyLineSwiftPackageTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.derived/runner.swift"
+      ],
+      "tempsPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.build",
+      "wholeModuleOptimization" : false
+    },
+    "C.StudyLineTests-arm64-apple-macosx-debug.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineTests.build/sources",
+      "importPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Tests/StudyLineTests/StudyLineTests.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules/StudyLine.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineTests.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "StudyLineTests",
+      "moduleOutputPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules/StudyLineTests.swiftmodule",
+      "objects" : [
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineTests.build/StudyLineTests.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-incremental",
+        "-enable-batch-mode",
+        "-serialize-diagnostics",
+        "-index-store-path",
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/index/store",
+        "-Onone",
+        "-enable-testing",
+        "-Xfrontend",
+        "-enable-cross-import-overlays",
+        "-j18",
+        "-DSWIFT_PACKAGE",
+        "-DDEBUG",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-Xcc",
+        "-fmodule-map-file=/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/CStudyLine/include/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/CStudyLine/include",
+        "-module-cache-path",
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "studyline_swift"
+      ],
+      "outputFileMapPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineTests.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineTests.build/StudyLineTests.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules/StudyLineTests.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Tests/StudyLineTests/StudyLineTests.swift"
+      ],
+      "tempsPath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineTests.build",
+      "wholeModuleOptimization" : false
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "StudyLine" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "StudyLine",
+      "-package-name",
+      "studyline_swift",
+      "-c",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/StudyLine/StudyLineEngine.swift",
+      "-I",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx13.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-j18",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-Xcc",
+      "-fmodule-map-file=/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/CStudyLine/include/module.modulemap",
+      "-Xcc",
+      "-I",
+      "-Xcc",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/CStudyLine/include",
+      "-module-cache-path",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLine.build/include/StudyLine-Swift.h",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "studyline_swift",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "StudyLineSwiftPackageTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "StudyLineSwiftPackageTests",
+      "-package-name",
+      "studyline_swift",
+      "-c",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.derived/runner.swift",
+      "-I",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx13.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j18",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-Xcc",
+      "-fmodule-map-file=/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/CStudyLine/include/module.modulemap",
+      "-Xcc",
+      "-I",
+      "-Xcc",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/CStudyLine/include",
+      "-module-cache-path",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.build/include/StudyLineSwiftPackageTests-Swift.h",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "studyline_swift",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "StudyLineTests" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "StudyLineTests",
+      "-package-name",
+      "studyline_swift",
+      "-c",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Tests/StudyLineTests/StudyLineTests.swift",
+      "-I",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-incremental",
+      "-enable-batch-mode",
+      "-serialize-diagnostics",
+      "-index-store-path",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/index/store",
+      "-Onone",
+      "-enable-testing",
+      "-Xfrontend",
+      "-enable-cross-import-overlays",
+      "-j18",
+      "-DSWIFT_PACKAGE",
+      "-DDEBUG",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-Xcc",
+      "-fmodule-map-file=/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/CStudyLine/include/module.modulemap",
+      "-Xcc",
+      "-I",
+      "-Xcc",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/CStudyLine/include",
+      "-module-cache-path",
+      "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "studyline_swift",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "CStudyLine" : [
+
+    ],
+    "StudyLine" : [
+      "CStudyLine"
+    ],
+    "StudyLineSwiftPackageTests" : [
+      "StudyLineTests",
+      "StudyLine",
+      "CStudyLine"
+    ],
+    "StudyLineTests" : [
+      "StudyLine",
+      "CStudyLine"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+    "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.derived/runner.swift" : {
+      "inputs" : [
+
+      ],
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.derived/runner.swift"
+        }
+      ]
+    }
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLine.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Sources/StudyLine/StudyLineEngine.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLine.build/sources"
+    },
+    "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.derived/runner.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.build/sources"
+    },
+    "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/CStudyLine.build/shim.c.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLine.build/StudyLineEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.build/runner.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineTests.build/StudyLineTests.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineSwiftPackageTests.product/Objects.LinkFileList"
+    },
+    "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineTests.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/Tests/StudyLineTests/StudyLineTests.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/StudyLineTests.build/sources"
+    },
+    "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

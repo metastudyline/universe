@@ -1,0 +1,40 @@
+{
+  "": {
+    "swift-dependencies": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/primary.swiftdeps"
+  },
+  "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/Sources/StudyLineApp/StudyLineApp.swift": {
+    "dependencies": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/StudyLineApp.d",
+    "object": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/StudyLineApp.swift.o",
+    "swiftmodule": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/StudyLineApp~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/StudyLineApp.swiftdeps",
+    "diagnostics": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/StudyLineApp.dia"
+  },
+  "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineTheme.swift": {
+    "dependencies": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/StudyLineTheme.d",
+    "object": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/StudyLineTheme.swift.o",
+    "swiftmodule": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/StudyLineTheme~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/StudyLineTheme.swiftdeps",
+    "diagnostics": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/StudyLineTheme.dia"
+  },
+  "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/Sources/StudyLineApp/Views/ExitExamModalView.swift": {
+    "dependencies": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/ExitExamModalView.d",
+    "object": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/ExitExamModalView.swift.o",
+    "swiftmodule": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/ExitExamModalView~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/ExitExamModalView.swiftdeps",
+    "diagnostics": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/ExitExamModalView.dia"
+  },
+  "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/Sources/StudyLineApp/Views/LectureWorkbenchView.swift": {
+    "dependencies": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/LectureWorkbenchView.d",
+    "object": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/LectureWorkbenchView.swift.o",
+    "swiftmodule": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/LectureWorkbenchView~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/LectureWorkbenchView.swiftdeps",
+    "diagnostics": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/LectureWorkbenchView.dia"
+  },
+  "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/Sources/StudyLineApp/Views/MainSplitView.swift": {
+    "dependencies": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/MainSplitView.d",
+    "object": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/MainSplitView.swift.o",
+    "swiftmodule": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/MainSplitView~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/MainSplitView.swiftdeps",
+    "diagnostics": "/Users/kevintung/Documents/dev/life-coach/packages/studyline-macos/.build/arm64-apple-macosx/debug/StudyLineApp.build/MainSplitView.dia"
+  }
+}
