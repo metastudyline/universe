@@ -21,5 +21,15 @@ domain_repositories:
     maintainer_team:
       - "@kevin-tung"
     exported_node_prefix: "mathematics"
-    node_count: 52
+  - namespace: "rust"
+    repository_url: "https://github.com/metastudyline/universe.git"
+    target_branch: "main"
+    pinned_release_tag: "v1.0.0"
+    pinned_commit_sha: "11f5f67a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e"
+    domain_category: "systems-programming"
+    maintainer_team:
+      - "@kevin-tung"
+    exported_node_prefix: "rust"
+    node_count: 100
     status: "active"
+

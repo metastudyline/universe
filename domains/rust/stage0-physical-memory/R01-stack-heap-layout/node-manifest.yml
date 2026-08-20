@@ -1,0 +1,23 @@
+schema_version: "1.0.0"
+node_id: "R01"
+title: "物理内存的本质：栈帧、堆分配器与 CPU 缓存行"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 25
+strict_prerequisites: []
+soft_prerequisites: []
+learning_objectives:
+  - "理解虚拟地址空间、栈指针（RSP）与堆分配器（glibc ptmalloc / jemalloc）的物理本质"
+  - "掌握 CPU L1/L2/L3 缓存行（64-byte Cache Line）与内存局部性（Spatial & Temporal Locality）"
+  - "建立现代程序内存布局图景（Text, Data, BSS, Heap, Stack）"
+exit_criteria:
+  quiz_questions:
+    - id: "R01_Q1"
+      type: "single_choice"
+      prompt: "在 x86_64 体系中，函数调用时栈指针寄存器（RSP）通常如何移动？"
+      options:
+        - "向高地址增长（RSP 增加）"
+        - "向低地址增长（RSP 减小）"
+        - "地址保持不变，仅写入堆区"
+        - "由操作系统调度器随机分配"
+      correct_answer: "向低地址增长（RSP 减小）"

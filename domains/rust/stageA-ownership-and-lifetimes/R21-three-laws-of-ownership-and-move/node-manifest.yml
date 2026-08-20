@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R21"
+title: "所有权三大定律与 Move 语义底层汇编：寄存器传递与零成本 Relocation"
+domain: "rust"
+stage: "阶段A·所有权与生命周期"
+estimated_minutes: 30
+strict_prerequisites:
+  - "R20"
+soft_prerequisites: []
+learning_objectives:
+  - "掌握所有权三大核心公理与变量绑定生命周期"
+  - "从 System V AMD64 ABI 汇编层面证明 Move 语义的零开销本质（Bitwise Copy / SROA）"
+  - "深度考据 core::mem::forget 与 ManuallyDrop 抑制 Drop Glue 的机制"
+exit_criteria:
+  quiz_questions:
+    - id: "R21_Q1"
+      type: "single_choice"
+      prompt: "在 Rust 中，为什么小结构体（<= 16 字节）的 Move 操作是绝对零内存开销的？"
+      options:
+        - "因为它们通过 CPU 寄存器（如 %rdi, %rsi）直接传递，无需任何栈内存拷贝"
+        - "因为 Rust 运行时的垃圾回收器在后台进行了内存复用"
+        - "因为编译器生成了虚表指针"
+        - "因为操作系统对栈指针进行了自动缓存"
+      correct_answer: "因为它们通过 CPU 寄存器（如 %rdi, %rsi）直接传递，无需任何栈内存拷贝"

@@ -1,0 +1,33 @@
+schema_version: "1.0.0"
+node_id: "R50"
+title: "阶段A出段综合大考：所有权三大定律、借用检查器与生命周期"
+domain: "rust"
+stage: "阶段A·所有权与生命周期"
+estimated_minutes: 40
+strict_prerequisites:
+  - "R21"
+  - "R25"
+soft_prerequisites: []
+learning_objectives:
+  - "完成阶段 A 30 讲关于所有权 Move、借用排他性与生命周期 NLL 的综合考核"
+  - "掌握不可伪造的生命周期子类型推演与引用安全性证明"
+exit_criteria:
+  quiz_questions:
+    - id: "R50_Q1"
+      type: "single_choice"
+      prompt: "为什么 Rust 中的 `&mut T` 可变引用不能实现 `Copy` 特质？"
+      options:
+        - "因为如果允许 Copy，就会瞬间复制出多个可变引用，直接摧毁别名异或可变性（Aliasing XOR Mutability）不变量"
+        - "因为可变引用体积太大（占 32 字节）"
+        - "因为 CPU 不支持寄存器复制"
+        - "因为操作系统阻止了指针复制"
+      correct_answer: "因为如果允许 Copy，就会瞬间复制出多个可变引用，直接摧毁别名异或可变性（Aliasing XOR Mutability）不变量"
+    - id: "R50_Q2"
+      type: "single_choice"
+      prompt: "Polonius 借用模型相比早期 NLL 的核心改进是什么？"
+      options:
+        - "采用基于 Datalog 的路径敏感（Path-Sensitive）Origin/Loan 求解，消除跨分支误杀"
+        - "引入了运行时垃圾回收"
+        - "取消了生命周期语法标注"
+        - "将引用全部替换为裸指针"
+      correct_answer: "采用基于 Datalog 的路径敏感（Path-Sensitive）Origin/Loan 求解，消除跨分支误杀"

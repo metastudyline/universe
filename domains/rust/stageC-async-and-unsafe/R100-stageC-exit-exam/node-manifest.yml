@@ -1,0 +1,32 @@
+schema_version: "1.0.0"
+node_id: "R100"
+title: "阶段C暨Rust大系终极大考：异步状态机、Pin钉住与Unsafe形式化模型"
+domain: "rust"
+stage: "阶段C·并发、异步与Unsafe"
+estimated_minutes: 45
+strict_prerequisites:
+  - "R76"
+soft_prerequisites: []
+learning_objectives:
+  - "完成阶段 C 25 讲及整个 Rust 100 讲大系的终极出段综合大考"
+  - "掌握 Stacked Borrows / Tree Borrows 内存别名模型、Miri 形式化验证与零成本系统架构"
+exit_criteria:
+  quiz_questions:
+    - id: "R100_Q1"
+      type: "single_choice"
+      prompt: "在 Miri 的 Stacked Borrows 内存模型中，为什么通过裸指针 `*mut T` 执行写入后，其上方的共享借用标签（Shared Tag）会被永久弹出销毁？"
+      options:
+        - "为了严格贯彻独占排他性，确保此后通过已失效的共享引用进行读取时能被精准捕获为未定义行为（UB）"
+        - "为了释放堆内存空间"
+        - "因为 CPU 缓存行发生了物理熔断"
+        - "因为编译器需要重置符号表"
+      correct_answer: "为了严格贯彻独占排他性，确保此后通过已失效的共享引用进行读取时能被精准捕获为未定义行为（UB）"
+    - id: "R100_Q2"
+      type: "single_choice"
+      prompt: "标准库中 `NonNull<T>` 对 `T` 具备何种型变（Variance）属性？"
+      options:
+        - "协变（Covariant）"
+        - "逆变（Contravariant）"
+        - "不变（Invariant）"
+        - "双变（Bivariant）"
+      correct_answer: "协变（Covariant）"

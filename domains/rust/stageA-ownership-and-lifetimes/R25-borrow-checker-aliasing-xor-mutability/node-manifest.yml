@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R25"
+title: "借用检查器与别名异或可变性：Polonius Datalog 模型与 LLVM noalias 优化"
+domain: "rust"
+stage: "阶段A·所有权与生命周期"
+estimated_minutes: 35
+strict_prerequisites:
+  - "R21"
+soft_prerequisites: []
+learning_objectives:
+  - "掌握借用两大核心公理：任意数量共享借用 &T ⊕ 唯一独占可变借用 &mut T"
+  - "理解 LLVM noalias 元数据如何赋能向量化与指令激进重排"
+  - "解析 Polonius 基于 Datalog 的 Origin 与 Loan 关系求解模型"
+exit_criteria:
+  quiz_questions:
+    - id: "R25_Q1"
+      type: "single_choice"
+      prompt: "在 LLVM IR 生成中，Rust 的 `&mut T` 可变引用通常被赋予什么属性？"
+      options:
+        - "noalias（通知优化器该指针在当前作用域内绝对独占，无任何别名干扰）"
+        - "volatile（禁止任何优化）"
+        - "atomic_relaxed（宽松原子）"
+        - "dyn_vtable（虚表分发）"
+      correct_answer: "noalias（通知优化器该指针在当前作用域内绝对独占，无任何别名干扰）"

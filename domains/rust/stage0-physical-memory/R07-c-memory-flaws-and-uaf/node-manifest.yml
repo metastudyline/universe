@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R07"
+title: "从 C 语言内存缺陷到所有权发生学：UAF、Double Free 与数据竞争"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 30
+strict_prerequisites:
+  - "R01"
+soft_prerequisites: []
+learning_objectives:
+  - "深入剖析 C/C++ 中指针别名（Aliasing）与就地突变（In-place Mutation）导致 UAF 的物理机制"
+  - "理解经典 vector 扩容重分配下的悬垂指针灾难（Dangling Pointer）"
+  - "论证为什么传统运行时防御（ASan/Valgrind）无法在编译期根除内存安全漏洞"
+exit_criteria:
+  quiz_questions:
+    - id: "R07_Q1"
+      type: "single_choice"
+      prompt: "在 C++ 中执行 `std::vector<int> v = {1, 2}; v.push_back(v[0]);` 触发 UAF 的物理根因是什么？"
+      options:
+        - "操作系统的虚拟内存页表发生死锁"
+        - "push_back 触发堆扩容重分配释放了旧内存块，导致指向旧 v[0] 的引用别名变为悬垂指针"
+        - "CPU 缓存一致性协议 MESI 发生总线风暴"
+        - "x86_64 寄存器发生溢出重置"
+      correct_answer: "push_back 触发堆扩容重分配释放了旧内存块，导致指向旧 v[0] 的引用别名变为悬垂指针"

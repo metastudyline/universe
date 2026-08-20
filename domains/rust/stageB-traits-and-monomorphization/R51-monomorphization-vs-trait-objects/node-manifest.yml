@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R51"
+title: "单态化与特质对象：零成本抽象与 dyn Trait 16 字节胖指针物理结构"
+domain: "rust"
+stage: "阶段B·特质系统与零成本抽象"
+estimated_minutes: 35
+strict_prerequisites:
+  - "R50"
+soft_prerequisites: []
+learning_objectives:
+  - "深入理解静态单态化（Monomorphization）在 LLVM 跨过程内联优化中的威力与代码膨胀权衡"
+  - "剖析 dyn Trait 胖指针（8字节数据指针 + 8字节 vtable 指针）物理内存布局"
+  - "掌握 vtable 四段结构：drop_in_place, size, align, methods"
+exit_criteria:
+  quiz_questions:
+    - id: "R51_Q1"
+      type: "single_choice"
+      prompt: "在 64 位架构下，一个 `Box<dyn Trait>` 胖指针在内存中占用多少字节？"
+      options:
+        - "16 字节（8 字节实例数据指针 + 8 字节 .rodata 虚表指针）"
+        - "8 字节（仅包含数据指针）"
+        - "24 字节（包含引用计数）"
+        - "32 字节（包含元数据头）"
+      correct_answer: "16 字节（8 字节实例数据指针 + 8 字节 .rodata 虚表指针）"
