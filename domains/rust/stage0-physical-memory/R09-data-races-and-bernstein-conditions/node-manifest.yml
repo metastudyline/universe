@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R09"
+title: "经典缺陷发生学 III：数据竞争（Data Race）与 Bernstein 并发条件失效"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 25
+strict_prerequisites:
+  - "R08"
+soft_prerequisites: []
+learning_objectives:
+  - "掌握 Bernstein (1966) 并发读写集互斥条件与 Happens-Before 偏序"
+  - "剖析多核 CPU 缓存一致性（MESI 协议）与内存乱序执行对数据竞争的放大"
+  - "证明为什么静态编译期排他借用是彻底消灭数据竞争的充要条件"
+exit_criteria:
+  quiz_questions:
+    - id: "R09_Q1"
+      type: "single_choice"
+      prompt: "根据 Bernstein 条件，两个并发线程发生数据竞争（Data Race）的必要条件是什么？"
+      options:
+        - "它们并发访问同一物理内存位置，且至少有一个操作是写操作，且彼此之间没有同步偏序关系"
+        - "两个线程使用了相同命名的局部变量"
+        - "两个线程运行在同一个 CPU 核心上"
+        - "操作系统没有分配足够的磁盘交换空间"
+      correct_answer: "它们并发访问同一物理内存位置，且至少有一个操作是写操作，且彼此之间没有同步偏序关系"

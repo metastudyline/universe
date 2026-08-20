@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R10"
+title: "经典缺陷发生学 IV：缓冲区溢出（Buffer Overflow）与栈破坏攻击"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 25
+strict_prerequisites:
+  - "R09"
+soft_prerequisites: []
+learning_objectives:
+  - "掌握经典栈溢出覆盖返回地址（`%rip` Hijack）与 ROP 链攻击物理机制"
+  - "理解边界检查（Bounds Checking）在硬件与汇编层面的开销及 LLVM 消除 Pass"
+  - "证明 Rust 切片（Fat Pointer 携带 len）如何以近乎零开销杜绝越界访问"
+exit_criteria:
+  quiz_questions:
+    - id: "R10_Q1"
+      type: "single_choice"
+      prompt: "在 x86_64 栈上向局部字符数组写入超出其长度的数据，最终会覆盖什么关键硬件数据导致控制流被劫持？"
+      options:
+        - "保存在栈帧底部的调用者函数返回地址（Saved RIP）"
+        - "CPU 的 L1 缓存行基地址"
+        - "操作系统的内核中断向量表"
+        - "磁盘上的分区引导扇区"
+      correct_answer: "保存在栈帧底部的调用者函数返回地址（Saved RIP）"

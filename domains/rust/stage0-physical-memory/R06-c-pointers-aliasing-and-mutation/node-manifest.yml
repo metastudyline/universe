@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R06"
+title: "C 语言指针的本质：无类型内存视图、指针别名与就地突变"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 25
+strict_prerequisites:
+  - "R05"
+soft_prerequisites: []
+learning_objectives:
+  - "理解 C 语言指针作为纯数字物理地址（u64）的自由性与脆弱性"
+  - "掌握指针类型强转（`void*` / `char*`）对类型系统的破坏"
+  - "剖析指针别名（Aliasing）与就地突变（In-place Mutation）结合时导致的所有内存安全灾难根源"
+exit_criteria:
+  quiz_questions:
+    - id: "R06_Q1"
+      type: "single_choice"
+      prompt: "在 C 语言中，为什么说指针别名破坏了程序的局部推理能力（Local Reasoning）？"
+      options:
+        - "因为通过任何一个别名指针修改内存，都会在调用者不知情的情况下悄悄改变其他指针所指向的数据（远距离作用效应）"
+        - "因为 CPU 会停止流水线计算"
+        - "因为编译器会拒绝生成二进制"
+        - "因为操作系统会关闭网络连接"
+      correct_answer: "因为通过任何一个别名指针修改内存，都会在调用者不知情的情况下悄悄改变其他指针所指向的数据（远距离作用效应）"

@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R05"
+title: "静态段与只读常量：Text, Data, BSS 与 .rodata 的物理装载"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 20
+strict_prerequisites:
+  - "R04"
+soft_prerequisites: []
+learning_objectives:
+  - "理解 ELF/Mach-O 二进制目标文件中的段结构：.text, .data, .bss, .rodata"
+  - "掌握 'static 生命周期的物理本质：只读内存页与整个进程运行期永驻"
+  - "理解向 .rodata 写入触发硬件只读保护段错误（SIGSEGV）的物理机制"
+exit_criteria:
+  quiz_questions:
+    - id: "R05_Q1"
+      type: "single_choice"
+      prompt: "在 Rust 中，字符串字面量 `\"hello\"` 为什么拥有 `'static` 生命周期？"
+      options:
+        - "因为它在编译期直接被硬编码进二进制可执行文件的只读数据段（.rodata），随程序加载进内存且生命周期与进程完全等长"
+        - "因为垃圾回收器将其标记为不可回收"
+        - "因为每次运行都会从网络下载"
+        - "因为操作系统动态分配了一个无限大的堆块"
+      correct_answer: "因为它在编译期直接被硬编码进二进制可执行文件的只读数据段（.rodata），随程序加载进内存且生命周期与进程完全等长"

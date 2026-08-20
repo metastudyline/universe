@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R03"
+title: "栈帧（Stack Frame）的物理本质：RSP 指针、调用规约与局部变量确定性销毁"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 25
+strict_prerequisites:
+  - "R02"
+soft_prerequisites: []
+learning_objectives:
+  - "掌握函数调用时栈帧的 Prologue 与 Epilogue 汇编指令生成"
+  - "理解 System V AMD64 调用规约（RDI, RSI, RDX, RCX, R8, R9 传参）"
+  - "证明栈上局部变量随 RSP 回弹实现 100% 确定性销毁的物理机制"
+exit_criteria:
+  quiz_questions:
+    - id: "R03_Q1"
+      type: "single_choice"
+      prompt: "在 x86_64 汇编中，函数退出时执行的 `ret` 指令本质上完成了什么操作？"
+      options:
+        - "从栈顶弹出 8 字节的返回地址并跳转至该地址（pop %rip）"
+        - "将所有寄存器写入磁盘"
+        - "调用垃圾回收器清理堆内存"
+        - "向内核发送退出信号"
+      correct_answer: "从栈顶弹出 8 字节的返回地址并跳转至该地址（pop %rip）"

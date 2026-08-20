@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R02"
+title: "虚拟地址空间与 MMU：页表映射、缺页异常与物理内存隔离"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 25
+strict_prerequisites:
+  - "R01"
+soft_prerequisites: []
+learning_objectives:
+  - "理解 CPU 内存管理单元（MMU）与多级页表（Page Table Walk）的地址翻译机制"
+  - "掌握 4KB 物理页、缺页异常（Page Fault）与 TLB 缓存加速"
+  - "理解操作系统进程间物理内存隔离与段错误（SIGSEGV）的物理成因"
+exit_criteria:
+  quiz_questions:
+    - id: "R02_Q1"
+      type: "single_choice"
+      prompt: "当程序访问一个尚未建立物理页映射的有效虚拟地址时，硬件会触发什么机制？"
+      options:
+        - "缺页异常（Page Fault），触发内核从磁盘或空闲页池分配物理页并建立映射"
+        - "CPU 直接断电重启"
+        - "编译器自动重新生成机器码"
+        - "寄存器清零"
+      correct_answer: "缺页异常（Page Fault），触发内核从磁盘或空闲页池分配物理页并建立映射"

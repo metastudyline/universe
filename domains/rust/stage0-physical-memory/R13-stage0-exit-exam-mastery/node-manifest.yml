@@ -1,0 +1,43 @@
+schema_version: "1.0.0"
+node_id: "R13"
+title: "0段出段综合大考：计算机物理内存与安全发生学因果总闭环"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 40
+strict_prerequisites:
+  - "R01"
+  - "R02"
+  - "R03"
+  - "R04"
+  - "R05"
+  - "R06"
+  - "R07"
+  - "R08"
+  - "R09"
+  - "R10"
+  - "R11"
+  - "R12"
+soft_prerequisites: []
+learning_objectives:
+  - "完成 0 段 13 讲关于硬件物理内存、C 语言内存崩溃与仿射类型系统的综合因果考核"
+  - "掌握从晶体管物理限制到 Rust 语言设计动机的全部第一性原理推导"
+exit_criteria:
+  quiz_questions:
+    - id: "R13_Q1"
+      type: "single_choice"
+      prompt: "为什么 Rust 能在完全没有运行时垃圾回收器（No GC）的前提下，从数学上彻底保证 100% 内存安全？"
+      options:
+        - "通过在编译期应用基于仿射类型系统（Affine Types）的所有权与别名异或可变性（Aliasing XOR Mutability）静态证明"
+        - "通过在操作系统底层植入隐蔽的守护进程"
+        - "通过强制所有变量都使用堆分配"
+        - "通过将所有 C 代码在运行期动态解释执行"
+      correct_answer: "通过在编译期应用基于仿射类型系统（Affine Types）的所有权与别名异或可变性（Aliasing XOR Mutability）静态证明"
+    - id: "R13_Q2"
+      type: "single_choice"
+      prompt: "下列关于栈分配与堆分配物理特性的陈述，完全正确的是？"
+      options:
+        - "栈分配仅需移动 RSP 寄存器且天然具备缓存连续性；堆分配需经由分配器寻址且存在碎片与多线程锁竞争代偿"
+        - "栈分配比堆分配慢 100 倍"
+        - "堆分配由 CPU 硬件指令直接单周期完成"
+        - "栈内存只能存储全局静态常量"
+      correct_answer: "栈分配仅需移动 RSP 寄存器且天然具备缓存连续性；堆分配需经由分配器寻址且存在碎片与多线程锁竞争代偿"

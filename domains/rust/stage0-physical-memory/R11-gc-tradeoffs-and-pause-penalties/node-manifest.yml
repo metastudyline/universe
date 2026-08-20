@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R11"
+title: "动态垃圾回收（GC）的代偿：引用计数循环引用与追踪式 GC 停顿"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 25
+strict_prerequisites:
+  - "R10"
+soft_prerequisites: []
+learning_objectives:
+  - "理解引用计数（Reference Counting）的循环引用内存泄漏与原子增减开销"
+  - "掌握追踪式垃圾回收器（Tracing GC, Mark-Sweep / Generational）的 STW（Stop-The-World）停顿"
+  - "论证为什么系统级基础设施（操作系统、数据库、网络引擎）必须排斥重度运行时 GC"
+exit_criteria:
+  quiz_questions:
+    - id: "R11_Q1"
+      type: "single_choice"
+      prompt: "为什么重度依赖追踪式垃圾回收（Tracing GC）的语言难以胜任操作系统内核或高频交易系统开发？"
+      options:
+        - "因为 GC 扫描与内存压缩会引发不可预测的 Stop-The-World (STW) 延迟与显著的内存元数据开销，破坏了确定性时延（Deterministic Latency）"
+        - "因为带有 GC 的语言无法生成 64 位机器码"
+        - "因为 GC 会导致 CPU 硬件断电"
+        - "因为操作系统内核禁止使用类与对象"
+      correct_answer: "因为 GC 扫描与内存压缩会引发不可预测的 Stop-The-World (STW) 延迟与显著的内存元数据开销，破坏了确定性时延（Deterministic Latency）"

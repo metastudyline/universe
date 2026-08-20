@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R08"
+title: "经典缺陷发生学 II：双重释放（Double Free）与堆块元数据破坏"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 25
+strict_prerequisites:
+  - "R07"
+soft_prerequisites: []
+learning_objectives:
+  - "掌握堆块在内存中的物理组织（Chunk Header、Size、Flags、FD/BK 链表指针）"
+  - "深入理解对同一堆指针二次调用 free() 导致分配器元数据污染的利用链"
+  - "证明为什么静态唯一所有权机制从数学上彻底消除了 Double Free"
+exit_criteria:
+  quiz_questions:
+    - id: "R08_Q1"
+      type: "single_choice"
+      prompt: "在 C 语言中对同一个指针执行两次 `free(p)` 会造成什么灾难？"
+      options:
+        - "破坏堆分配器的空闲链表元数据（Free List Corruption），导致后续内存分配返回重叠地址甚至任意代码执行"
+        - "操作系统会自动忽略第二次释放"
+        - "CPU 会将程序自动转换为 Rust 代码"
+        - "只是打印一条终端警告"
+      correct_answer: "破坏堆分配器的空闲链表元数据（Free List Corruption），导致后续内存分配返回重叠地址甚至任意代码执行"

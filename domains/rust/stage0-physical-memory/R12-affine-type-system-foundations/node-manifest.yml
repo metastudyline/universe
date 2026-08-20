@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R12"
+title: "形式化类型论起步：线性逻辑与仿射类型系统（Affine Types）数学模型"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 30
+strict_prerequisites:
+  - "R11"
+soft_prerequisites: []
+learning_objectives:
+  - "理解结构子类型系统（Substructural Type System）：Weakening（弱化）与 Contraction（收缩）规则"
+  - "掌握仿射类型系统（Affine Types：使用次数 $\le 1$）与线性类型系统（Linear Types：使用次数 $= 1$）的数学区别"
+  - "推导 Rust 所有权如何将仿射类型系统映射为编译期 Move 与自动 Drop"
+exit_criteria:
+  quiz_questions:
+    - id: "R12_Q1"
+      type: "single_choice"
+      prompt: "在类型论中，仿射类型系统（Affine Type System）对资源使用的核心数学约束是什么？"
+      options:
+        - "每个资源最多只能被使用一次（$\le 1$ 次，允许 Weakening 丢弃，禁止 Contraction 复制）"
+        - "每个资源必须被使用无限多次"
+        - "每个资源必须且只能被使用恰好两次"
+        - "每个资源都必须被标记为全局静态常量"
+      correct_answer: "每个资源最多只能被使用一次（$\le 1$ 次，允许 Weakening 丢弃，禁止 Contraction 复制）"

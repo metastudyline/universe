@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "R04"
+title: "堆（Heap）的物理代偿：分配器算法（Bump/Free List/Slab）与多线程锁竞争"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 25
+strict_prerequisites:
+  - "R03"
+soft_prerequisites: []
+learning_objectives:
+  - "掌握堆分配器的核心算法模型：空闲链表（Free List）、伙伴系统（Buddy System）与 Slab 分配器"
+  - "理解 jemalloc / mimalloc 的 Thread-local 缓存（tcache）与跨线程分配锁争用"
+  - "证明为什么堆分配相比栈分配存在 10~100 倍的时间与空间物理代偿"
+exit_criteria:
+  quiz_questions:
+    - id: "R04_Q1"
+      type: "single_choice"
+      prompt: "jemalloc 等现代高性能堆分配器采用 Thread-local Cache (tcache) 的主要目的是什么？"
+      options:
+        - "避免每个线程在频繁申请和释放小内存块时去抢占全局分配器锁"
+        - "将所有堆内存自动写入硬盘"
+        - "禁用操作系统的虚拟内存管理"
+        - "使 Rust 代码自动运行在 GPU 上"
+      correct_answer: "避免每个线程在频繁申请和释放小内存块时去抢占全局分配器锁"

@@ -5,7 +5,7 @@ domain: "rust"
 stage: "阶段A·所有权与生命周期"
 estimated_minutes: 30
 strict_prerequisites:
-  - "R20"
+  - "R13"
 soft_prerequisites: []
 learning_objectives:
   - "掌握所有权三大核心公理与变量绑定生命周期"
