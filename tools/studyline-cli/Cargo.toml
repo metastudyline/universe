@@ -1,0 +1,26 @@
+[package]
+name = "studyline"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "Unified Command Hub and Native CLI for StudyLine Universal Knowledge Engine"
+
+[[bin]]
+name = "studyline"
+path = "src/main.rs"
+
+[dependencies]
+studyline-graph-core = { path = "../studyline-graph-core" }
+studyline-compiler = { path = "../studyline-compiler" }
+studyline-daemon = { path = "../studyline-daemon" }
+studyline-cabi = { path = "../studyline-cabi" }
+clap.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+serde_yaml.workspace = true
+walkdir.workspace = true
+rayon.workspace = true
+anyhow.workspace = true
+thiserror.workspace = true

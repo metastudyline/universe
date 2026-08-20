@@ -3,6 +3,9 @@ members = [
     "studyline-graph-core",
     "studyline-compiler",
     "studyline-daemon",
+    "studyline-cabi",
+    "studyline-cli",
+    "studyline-wasm",
 ]
 resolver = "2"
 

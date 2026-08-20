@@ -1,0 +1,18 @@
+[package]
+name = "studyline-cabi"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "C-ABI export and FFI interface for StudyLine Knowledge Engine"
+
+[lib]
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[dependencies]
+studyline-graph-core = { path = "../studyline-graph-core" }
+studyline-compiler = { path = "../studyline-compiler" }
+serde.workspace = true
+serde_json.workspace = true
+anyhow.workspace = true
+libc = "0.2.155"

@@ -1,0 +1,17 @@
+[package]
+name = "studyline-wasm"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "WebAssembly offline topology engine for StudyLine Web Client"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+studyline-graph-core = { path = "../studyline-graph-core" }
+wasm-bindgen = "0.2"
+serde.workspace = true
+serde_json.workspace = true
+serde-wasm-bindgen = "0.6"

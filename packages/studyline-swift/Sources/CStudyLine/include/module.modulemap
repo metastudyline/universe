@@ -1,0 +1,4 @@
+module CStudyLine {
+    header "studyline.h"
+    export *
+}
