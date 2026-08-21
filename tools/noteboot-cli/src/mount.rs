@@ -1,20 +1,23 @@
-// ✦ NoteBoot Virtual Vault Mount Manager
+// ✦ NoteBoot Virtual Vault Mount & TTZip Universal Archive Integrator
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::process::Command;
 use walkdir::WalkDir;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MountEntry {
     pub id: String,
     pub namespace: String,       // e.g. "@studyline/rust"
-    pub source_path: String,     // e.g. "/Users/.../domains/rust"
+    pub source_path: String,     // e.g. "/path/to/domains/rust" or "/path/to/universe.tar.zst"
     #[serde(default = "default_readonly")]
     pub mode: String,            // "readonly" | "readwrite"
     #[serde(default = "default_includes")]
     pub include: Vec<String>,
     #[serde(default)]
     pub exclude: Vec<String>,
+    #[serde(default)]
+    pub is_archive: bool,        // 是否为通过 TTZip 支持的归档文件 (tar.zst, 7z, zip 等)
     #[serde(default)]
     pub description: Option<String>,
 }
@@ -50,6 +53,9 @@ pub struct ScannedDocument {
     pub canonical_path: String,  // e.g. "@studyline/rust/stage0/R03.md" or "01-Inbox/idea.md"
     pub physical_path: PathBuf,
     pub is_readonly: bool,
+    pub is_archive_entry: bool,  // 是否从 TTZip 归档中动态流式提取
+    pub archive_file: Option<PathBuf>,
+    pub entry_name: Option<String>,
 }
 
 impl VirtualVaultScanner {
@@ -78,10 +84,14 @@ impl VirtualVaultScanner {
         namespace: &str,
         description: Option<String>,
     ) -> Result<MountEntry, Box<dyn std::error::Error>> {
-        let abs_source = fs::canonicalize(source_path)?;
-        if !abs_source.is_dir() {
-            return Err(format!("挂载源目录不存在: {}", source_path).into());
-        }
+        let p = Path::new(source_path);
+        let abs_source = if p.exists() {
+            fs::canonicalize(p)?
+        } else {
+            return Err(format!("挂载源路径不存在: {}", source_path).into());
+        };
+
+        let is_archive = abs_source.is_file();
 
         let mut config = Self::load_mounts(vault_dir);
         let ns = if namespace.starts_with('@') {
@@ -90,7 +100,6 @@ impl VirtualVaultScanner {
             format!("@{}", namespace)
         };
 
-        // 检查重复
         if config.mounts.iter().any(|m| m.namespace == ns) {
             return Err(format!("命名空间 {} 已存在", ns).into());
         }
@@ -103,6 +112,7 @@ impl VirtualVaultScanner {
             mode: "readonly".to_string(),
             include: default_includes(),
             exclude: vec![".git/**".to_string(), "target/**".to_string(), ".noteboot/**".to_string()],
+            is_archive,
             description,
         };
 
@@ -123,6 +133,34 @@ impl VirtualVaultScanner {
         }
     }
 
+    pub fn read_document_content(doc: &ScannedDocument) -> Result<String, Box<dyn std::error::Error>> {
+        if doc.is_archive_entry {
+            if let (Some(ref arc), Some(ref entry)) = (&doc.archive_file, &doc.entry_name) {
+                // 调用 ttzip-cli cat 零落盘流式输出
+                let output = Command::new("ttzip-cli")
+                    .arg("cat")
+                    .arg(arc)
+                    .arg(entry)
+                    .output()
+                    .or_else(|_| {
+                        // 尝试从工作区根目录调用 ./ttzip-cli
+                        Command::new("./ttzip-cli")
+                            .arg("cat")
+                            .arg(arc)
+                            .arg(entry)
+                            .output()
+                    })?;
+
+                if output.status.success() {
+                    return Ok(String::from_utf8_lossy(&output.stdout).to_string());
+                } else {
+                    return Err(format!("ttzip-cli cat 解压失败: {}", String::from_utf8_lossy(&output.stderr)).into());
+                }
+            }
+        }
+        Ok(fs::read_to_string(&doc.physical_path)?)
+    }
+
     pub fn scan_all(vault_dir: &str) -> Vec<ScannedDocument> {
         let mut docs = Vec::new();
 
@@ -140,6 +178,9 @@ impl VirtualVaultScanner {
                     canonical_path: rel,
                     physical_path: path.to_path_buf(),
                     is_readonly: false,
+                    is_archive_entry: false,
+                    archive_file: None,
+                    entry_name: None,
                 });
             }
         }
@@ -151,21 +192,77 @@ impl VirtualVaultScanner {
             if !mount_path.exists() {
                 continue;
             }
-            for entry in WalkDir::new(mount_path).into_iter().filter_map(|e| e.ok()) {
-                let path = entry.path();
-                if path.is_file() && path.extension().map_or(false, |ext| ext == "md") {
-                    let path_str = path.to_string_lossy();
-                    if path_str.contains("/.noteboot/") || path_str.contains("/.git/") || path_str.contains("/target/") {
-                        continue;
-                    }
-                    let rel = path.strip_prefix(mount_path).unwrap_or(path).to_string_lossy().to_string();
-                    let canonical = format!("{}/{}", m.namespace, rel);
-                    docs.push(ScannedDocument {
-                        vault: m.namespace.clone(),
-                        canonical_path: canonical,
-                        physical_path: path.to_path_buf(),
-                        is_readonly: true,
+
+            if m.is_archive {
+                // TTZip 全格式归档包挂载：通过 `ttzip-cli list --json` 极速获取结构化文件清单
+                let cmd_output = Command::new("ttzip-cli")
+                    .arg("list")
+                    .arg("--json")
+                    .arg(&m.source_path)
+                    .output()
+                    .or_else(|_| {
+                        Command::new("./ttzip-cli")
+                            .arg("list")
+                            .arg("--json")
+                            .arg(&m.source_path)
+                            .output()
                     });
+
+                if let Ok(output) = cmd_output {
+                    if output.status.success() {
+                        let stdout_str = String::from_utf8_lossy(&output.stdout);
+                        for line in stdout_str.lines() {
+                            let trimmed = line.trim();
+                            if trimmed.is_empty() { continue; }
+                            if let Ok(val) = serde_json::from_str::<serde_json::Value>(trimmed) {
+                                let entries_opt = val.get("archive_metadata")
+                                    .and_then(|m| m.get("entries"))
+                                    .or_else(|| val.get("entries"))
+                                    .and_then(|e| e.as_array());
+
+                                if let Some(entries) = entries_opt {
+                                    for (idx, item) in entries.iter().enumerate() {
+                                        if let Some(entry_path) = item.get("path").and_then(|p| p.as_str()) {
+                                            if entry_path.ends_with(".md") {
+                                                let canonical = format!("{}/entry_{}_{}", m.namespace, idx, entry_path);
+                                                docs.push(ScannedDocument {
+                                                    vault: m.namespace.clone(),
+                                                    canonical_path: canonical,
+                                                    physical_path: mount_path.to_path_buf(),
+                                                    is_readonly: true,
+                                                    is_archive_entry: true,
+                                                    archive_file: Some(mount_path.to_path_buf()),
+                                                    entry_name: Some(entry_path.to_string()),
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                // 物理目录扫描
+                for entry in WalkDir::new(mount_path).into_iter().filter_map(|e| e.ok()) {
+                    let path = entry.path();
+                    if path.is_file() && path.extension().map_or(false, |ext| ext == "md") {
+                        let path_str = path.to_string_lossy();
+                        if path_str.contains("/.noteboot/") || path_str.contains("/.git/") || path_str.contains("/target/") {
+                            continue;
+                        }
+                        let rel = path.strip_prefix(mount_path).unwrap_or(path).to_string_lossy().to_string();
+                        let canonical = format!("{}/{}", m.namespace, rel);
+                        docs.push(ScannedDocument {
+                            vault: m.namespace.clone(),
+                            canonical_path: canonical,
+                            physical_path: path.to_path_buf(),
+                            is_readonly: true,
+                            is_archive_entry: false,
+                            archive_file: None,
+                            entry_name: None,
+                        });
+                    }
                 }
             }
         }

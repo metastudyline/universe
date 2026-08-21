@@ -94,12 +94,21 @@ fn sync_vault(vault_dir: &str) -> Result<(), Box<dyn std::error::Error>> {
     let total_scanned = scanned_docs.len();
 
     for doc in scanned_docs {
-        if let Ok(content) = fs::read_to_string(&doc.physical_path) {
-            let metadata = doc.physical_path.metadata()?;
-            let mtime = metadata.modified()?.duration_since(std::time::UNIX_EPOCH)?.as_millis() as i64;
-            let file_name = doc.physical_path.file_name().unwrap_or_default().to_string_lossy().to_string();
+        if let Ok(content) = VirtualVaultScanner::read_document_content(&doc) {
+            let metadata = doc.physical_path.metadata();
+            let mtime = metadata
+                .and_then(|m| m.modified().map_err(|e| e))
+                .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e)))
+                .map(|d| d.as_millis() as i64)
+                .unwrap_or(0);
 
-            let parsed = parse_markdown_metadata(&content, &file_name);
+            let file_name = doc
+                .entry_name
+                .as_deref()
+                .or_else(|| doc.physical_path.file_name().and_then(|f| f.to_str()))
+                .unwrap_or("untitled.md");
+
+            let parsed = parse_markdown_metadata(&content, file_name);
             let id = format!("{:x}", md5_hash(&doc.canonical_path));
 
             db.upsert_note(
