@@ -525,9 +525,14 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
 
   <script>
     let currentDoc = null;
-    let rawBlocks = [];
+    let docBlocks = [];
     let activeInjections = [];
     let activePrereqs = [];
+    let currentFocusBlockId = null;
+
+    function generateId() {
+      return 'b_' + Math.random().toString(36).substr(2, 9);
+    }
 
     async function loadTree() {
       const res = await fetch('/api/tree').then(r => r.json());
@@ -544,17 +549,17 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
       for (const [vault, docs] of Object.entries(grouped)) {
         const isLocal = vault === '@local';
         const groupEl = document.createElement('div');
-        groupEl.className = 'mb-2';
+        groupEl.className = 'mb-3';
         groupEl.innerHTML = `
-          <div class="text-[11px] font-mono font-bold px-2 py-1 text-neutral-400 flex items-center justify-between">
+          <div class="text-[10px] font-serif font-bold tracking-[1.5px] px-2 py-1 text-kintsugi-gold uppercase flex items-center justify-between">
             <span>${vault}</span>
-            <span class="text-[10px] px-1 rounded ${isLocal ? 'bg-blue-500/20 text-blue-300' : 'bg-amber-500/20 text-amber-300'}">${isLocal ? '本地工作区' : '只读宇宙'}</span>
+            <span class="text-[9px] px-1.5 py-0.5 rounded-full ${isLocal ? 'bg-blue-500/20 text-blue-300' : 'bg-kintsugi-gold/20 text-kintsugi-light'} font-mono">${isLocal ? '本地' : '宇宙'}</span>
           </div>
         `;
         docs.forEach(doc => {
           const item = document.createElement('div');
-          item.className = 'px-2 py-1.5 rounded cursor-pointer truncate glass-card text-neutral-300 hover:text-white flex items-center gap-1.5';
-          item.innerHTML = `<span>📄</span> <span class="truncate">${doc.canonical_path}</span>`;
+          item.className = 'px-2.5 py-2 rounded-lg cursor-pointer truncate glass-card text-neutral-300 hover:text-white flex items-center gap-2 transition';
+          item.innerHTML = `<span class="text-kintsugi-gold text-xs">📄</span> <span class="truncate font-serif text-xs">${doc.canonical_path}</span>`;
           item.onclick = () => openNote(doc);
           groupEl.appendChild(item);
         });
@@ -569,238 +574,263 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
       if (res.success && res.data) {
         activeInjections = res.data.injections || [];
         activePrereqs = res.data.prerequisites || [];
-        parseMarkdownToBlocks(res.data.content || '');
-        renderLiveCanvas();
+        markdownToBlocks(res.data.content || '');
+        renderDocBlocks();
         loadBacklinks(doc.canonical_path);
         renderInjectionsAndPrereqs(activeInjections, activePrereqs);
       }
     }
 
-    function parseMarkdownToBlocks(content) {
-      const rawLines = content.split('\n');
-      rawBlocks = [];
-      let currentBlock = [];
+    function markdownToBlocks(content) {
+      docBlocks = [];
+      const lines = content.split('\n');
+      let codeBuffer = null;
 
-      rawLines.forEach((line, idx) => {
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
         const trimmed = line.trim();
-        if (trimmed.startsWith('# ') || trimmed.startsWith('## ') || trimmed.startsWith('### ') || trimmed.startsWith('> ') || trimmed.startsWith('```')) {
-          if (currentBlock.length > 0) {
-            rawBlocks.push(currentBlock.join('\n'));
-            currentBlock = [];
+
+        if (trimmed.startsWith('```')) {
+          if (codeBuffer === null) {
+            codeBuffer = [];
+          } else {
+            docBlocks.push({ id: generateId(), type: 'code', text: codeBuffer.join('\n') });
+            codeBuffer = null;
           }
-          rawBlocks.push(line);
-        } else if (trimmed === '') {
-          if (currentBlock.length > 0) {
-            rawBlocks.push(currentBlock.join('\n'));
-            currentBlock = [];
-          }
-        } else {
-          currentBlock.push(line);
+          continue;
         }
-      });
-      if (currentBlock.length > 0) {
-        rawBlocks.push(currentBlock.join('\n'));
+
+        if (codeBuffer !== null) {
+          codeBuffer.push(line);
+          continue;
+        }
+
+        if (trimmed.startsWith('# ')) {
+          docBlocks.push({ id: generateId(), type: 'h1', text: trimmed.substring(2) });
+        } else if (trimmed.startsWith('## ')) {
+          const h2Text = trimmed.substring(3);
+          docBlocks.push({ id: generateId(), type: 'h2', text: h2Text });
+          
+          // 匹配外置伴随组件
+          const matched = activeInjections.filter(inj => 
+            inj.target_section.includes(h2Text) || h2Text.includes(inj.target_section.replace(/^[#\s]+/, ''))
+          );
+          matched.forEach(inj => {
+            docBlocks.push({
+              id: generateId(),
+              type: 'widget',
+              text: '',
+              widgetComponent: inj.component,
+              widgetProps: inj.props
+            });
+          });
+        } else if (trimmed.startsWith('### ')) {
+          docBlocks.push({ id: generateId(), type: 'h3', text: trimmed.substring(4) });
+        } else if (trimmed.startsWith('> ')) {
+          docBlocks.push({ id: generateId(), type: 'quote', text: trimmed.substring(2) });
+        } else if (trimmed.length > 0) {
+          docBlocks.push({ id: generateId(), type: 'p', text: trimmed });
+        }
+      }
+
+      if (codeBuffer !== null) {
+        docBlocks.push({ id: generateId(), type: 'code', text: codeBuffer.join('\n') });
+      }
+
+      if (docBlocks.length === 0) {
+        docBlocks.push({ id: generateId(), type: 'p', text: '' });
       }
     }
 
-    function getCleanMarkdownFromBlocks() {
-      return rawBlocks.join('\n\n');
+    function blocksToMarkdown() {
+      return docBlocks.filter(b => b.type !== 'widget').map(b => {
+        if (b.type === 'h1') return `# ${b.text}`;
+        if (b.type === 'h2') return `## ${b.text}`;
+        if (b.type === 'h3') return `### ${b.text}`;
+        if (b.type === 'quote') return `> ${b.text}`;
+        if (b.type === 'code') return `\`\`\`\n${b.text}\n\`\`\``;
+        return b.text;
+      }).filter(t => t.trim().length > 0).join('\n\n');
     }
 
-    function renderLiveCanvas() {
+    function renderDocBlocks(focusBlockId = null, cursorPosition = 'end') {
       const canvas = document.getElementById('live-canvas');
       canvas.innerHTML = '';
 
-      rawBlocks.forEach((blockText, blockIdx) => {
-        const trimmed = blockText.trim();
-        const blockWrapper = document.createElement('div');
-        blockWrapper.className = 'group relative transition duration-150 rounded-lg p-1 hover:bg-white/[0.02]';
-        blockWrapper.dataset.blockIndex = blockIdx;
+      docBlocks.forEach((block, idx) => {
+        const blockNode = document.createElement('div');
+        blockNode.className = 'block-node group relative transition duration-150 rounded-lg';
+        blockNode.dataset.blockId = block.id;
+        blockNode.dataset.blockIndex = idx;
 
-        let renderedElement;
-
-        if (trimmed.startsWith('# ')) {
-          renderedElement = document.createElement('h1');
-          renderedElement.className = 'text-2xl font-bold text-white tracking-tight leading-snug cursor-text';
-          renderedElement.innerText = trimmed.substring(2);
-        } else if (trimmed.startsWith('## ')) {
-          const headingText = trimmed.substring(3);
-          renderedElement = document.createElement('h2');
-          renderedElement.className = 'text-lg font-bold text-amber-400 tracking-tight leading-snug border-b border-white/10 pb-1.5 cursor-text';
-          renderedElement.innerText = headingText;
-        } else if (trimmed.startsWith('### ')) {
-          renderedElement = document.createElement('h3');
-          renderedElement.className = 'text-base font-semibold text-neutral-200 tracking-tight cursor-text';
-          renderedElement.innerText = trimmed.substring(4);
-        } else if (trimmed.startsWith('> ')) {
-          renderedElement = document.createElement('blockquote');
-          renderedElement.className = 'border-l-2 border-amber-500/70 bg-white/5 pl-4 py-2 text-sm text-neutral-200 italic rounded-r cursor-text';
-          renderedElement.innerText = trimmed.substring(2);
-        } else if (trimmed.startsWith('```')) {
-          renderedElement = document.createElement('pre');
-          renderedElement.className = 'p-3 rounded-lg bg-black/60 border border-white/10 font-mono text-xs text-amber-200/90 overflow-x-auto cursor-text';
-          renderedElement.innerText = blockText;
+        if (block.type === 'widget') {
+          blockNode.className += ' block-widget my-4 select-none';
+          blockNode.setAttribute('contenteditable', 'false');
+          blockNode.innerHTML = renderInteractiveComponent(block.widgetComponent, block.widgetProps);
         } else {
-          renderedElement = document.createElement('p');
-          renderedElement.className = 'text-sm leading-relaxed text-neutral-300 font-serif cursor-text';
-          
-          // 渲染双向链接药丸胶囊 [[...]]
-          const htmlContent = trimmed.replace(/\[\[(.*?)\]\]/g, '<span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 font-mono text-xs cursor-pointer hover:bg-blue-500/30">✦ $1</span>');
-          renderedElement.innerHTML = htmlContent;
+          let editableEl;
+          if (block.type === 'h1') {
+            editableEl = document.createElement('h1');
+            editableEl.className = 'block-editable text-2xl font-serif font-bold text-white tracking-tight leading-snug outline-none py-1';
+          } else if (block.type === 'h2') {
+            editableEl = document.createElement('h2');
+            editableEl.className = 'block-editable text-lg font-serif font-bold text-kintsugi-gold tracking-tight leading-snug outline-none pt-3 pb-1 border-b border-white/10';
+          } else if (block.type === 'h3') {
+            editableEl = document.createElement('h3');
+            editableEl.className = 'block-editable text-base font-serif font-semibold text-neutral-200 tracking-tight outline-none py-1';
+          } else if (block.type === 'quote') {
+            editableEl = document.createElement('blockquote');
+            editableEl.className = 'block-editable border-l-2 border-kintsugi-gold bg-white/5 pl-4 py-2 text-sm text-neutral-200 italic rounded-r outline-none';
+          } else if (block.type === 'code') {
+            editableEl = document.createElement('pre');
+            editableEl.className = 'block-editable p-4 rounded-xl bg-ink border border-white/10 font-mono text-xs text-amber-200/90 overflow-x-auto outline-none';
+          } else {
+            editableEl = document.createElement('p');
+            editableEl.className = 'block-editable text-sm leading-relaxed text-neutral-300 font-serif outline-none py-1 min-h-[1.75em] empty:before:content-[attr(data-placeholder)] empty:before:text-neutral-600';
+            editableEl.setAttribute('data-placeholder', '输入正文内容，或键入「/」插入交互积木...');
+          }
+
+          editableEl.setAttribute('contenteditable', 'true');
+          editableEl.setAttribute('spellcheck', 'false');
+          editableEl.innerText = block.text;
+
+          // 核心飞书/Notion 键盘交互
+          editableEl.onkeydown = (e) => handleBlockKeyDown(e, idx, block);
+          editableEl.oninput = (e) => handleBlockInput(e, idx, block);
+
+          blockNode.appendChild(editableEl);
         }
 
-        // 点击原地进入编辑模式 (Inline Edit on Click)
-        renderedElement.onclick = () => enterInlineEdit(blockWrapper, blockIdx, blockText);
-        blockWrapper.appendChild(renderedElement);
-        canvas.appendChild(blockWrapper);
+        canvas.appendChild(blockNode);
 
-        // 如果是二级标题，检查并原地注入伴随组件 (In-Place Sidecar Component Widget)
-        if (trimmed.startsWith('## ')) {
-          const headingText = trimmed.substring(3);
-          const matchedInjections = activeInjections.filter(inj => 
-            inj.target_section.includes(headingText) || headingText.includes(inj.target_section.replace(/^[#\s]+/, ''))
-          );
-          matchedInjections.forEach(inj => {
-            const widgetEl = document.createElement('div');
-            widgetEl.className = 'my-4';
-            widgetEl.innerHTML = renderInteractiveComponent(inj.component, inj.props);
-            canvas.appendChild(widgetEl);
-          });
+        // 如果需要聚焦到特定 Block
+        if (focusBlockId === block.id) {
+          const editable = blockNode.querySelector('.block-editable');
+          if (editable) {
+            setTimeout(() => {
+              editable.focus();
+              setCursor(editable, cursorPosition);
+            }, 0);
+          }
         }
       });
     }
 
-    function enterInlineEdit(wrapper, blockIdx, originalText) {
-      wrapper.innerHTML = '';
-      const input = document.createElement('textarea');
-      input.className = 'w-full bg-black/40 border border-amber-500/50 rounded-lg p-2.5 text-sm font-mono text-white focus:outline-none resize-none leading-relaxed shadow-lg';
-      input.value = originalText;
-      input.rows = Math.max(2, originalText.split('\n').length);
-
-      input.onkeydown = (e) => {
-        if (e.key === 'Enter' && !e.shiftKey && !originalText.startsWith('```')) {
-          e.preventDefault();
-          rawBlocks[blockIdx] = input.value;
-          renderLiveCanvas();
-        } else if (e.key === 'Escape') {
-          renderLiveCanvas();
-        } else if (e.key === '/') {
-          triggerSlashMenu();
-        }
-      };
-
-      input.onblur = () => {
-        rawBlocks[blockIdx] = input.value;
-        renderLiveCanvas();
-      };
-
-      wrapper.appendChild(input);
-      input.focus();
+    function setCursor(el, position) {
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(el);
+      range.collapse(position === 'start');
+      sel.removeAllRanges();
+      sel.addRange(range);
     }
 
-    function renderInteractiveComponent(component, props) {
-      if (component === 'StackFrameSimulator') {
-        return `
-          <div class="p-5 glass-island my-5 shadow-2xl border border-white/10 relative overflow-hidden">
-            <div class="flex items-center justify-between text-xs mb-4 pb-2.5 border-b border-white/10">
-              <div class="flex items-center gap-2">
-                <span class="text-sm text-kintsugi-gold">⚡</span>
-                <span class="font-serif font-bold text-white text-sm">硬件栈帧物理仿真器</span>
-                <span class="text-[9px] font-mono font-bold tracking-wider text-kintsugi-gold uppercase">StackFrameSimulator</span>
-              </div>
-              <span class="px-2.5 py-0.5 rounded-full bg-bamboo-surface text-bamboo-light border border-bamboo-green/30 text-[10px] font-mono font-bold">HARDWARE SIM</span>
-            </div>
-            <div class="grid grid-cols-2 gap-5 text-xs font-mono">
-              <div class="space-y-3">
-                <div class="text-neutral-400 font-serif">RSP 栈顶寄存器指针微调:</div>
-                <input type="range" min="0" max="64" value="16" class="w-full accent-kintsugi-gold cursor-pointer" oninput="document.getElementById('sim-rsp').innerText = '0x7fffffffde' + (40 - parseInt(this.value)).toString(16)" />
-                <div class="text-neutral-300">当前 RSP: <span id="sim-rsp" class="text-kintsugi-light font-bold text-sm">0x7fffffffde28</span></div>
-                <button onclick="alert('单步 call 指令压栈成功！RSP 已自动偏移 8 字节。')" class="px-4 py-1.5 rounded-full bg-bamboo-green text-white hover:bg-bamboo-green/90 text-xs font-bold transition shadow-sm flex items-center gap-1.5">
-                  <span>▶</span> 单步 call 指令压栈 (↵)
-                </button>
-              </div>
-              <div class="glass-card p-3 space-y-1.5 text-[11px]">
-                <div class="text-kintsugi-gold pb-1.5 border-b border-white/10 font-bold font-serif">栈内存物理布局 (High ➔ Low):</div>
-                <div class="p-1.5 bg-white/5 text-neutral-300 rounded border border-white/5">[ 0x7fffffffde38 ] Return Address (RIP)</div>
-                <div class="p-1.5 bg-white/5 text-neutral-300 rounded border border-white/5">[ 0x7fffffffde30 ] Saved RBP Frame</div>
-                <div class="p-1.5 bg-kintsugi-gold/15 text-kintsugi-light rounded border border-kintsugi-gold/30 font-bold">[ 0x7fffffffde28 ] Local Var a = 42 &lt;-- RSP</div>
-              </div>
-            </div>
-          </div>
-        `;
-      } else if (component === 'WSJVideoPlayer') {
-        return `
-          <div class="p-4 glass-island my-5 border border-white/10">
-            <div class="flex items-center justify-between text-xs mb-3">
-              <div class="flex items-center gap-2">
-                <span class="text-sm text-kintsugi-gold">🎬</span>
-                <span class="font-serif font-bold text-white text-sm">WSJ 4K 演示视频</span>
-                <span class="text-[9px] font-mono text-neutral-400">4K ULTRA HD · 60FPS</span>
-              </div>
-              <span class="px-2 py-0.5 rounded-full bg-white/5 text-neutral-400 border border-white/10 text-[10px] font-mono">B-ROLL</span>
-            </div>
-            <div class="aspect-video bg-ink rounded-xl border border-white/10 flex flex-col items-center justify-center relative overflow-hidden group shadow-inner">
-              <div class="w-14 h-14 rounded-full bg-kintsugi-gold/20 text-kintsugi-light flex items-center justify-center text-xl cursor-pointer group-hover:scale-110 transition border border-kintsugi-gold/40 shadow-lg" onclick="alert('播放 WSJ 4K 演示动画')">▶</div>
-              <span class="text-[11px] text-neutral-400 mt-3 font-serif">${(props && props.caption) || 'WSJ 4K: RSP 栈帧风箱压伸与释放机制'}</span>
-            </div>
-          </div>
-        `;
-      } else if (component === 'BilingualPrimarySource') {
-        return `
-          <div class="p-5 glass-island my-5 border border-kintsugi-gold/30 relative">
-            <div class="text-xs font-serif font-bold text-kintsugi-gold mb-3 flex items-center gap-2">
-              <span>🔬</span> 一手文献双语对照 (DK 28 B 3)
-            </div>
-            <div class="grid grid-cols-2 gap-4 text-xs font-serif leading-relaxed">
-              <div class="p-3.5 rounded-xl bg-white/5 text-kintsugi-light border border-white/5 italic">
-                "Τὸ γὰρ αὐτὸ νοεῖν ἐστίν τε καὶ εἶναι." (Parmenides, Fragment B 3)
-              </div>
-              <div class="p-3.5 rounded-xl bg-white/5 text-neutral-200 border border-white/5">
-                “因为能够被思想的和能够存在的是同一回事。”（巴门尼德 残篇 B 3）
-              </div>
-            </div>
-          </div>
-        `;
-      } else if (component === 'FormalSyllogism') {
-        return `
-          <div class="p-5 glass-island my-5 border border-white/10">
-            <div class="text-xs font-serif font-bold text-kintsugi-gold mb-3 flex items-center gap-2">
-              <span>🏛️</span> 形式化逻辑三段论推演 (FormalSyllogism)
-            </div>
-            <div class="space-y-2 text-xs font-serif">
-              <div class="p-2.5 rounded-lg bg-white/5 text-neutral-300 border border-white/5"><span class="font-bold text-kintsugi-gold font-mono mr-1.5">[大前提]</span> 物理资源必须在离开作用域时确定性释放一次且仅一次。</div>
-              <div class="p-2.5 rounded-lg bg-white/5 text-neutral-300 border border-white/5"><span class="font-bold text-kintsugi-gold font-mono mr-1.5">[小前提]</span> 编译器基于 CFG 控制流图在编译期推导出局部变量的最后活跃点。</div>
-              <div class="p-2.5 rounded-lg bg-bamboo-surface text-bamboo-light font-bold border border-bamboo-green/40"><span class="font-mono mr-1.5">[必然结论]</span> 零运行期垃圾回收开销，从类型系统层面消除内存缺陷。</div>
-            </div>
-          </div>
-        `;
+    function handleBlockInput(e, idx, block) {
+      const el = e.target;
+      const text = el.innerText;
+      block.text = text;
+
+      // 飞书 / Notion 实时 Markdown 输入规则
+      if (text.startsWith('# ')) {
+        block.type = 'h1';
+        block.text = text.substring(2);
+        renderDocBlocks(block.id, 'start');
+      } else if (text.startsWith('## ')) {
+        block.type = 'h2';
+        block.text = text.substring(3);
+        renderDocBlocks(block.id, 'start');
+      } else if (text.startsWith('### ')) {
+        block.type = 'h3';
+        block.text = text.substring(4);
+        renderDocBlocks(block.id, 'start');
+      } else if (text.startsWith('> ')) {
+        block.type = 'quote';
+        block.text = text.substring(2);
+        renderDocBlocks(block.id, 'start');
+      } else if (text === '/') {
+        showSlashMenuNearCursor();
+      } else {
+        const slashMenu = document.getElementById('slash-menu');
+        if (!slashMenu.classList.contains('hidden') && !text.includes('/')) {
+          slashMenu.classList.add('hidden');
+        }
       }
-      return '';
+    }
+
+    function handleBlockKeyDown(e, idx, block) {
+      if (e.key === 'Enter') {
+        if (block.type === 'code' && e.shiftKey) {
+          return; // 代码块允许 Shift+Enter 换行
+        }
+        e.preventDefault();
+        const newBlock = { id: generateId(), type: 'p', text: '' };
+        docBlocks.splice(idx + 1, 0, newBlock);
+        renderDocBlocks(newBlock.id, 'start');
+      } else if (e.key === 'Backspace') {
+        const text = e.target.innerText;
+        if (text === '' || text === '\n') {
+          if (block.type !== 'p') {
+            e.preventDefault();
+            block.type = 'p';
+            renderDocBlocks(block.id, 'start');
+          } else if (docBlocks.length > 1) {
+            e.preventDefault();
+            docBlocks.splice(idx, 1);
+            const prevIdx = Math.max(0, idx - 1);
+            renderDocBlocks(docBlocks[prevIdx].id, 'end');
+          }
+        }
+      } else if (e.key === 'Escape') {
+        document.getElementById('slash-menu').classList.add('hidden');
+      }
+    }
+
+    function showSlashMenuNearCursor() {
+      const sel = window.getSelection();
+      if (!sel.rangeCount) return;
+      const range = sel.getRangeAt(0);
+      const rect = range.getBoundingClientRect();
+      const menu = document.getElementById('slash-menu');
+      menu.style.top = `${rect.bottom + window.scrollY + 8}px`;
+      menu.style.left = `${Math.min(rect.left, window.innerWidth - 340)}px`;
+      menu.classList.remove('hidden');
     }
 
     function triggerSlashMenu() {
       const menu = document.getElementById('slash-menu');
+      menu.style.top = '120px';
+      menu.style.left = '280px';
       menu.classList.toggle('hidden');
     }
 
     function insertSlashComponent(componentName) {
       document.getElementById('slash-menu').classList.add('hidden');
+      const widgetBlock = {
+        id: generateId(),
+        type: 'widget',
+        text: '',
+        widgetComponent: componentName,
+        widgetProps: { caption: '由创作者 Slash 积木菜单挂载' }
+      };
+
+      // 挂载到外置伴随清单
       activeInjections.push({
-        target_section: "## 新增交互小节",
+        target_section: "## 交互仿真小节",
         position: "after",
         component: componentName,
         props: { caption: "由创作者 Slash 积木菜单挂载" }
       });
-      rawBlocks.push("## 新增交互小节");
-      rawBlocks.push("这里是该小节的学术解析正文...");
-      renderLiveCanvas();
+
+      docBlocks.push(widgetBlock);
+      docBlocks.push({ id: generateId(), type: 'p', text: '' });
+      renderDocBlocks(widgetBlock.id);
       renderInjectionsAndPrereqs(activeInjections, activePrereqs);
       alert(`已成功挂载组件 [${componentName}] 到外置伴随清单！正文 Markdown 保持 100% 绝对纯净。`);
     }
 
     async function saveCurrentNote() {
       if (!currentDoc) return;
-      const content = getCleanMarkdownFromBlocks();
+      const content = blocksToMarkdown();
       const res = await fetch('/api/note', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -864,9 +894,9 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
           const el = document.createElement('div');
           el.className = 'p-2.5 rounded-lg glass-card cursor-pointer';
           el.innerHTML = `
-            <div class="font-bold text-amber-400 text-xs">${b.source_title}</div>
+            <div class="font-bold text-kintsugi-gold text-xs font-serif">${b.source_title}</div>
             <div class="text-[10px] text-neutral-400 mt-1 font-mono">${b.source_vault}/${b.source_path}</div>
-            <div class="text-xs text-neutral-300 mt-1 line-clamp-2">${b.snippet || ''}</div>
+            <div class="text-xs text-neutral-300 mt-1 font-serif line-clamp-2">${b.snippet || ''}</div>
           `;
           container.appendChild(el);
         });
@@ -882,11 +912,11 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
           const tr = document.createElement('tr');
           tr.className = 'hover:bg-white/5 transition font-mono';
           tr.innerHTML = `
-            <td class="p-3 text-amber-400">${r.vault || '@local'}</td>
+            <td class="p-3 text-kintsugi-gold">${r.vault || '@local'}</td>
             <td class="p-3 text-neutral-300">${r.path}</td>
-            <td class="p-3 font-sans font-medium text-white">${r.title}</td>
-            <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px]">${r.status || 'active'}</span></td>
-            <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px]">${r.priority || 'P1'}</span></td>
+            <td class="p-3 font-serif font-medium text-white">${r.title}</td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-bamboo-surface text-bamboo-light border border-bamboo-green/30 text-[10px]">${r.status || 'active'}</span></td>
+            <td class="p-3"><span class="px-2 py-0.5 rounded-full bg-kintsugi-gold/20 text-kintsugi-light border border-kintsugi-gold/30 text-[10px]">${r.priority || 'P1'}</span></td>
           `;
           tbody.appendChild(tr);
         });
@@ -897,18 +927,18 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
       if (tab === 'editor') {
         document.getElementById('view-editor').classList.remove('hidden');
         document.getElementById('view-bento').classList.add('hidden');
-        document.getElementById('btn-tab-editor').className = 'px-3 py-1 rounded-md bg-amber-500/20 text-amber-300 font-medium';
-        document.getElementById('btn-tab-bento').className = 'px-3 py-1 rounded-md text-neutral-400 hover:text-white';
+        document.getElementById('btn-tab-editor').className = 'px-4 py-1 rounded-full bg-kintsugi-gold/20 text-kintsugi-light font-medium tracking-wide';
+        document.getElementById('btn-tab-bento').className = 'px-4 py-1 rounded-full text-neutral-400 hover:text-white transition';
       } else {
         document.getElementById('view-editor').classList.add('hidden');
         document.getElementById('view-bento').classList.remove('hidden');
-        document.getElementById('btn-tab-bento').className = 'px-3 py-1 rounded-md bg-amber-500/20 text-amber-300 font-medium';
-        document.getElementById('btn-tab-editor').className = 'px-3 py-1 rounded-md text-neutral-400 hover:text-white';
+        document.getElementById('btn-tab-bento').className = 'px-4 py-1 rounded-full bg-kintsugi-gold/20 text-kintsugi-light font-medium tracking-wide';
+        document.getElementById('btn-tab-editor').className = 'px-4 py-1 rounded-full text-neutral-400 hover:text-white transition';
         loadBento();
       }
     }
 
-    // 智能剪贴板清洗拦截器
+    // 智能剪贴板清洗拦截器 (Smart Clipboard Sanitizer)
     document.addEventListener('paste', function(e) {
       const html = e.clipboardData.getData('text/html');
       if (html && html.trim()) {
@@ -917,8 +947,9 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
         const doc = parser.parseFromString(html, 'text/html');
         let text = doc.body.textContent || '';
         text = text.replace(/<!--[\s\S]*?-->/g, '').replace(/<\/?[^>]+(>|$)/g, '');
-        rawBlocks.push(text);
-        renderLiveCanvas();
+        const newBlock = { id: generateId(), type: 'p', text: text };
+        docBlocks.push(newBlock);
+        renderDocBlocks(newBlock.id, 'end');
       }
     });
 
