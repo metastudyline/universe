@@ -1,10 +1,12 @@
 name: StudyLine & NoteBoot Industrial 5-Stage CI Pipeline
 
+# 自动触发已关闭以节省 GitHub Actions 额度；仅保留手动调度 (workflow_dispatch)
+# on:
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:

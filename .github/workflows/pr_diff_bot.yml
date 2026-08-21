@@ -1,8 +1,11 @@
 name: PR Visual Topology Diff Bot
 
+# 自动触发已关闭以节省 GitHub Actions 额度；仅保留手动调度 (workflow_dispatch)
+# on:
+#   pull_request:
+#     types: [opened, synchronize, reopened]
 on:
-  pull_request:
-    types: [opened, synchronize, reopened]
+  workflow_dispatch:
 
 jobs:
   topology-diff:
