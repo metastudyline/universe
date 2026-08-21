@@ -1,7 +1,6 @@
 // =============================================================================
 // StudyLine macOS Top-Level Navigation Shell (顶层系统导航中枢外壳)
-// 5-Tab Hub: Home × Topology × Workbench × Exam × Settings
-// Strict Y=90pt Kintsugi Gold Line Alignment
+// Fluid Dynamic Background Canvas × 5-Tab Glass Hub × Y=90pt Kintsugi Gold Line
 // =============================================================================
 
 import SwiftUI
@@ -46,45 +45,54 @@ public struct AppNavigationShell: View {
     }
 
     public var body: some View {
-        VStack(spacing: 0) {
-            // 顶层全局导航 Header Bar (Y=90pt 金线绝对对齐)
-            topNavigationHeader
+        ZStack {
+            // 1. 全局流体动态极光背景底盘 (Fluid Dynamic Mesh Background)
+            StudyLineFluidBackgroundView(
+                primaryColor: currentTab == .workbench ? StudyLineTheme.bambooGreen : StudyLineTheme.cosmicUltramarine,
+                secondaryColor: StudyLineTheme.kintsugiGold,
+                accentColor: currentTab == .exam ? StudyLineTheme.cinnabarRed : StudyLineTheme.bambooGreen,
+                speed: 0.22
+            )
+            .allowsHitTesting(false)
 
-            // 核心视图切换区 (State-Preserving View Switcher)
-            ZStack {
-                switch currentTab {
-                case .home:
+            // 2. 核心主内容区与顶栏外壳
+            VStack(spacing: 0) {
+                // 顶层全局导航 Header Bar (Y=90pt 金线绝对对齐)
+                topNavigationHeader
+
+                // 核心视图切换区 (State-Preserving View Switcher)
+                ZStack {
                     UniverseHomeView(
                         selectedNodeId: $selectedNodeId,
                         currentTab: $currentTab,
                         isExamPresented: $isExamPresented
                     )
-                    .transition(.opacity)
+                    .opacity(currentTab == .home ? 1 : 0)
+                    .allowsHitTesting(currentTab == .home)
 
-                case .workbench:
                     MainSplitView(
                         selectedNodeId: $selectedNodeId,
                         isZenMode: $isZenMode,
                         isExamPresented: $isExamPresented
                     )
-                    .transition(.opacity)
+                    .opacity(currentTab == .workbench ? 1 : 0)
+                    .allowsHitTesting(currentTab == .workbench)
 
-                case .topology:
                     topologyPlaceholderView
-                        .transition(.opacity)
+                        .opacity(currentTab == .topology ? 1 : 0)
+                        .allowsHitTesting(currentTab == .topology)
 
-                case .exam:
                     examArenaPlaceholderView
-                        .transition(.opacity)
+                        .opacity(currentTab == .exam ? 1 : 0)
+                        .allowsHitTesting(currentTab == .exam)
 
-                case .settings:
                     settingsPlaceholderView
-                        .transition(.opacity)
+                        .opacity(currentTab == .settings ? 1 : 0)
+                        .allowsHitTesting(currentTab == .settings)
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
-        .background(Color.primary.opacity(0.015))
         .ignoresSafeArea(.container, edges: .top)
     }
 
@@ -93,13 +101,18 @@ public struct AppNavigationShell: View {
         VStack(spacing: 0) {
             HStack(spacing: 16) {
                 // 左侧 Logo
-                HStack(spacing: 8) {
-                    Image(systemName: "circle.hexagongrid.fill")
-                        .font(.system(size: 15, weight: .bold))
-                        .foregroundStyle(TTZipTheme.kintsugiGold)
+                HStack(spacing: 9) {
+                    ZStack {
+                        Circle()
+                            .fill(StudyLineTheme.kintsugiGold.opacity(0.18))
+                            .frame(width: 24, height: 24)
+                        Image(systemName: "circle.hexagongrid.fill")
+                            .font(.system(size: 13, weight: .bold))
+                            .foregroundStyle(StudyLineTheme.kintsugiGold)
+                    }
                     Text("STUDYLINE")
                         .font(.system(size: 13, weight: .bold, design: .serif))
-                        .tracking(2.5)
+                        .tracking(3)
                         .foregroundStyle(.primary)
                 }
 
@@ -109,7 +122,7 @@ public struct AppNavigationShell: View {
                 HStack(spacing: 4) {
                     ForEach(AppTab.allCases) { tab in
                         Button(action: {
-                            withAnimation(.easeInOut(duration: 0.18)) {
+                            withAnimation(.spring(response: 0.28, dampingFraction: 0.85)) {
                                 currentTab = tab
                             }
                             NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .now)
@@ -122,8 +135,8 @@ public struct AppNavigationShell: View {
                             }
                             .padding(.horizontal, 13)
                             .padding(.vertical, 6)
-                            .background(currentTab == tab ? TTZipTheme.kintsugiGold.opacity(0.18) : Color.clear)
-                            .foregroundStyle(currentTab == tab ? TTZipTheme.kintsugiGold : .secondary)
+                            .background(currentTab == tab ? StudyLineTheme.kintsugiGold.opacity(0.18) : Color.clear)
+                            .foregroundStyle(currentTab == tab ? StudyLineTheme.kintsugiGold : .secondary)
                             .clipShape(Capsule())
                         }
                         .buttonStyle(.plain)
@@ -131,9 +144,10 @@ public struct AppNavigationShell: View {
                 }
                 .padding(4)
                 .background(VisualEffectBlur(material: .sidebar, blendingMode: .withinWindow))
-                .background(Color.primary.opacity(0.03))
+                .background(Color.primary.opacity(0.02))
                 .clipShape(Capsule())
-                .overlay(Capsule().strokeBorder(TTZipTheme.hairlineBorder, lineWidth: 0.8))
+                .overlay(Capsule().strokeBorder(StudyLineTheme.hairlineBorder, lineWidth: 0.6))
+                .shadow(color: Color.black.opacity(0.04), radius: 6, y: 2)
 
                 Spacer()
 
@@ -143,6 +157,7 @@ public struct AppNavigationShell: View {
                         withAnimation(.easeInOut(duration: 0.25)) {
                             isZenMode.toggle()
                         }
+                        NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .now)
                     }) {
                         Image(systemName: isZenMode ? "arrow.down.right.and.arrow.up.left" : "arrow.up.left.and.arrow.down.right")
                             .font(.system(size: 12, weight: .bold))
@@ -164,11 +179,12 @@ public struct AppNavigationShell: View {
                             Text("出段大考")
                                 .font(.system(size: 11, weight: .bold))
                         }
-                        .padding(.horizontal, 12)
+                        .padding(.horizontal, 13)
                         .padding(.vertical, 6)
-                        .background(TTZipTheme.bambooGreen)
+                        .background(StudyLineTheme.bambooGreen)
                         .foregroundStyle(Color.white)
                         .clipShape(Capsule())
+                        .shadow(color: StudyLineTheme.bambooGreen.opacity(0.3), radius: 6, y: 2)
                     }
                     .buttonStyle(.plain)
                 }
@@ -178,7 +194,7 @@ public struct AppNavigationShell: View {
 
             // Y = 90pt 贯通金线 (38pt padding + 52pt header)
             Rectangle()
-                .fill(TTZipTheme.kintsugiGold)
+                .fill(StudyLineTheme.kintsugiGold)
                 .frame(height: 1.5)
         }
         .padding(.top, 38)
@@ -186,21 +202,23 @@ public struct AppNavigationShell: View {
 
     // MARK: - 占位视图
     private var topologyPlaceholderView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 18) {
             Image(systemName: "point.3.connected.trianglepath.dotted")
-                .font(.system(size: 48))
-                .foregroundStyle(TTZipTheme.kintsugiGold)
+                .font(.system(size: 52))
+                .foregroundStyle(StudyLineTheme.kintsugiGold)
             Text("60FPS 宏观知识星云力导向拓扑画布")
-                .font(.system(size: 20, weight: .bold, design: .serif))
+                .font(StudyLineTheme.Typography.displayTitle)
             Text("支持 LOD 0 星系热力 ➔ LOD 1 金色骨干 ➔ LOD 2 胶囊细节的 3 级语义缩放")
-                .font(.system(size: 13))
+                .font(StudyLineTheme.Typography.body)
                 .foregroundStyle(.secondary)
-            Button("进入研读工作台") {
-                currentTab = .workbench
+            Button("进入研读工作台 (⌘1)") {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    currentTab = .workbench
+                }
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 8)
-            .background(TTZipTheme.kintsugiGold)
+            .padding(.horizontal, 18)
+            .padding(.vertical, 9)
+            .background(StudyLineTheme.kintsugiGold)
             .foregroundStyle(Color.black)
             .clipShape(Capsule())
         }
@@ -208,21 +226,21 @@ public struct AppNavigationShell: View {
     }
 
     private var examArenaPlaceholderView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 18) {
             Image(systemName: "pencil.and.outline")
-                .font(.system(size: 48))
-                .foregroundStyle(TTZipTheme.bambooGreen)
+                .font(.system(size: 52))
+                .foregroundStyle(StudyLineTheme.bambooGreen)
             Text("出段考核竞技场 (Exam Arena)")
-                .font(.system(size: 20, weight: .bold, design: .serif))
+                .font(StudyLineTheme.Typography.displayTitle)
             Text("完成 0段神话悲剧、阶段A爱利亚存在论与 Rust 内存模型闭卷因果推演")
-                .font(.system(size: 13))
+                .font(StudyLineTheme.Typography.body)
                 .foregroundStyle(.secondary)
             Button("启动出段考核 (⌘E)") {
                 isExamPresented = true
             }
-            .padding(.horizontal, 18)
-            .padding(.vertical, 8)
-            .background(TTZipTheme.bambooGreen)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 9)
+            .background(StudyLineTheme.bambooGreen)
             .foregroundStyle(Color.white)
             .clipShape(Capsule())
         }
@@ -230,14 +248,14 @@ public struct AppNavigationShell: View {
     }
 
     private var settingsPlaceholderView: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 18) {
             Image(systemName: "gearshape.2.fill")
-                .font(.system(size: 48))
+                .font(.system(size: 52))
                 .foregroundStyle(.secondary)
             Text("StudyLine 系统级引擎与数据中枢")
-                .font(.system(size: 20, weight: .bold, design: .serif))
+                .font(StudyLineTheme.Typography.displayTitle)
             Text("All-in-Rust C-ABI 静态库直连 · rkyv 零拷贝镜像 (.sla) · 本地 Axum 守护进程")
-                .font(.system(size: 13))
+                .font(StudyLineTheme.Typography.body)
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

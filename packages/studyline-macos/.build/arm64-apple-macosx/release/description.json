@@ -150,6 +150,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/StudyLineFluidBackgroundView.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/UniverseHomeView.swift"
         },
         {
@@ -176,6 +180,7 @@
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/ExitExamModalView.swift.o",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/LectureWorkbenchView.swift.o",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/MainSplitView.swift.o",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineFluidBackgroundView.swift.o",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/UniverseHomeView.swift.o"
       ],
       "otherArguments" : [
@@ -262,6 +267,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineFluidBackgroundView.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/UniverseHomeView.swift.o"
         },
         {
@@ -278,6 +287,7 @@
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/ExitExamModalView.swift",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/LectureWorkbenchView.swift",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/MainSplitView.swift",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/StudyLineFluidBackgroundView.swift",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/UniverseHomeView.swift"
       ],
       "tempsPath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build",
@@ -365,6 +375,7 @@
       "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/ExitExamModalView.swift",
       "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/LectureWorkbenchView.swift",
       "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/MainSplitView.swift",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/StudyLineFluidBackgroundView.swift",
       "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/UniverseHomeView.swift",
       "-I",
       "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/Modules",
@@ -497,6 +508,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/StudyLineFluidBackgroundView.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/UniverseHomeView.swift"
         }
       ],
@@ -540,6 +555,10 @@
         {
           "kind" : "file",
           "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineFluidBackgroundView.swift.o"
         },
         {
           "kind" : "file",

@@ -1,6 +1,7 @@
 // =============================================================================
 // StudyLine macOS Native Universe Home Portal (知识宇宙控制台主页)
 // Hero Panorama × Resume Card × Bento Grid Domains × Daily Epigram
+// TTZip Zen Philosophy × WSJ Editorial Typography × Liquid Glass Cards
 // =============================================================================
 
 import SwiftUI
@@ -12,7 +13,6 @@ public struct UniverseHomeView: View {
     @Binding public var isExamPresented: Bool
 
     @State private var epigram: EpigramItem = DailyEpigramEngine.todayEpigram()
-    @State private var searchQuery: String = ""
 
     public init(
         selectedNodeId: Binding<String>,
@@ -26,7 +26,7 @@ public struct UniverseHomeView: View {
 
     public var body: some View {
         ScrollView(.vertical, showsIndicators: true) {
-            VStack(alignment: .leading, spacing: 28) {
+            VStack(alignment: .leading, spacing: 24) {
                 
                 // 1. Hero 宏观控制台概览 (Header Panorama)
                 heroSection
@@ -41,7 +41,7 @@ public struct UniverseHomeView: View {
                 dailyEpigramCard
 
                 // 底部留白
-                Spacer().frame(height: 40)
+                Spacer().frame(height: 36)
             }
             .padding(.horizontal, 36)
             .padding(.top, 24)
@@ -51,41 +51,39 @@ public struct UniverseHomeView: View {
 
     // MARK: - 1. Hero 宏观控制台概览
     private var heroSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("UNIVERSAL KNOWLEDGE DASHBOARD")
-                        .font(.system(size: 10, weight: .bold, design: .serif))
-                        .tracking(3)
-                        .foregroundStyle(TTZipTheme.kintsugiGold)
+                    HStack(spacing: 6) {
+                        Circle()
+                            .fill(StudyLineTheme.cosmicUltramarine)
+                            .frame(width: 7, height: 7)
+                        Text("UNIVERSAL KNOWLEDGE DASHBOARD")
+                            .font(.system(size: 9, weight: .bold, design: .serif))
+                            .tracking(3)
+                            .foregroundStyle(StudyLineTheme.cosmicUltramarine)
+                    }
 
                     Text("知识宇宙控制台")
-                        .font(.system(size: 28, weight: .bold, design: .serif))
+                        .font(StudyLineTheme.Typography.wsjHeadline)
                         .foregroundStyle(.primary)
 
                     Text("跨越古希腊本体论哲学与系统级 Rust 硬件内存模型的因果拓扑中枢")
-                        .font(.system(size: 13, weight: .regular))
+                        .font(StudyLineTheme.Typography.body)
                         .foregroundStyle(.secondary)
                 }
 
                 Spacer()
 
                 // 快速全域统计徽章
-                HStack(spacing: 16) {
-                    statCapsule(title: "全库知识点", value: "126+", icon: "sparkles", color: TTZipTheme.kintsugiGold)
-                    statCapsule(title: "掌握度星级", value: "48★", icon: "star.fill", color: TTZipTheme.kintsugiGold)
-                    statCapsule(title: "连续研读", value: "7 天", icon: "flame.fill", color: TTZipTheme.cinnabarRed)
+                HStack(spacing: 12) {
+                    statCapsule(title: "全库讲义", value: "126+", icon: "sparkles", color: StudyLineTheme.kintsugiGold)
+                    statCapsule(title: "掌握星级", value: "48★", icon: "star.fill", color: StudyLineTheme.kintsugiGold)
+                    statCapsule(title: "研读天数", value: "7 天", icon: "flame.fill", color: StudyLineTheme.cinnabarRed)
                 }
             }
         }
-        .padding(24)
-        .background(VisualEffectBlur(material: .sidebar, blendingMode: .withinWindow))
-        .background(Color.primary.opacity(0.02))
-        .clipShape(RoundedRectangle(cornerRadius: 20, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .strokeBorder(TTZipTheme.kintsugiGold.opacity(0.35), lineWidth: 1)
-        )
+        .studylineLiquidGlass(cornerRadius: StudyLineTheme.Radius.xl, padding: 22)
     }
 
     private func statCapsule(title: String, value: String, icon: String, color: Color) -> some View {
@@ -102,43 +100,43 @@ public struct UniverseHomeView: View {
                     .foregroundStyle(.primary)
             }
         }
-        .padding(.horizontal, 14)
-        .padding(.vertical, 8)
+        .padding(.horizontal, 13)
+        .padding(.vertical, 7)
         .background(Color.primary.opacity(0.03))
-        .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-        .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(TTZipTheme.hairlineBorder, lineWidth: 0.8))
+        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+        .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(StudyLineTheme.hairlineBorder, lineWidth: 0.5))
     }
 
     // MARK: - 2. Resume Learning 快速续读主卡
     private var resumeLearningCard: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 14) {
             HStack {
                 HStack(spacing: 6) {
                     Circle()
-                        .fill(TTZipTheme.bambooGreen)
+                        .fill(StudyLineTheme.bambooGreen)
                         .frame(width: 8, height: 8)
                     Text("最近研读断点 (RESUME LEARNING)")
                         .font(.system(size: 10, weight: .bold, design: .serif))
                         .tracking(2)
-                        .foregroundStyle(TTZipTheme.bambooGreen)
+                        .foregroundStyle(StudyLineTheme.bambooGreen)
                 }
 
                 Spacer()
 
                 Text("上次学习于 2 小时前")
-                    .font(.system(size: 11))
+                    .font(StudyLineTheme.Typography.subheadline)
                     .foregroundStyle(.secondary)
             }
 
             HStack(alignment: .center, spacing: 20) {
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 5) {
                     HStack(spacing: 8) {
                         Text(selectedNodeId.hasPrefix("R") ? "RUST 系统大系" : "古希腊哲学史大系")
                             .font(.system(size: 10, weight: .bold))
-                            .padding(.horizontal, 7)
-                            .padding(.vertical, 2)
-                            .background(selectedNodeId.hasPrefix("R") ? TTZipTheme.bambooGreen.opacity(0.15) : TTZipTheme.kintsugiGold.opacity(0.15))
-                            .foregroundStyle(selectedNodeId.hasPrefix("R") ? TTZipTheme.bambooGreen : TTZipTheme.kintsugiGold)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 3)
+                            .background(selectedNodeId.hasPrefix("R") ? StudyLineTheme.bambooGreen.opacity(0.14) : StudyLineTheme.kintsugiGold.opacity(0.14))
+                            .foregroundStyle(selectedNodeId.hasPrefix("R") ? StudyLineTheme.bambooGreen : StudyLineTheme.kintsugiGold)
                             .clipShape(Capsule())
 
                         Text("第 \(selectedNodeId) 讲")
@@ -147,11 +145,11 @@ public struct UniverseHomeView: View {
                     }
 
                     Text(selectedNodeId == "A04" ? "巴门尼德真理之路与存在论之锚" : (selectedNodeId == "R07" ? "从 C 语言内存缺陷到所有权发生学：UAF 与数据竞争" : "物理内存与类型系统形式化证明"))
-                        .font(.system(size: 18, weight: .bold, design: .serif))
+                        .font(StudyLineTheme.Typography.title1)
                         .foregroundStyle(.primary)
 
                     Text("当前阶段研读进度 65% · 已完成前置因果证明推演")
-                        .font(.system(size: 12))
+                        .font(StudyLineTheme.Typography.callout)
                         .foregroundStyle(.secondary)
                 }
 
@@ -159,7 +157,7 @@ public struct UniverseHomeView: View {
 
                 // 继续研读主按钮
                 Button(action: {
-                    withAnimation(.easeInOut(duration: 0.2)) {
+                    withAnimation(.spring(response: 0.28, dampingFraction: 0.85)) {
                         currentTab = .workbench
                     }
                     NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .now)
@@ -171,23 +169,16 @@ public struct UniverseHomeView: View {
                             .font(.system(size: 13, weight: .bold))
                     }
                     .padding(.horizontal, 22)
-                    .padding(.vertical, 11)
-                    .background(TTZipTheme.bambooGreen)
+                    .padding(.vertical, 10)
+                    .background(StudyLineTheme.bambooGreen)
                     .foregroundStyle(Color.white)
                     .clipShape(Capsule())
-                    .shadow(color: TTZipTheme.bambooGreen.opacity(0.3), radius: 8, y: 3)
+                    .shadow(color: StudyLineTheme.bambooGreen.opacity(0.35), radius: 8, y: 3)
                 }
                 .buttonStyle(.plain)
             }
         }
-        .padding(22)
-        .background(VisualEffectBlur(material: .sidebar, blendingMode: .withinWindow))
-        .background(Color.primary.opacity(0.025))
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(TTZipTheme.bambooGreen.opacity(0.3), lineWidth: 1)
-        )
+        .studylineLiquidGlass(cornerRadius: StudyLineTheme.Radius.xl, padding: 20)
     }
 
     // MARK: - 3. Bento Grid 领域知识矩阵
@@ -196,7 +187,7 @@ public struct UniverseHomeView: View {
             Text("DOMAINS & ACADEMIC PATHWAYS")
                 .font(.system(size: 10, weight: .bold, design: .serif))
                 .tracking(2)
-                .foregroundStyle(TTZipTheme.kintsugiGold)
+                .foregroundStyle(StudyLineTheme.kintsugiGold)
 
             HStack(spacing: 18) {
                 // 领域 1: 古希腊哲学史大系
@@ -206,7 +197,7 @@ public struct UniverseHomeView: View {
                     headline: "从神话宇宙论到爱利亚一元论",
                     description: "赫西俄德神谱、荷马正义分配、悲剧司法与巴门尼德存在论之锚。",
                     nodeCount: "126 讲义",
-                    accentColor: TTZipTheme.kintsugiGold,
+                    accentColor: StudyLineTheme.kintsugiGold,
                     icon: "building.columns.fill",
                     targetNode: "A04"
                 )
@@ -218,7 +209,7 @@ public struct UniverseHomeView: View {
                     headline: "物理内存、仿射类型与无畏并发",
                     description: "从 C 语言 UAF 崩溃到仿射逻辑、NLL Polonius、Pin 钉住证明与 Miri 模型。",
                     nodeCount: "100 讲义",
-                    accentColor: TTZipTheme.bambooGreen,
+                    accentColor: StudyLineTheme.bambooGreen,
                     icon: "cpu.fill",
                     targetNode: "R01"
                 )
@@ -236,7 +227,7 @@ public struct UniverseHomeView: View {
         icon: String,
         targetNode: String
     ) -> some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack {
                 Image(systemName: icon)
                     .font(.system(size: 16, weight: .bold))
@@ -253,13 +244,13 @@ public struct UniverseHomeView: View {
                 Spacer()
 
                 Text(nodeCount)
-                    .font(.system(size: 11, weight: .medium))
+                    .font(StudyLineTheme.Typography.subheadline)
                     .foregroundStyle(.secondary)
             }
 
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text(domainName)
-                    .font(.system(size: 17, weight: .bold, design: .serif))
+                    .font(StudyLineTheme.Typography.title1)
                     .foregroundStyle(.primary)
 
                 Text(headline)
@@ -268,7 +259,7 @@ public struct UniverseHomeView: View {
             }
 
             Text(description)
-                .font(.system(size: 12))
+                .font(StudyLineTheme.Typography.callout)
                 .foregroundStyle(.secondary)
                 .lineLimit(2)
 
@@ -276,7 +267,7 @@ public struct UniverseHomeView: View {
 
             Button(action: {
                 selectedNodeId = targetNode
-                withAnimation(.easeInOut(duration: 0.2)) {
+                withAnimation(.spring(response: 0.28, dampingFraction: 0.85)) {
                     currentTab = .workbench
                 }
                 NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .now)
@@ -296,76 +287,62 @@ public struct UniverseHomeView: View {
             }
             .buttonStyle(.plain)
         }
-        .padding(20)
-        .frame(maxWidth: .infinity, minHeight: 220)
-        .background(VisualEffectBlur(material: .sidebar, blendingMode: .withinWindow))
-        .background(Color.primary.opacity(0.025))
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(accentColor.opacity(0.25), lineWidth: 1)
-        )
+        .frame(maxWidth: .infinity, minHeight: 200)
+        .studylineLiquidGlass(cornerRadius: StudyLineTheme.Radius.xl, padding: 18)
     }
 
     // MARK: - 4. 每日一手原典思维火花
     private var dailyEpigramCard: some View {
-        VStack(alignment: .leading, spacing: 14) {
+        VStack(alignment: .leading, spacing: 12) {
             HStack {
                 HStack(spacing: 6) {
                     Image(systemName: "quote.opening")
                         .font(.system(size: 12, weight: .bold))
-                        .foregroundStyle(TTZipTheme.kintsugiGold)
+                        .foregroundStyle(StudyLineTheme.kintsugiGold)
                     Text("DAILY FIRST-PRINCIPLES EPIGRAM (每日一手原典)")
                         .font(.system(size: 10, weight: .bold, design: .serif))
                         .tracking(2)
-                        .foregroundStyle(TTZipTheme.kintsugiGold)
+                        .foregroundStyle(StudyLineTheme.kintsugiGold)
                 }
 
                 Spacer()
 
                 Text(epigram.domain)
-                    .font(.system(size: 11, weight: .medium))
+                    .font(StudyLineTheme.Typography.subheadline)
                     .foregroundStyle(.secondary)
             }
 
             // 原典原文字段 (古希腊文或标准库原典)
             Text(epigram.primaryText)
-                .font(.system(size: 15, weight: .medium, design: .serif))
+                .font(.system(size: 14, weight: .medium, design: .serif))
                 .italic()
                 .lineSpacing(4)
-                .foregroundStyle(TTZipTheme.kintsugiGold)
-                .padding(14)
+                .foregroundStyle(StudyLineTheme.kintsugiGold)
+                .padding(12)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .background(Color.primary.opacity(0.025))
-                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(TTZipTheme.kintsugiGold.opacity(0.25), lineWidth: 0.8))
+                .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(StudyLineTheme.kintsugiGold.opacity(0.25), lineWidth: 0.6))
 
             // 权威学术中译
             Text(epigram.translationCn)
-                .font(.system(size: 13, weight: .regular))
+                .font(StudyLineTheme.Typography.body)
                 .foregroundStyle(.primary)
                 .lineSpacing(3)
 
             HStack {
                 Text(epigram.citation)
-                    .font(.system(size: 11, weight: .semibold, design: .monospaced))
+                    .font(StudyLineTheme.Typography.codeCaption)
                     .foregroundStyle(.secondary)
 
                 Spacer()
 
                 Text(epigram.insight)
-                    .font(.system(size: 11))
+                    .font(StudyLineTheme.Typography.subheadline)
                     .italic()
                     .foregroundStyle(.secondary)
             }
         }
-        .padding(22)
-        .background(VisualEffectBlur(material: .sidebar, blendingMode: .withinWindow))
-        .background(Color.primary.opacity(0.02))
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .strokeBorder(TTZipTheme.hairlineBorder, lineWidth: 0.8)
-        )
+        .studylineLiquidGlass(cornerRadius: StudyLineTheme.Radius.xl, padding: 20)
     }
 }

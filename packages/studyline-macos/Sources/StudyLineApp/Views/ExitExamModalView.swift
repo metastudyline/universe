@@ -1,47 +1,68 @@
 // =============================================================================
-// StudyLine macOS Native Exit Exam Modal View (640pt × 520pt Liquid Glass)
-// Integrated with NSHapticFeedbackManager and TTZip Zen Design System
+// StudyLine macOS Native ExitExamModalView (出段大考模态视口)
+// 640x520pt Liquid Glass Modal × Dynamic Haptic Feedback × Syllogism Verification
 // =============================================================================
 
 import SwiftUI
 import AppKit
 
-public struct ExamQuestionModel: Identifiable {
-    public let id: String
+public struct ExamQuestion: Identifiable {
+    public let id: Int
+    public let title: String
     public let prompt: String
     public let options: [String]
     public let correctIndex: Int
+    public let explanation: String
 }
 
 public struct ExitExamModalView: View {
     @Binding public var isPresented: Bool
-    @State private var activeQuestionIndex: Int = 0
-    @State private var selectedOptionIndex: Int? = nil
+
+    @State private var currentQuestionIndex: Int = 0
+    @State private var selectedOption: Int? = nil
     @State private var isSubmitted: Bool = false
     @State private var score: Int = 0
+    @State private var isCompleted: Bool = false
 
-    private let questions: [ExamQuestionModel] = [
-        ExamQuestionModel(
-            id: "Q1",
-            prompt: "阿那克西曼德 DK 12 B1 中，事物向彼此支付赔偿（δίκη καὶ τίσις）的原因是什么？",
+    public let questions: [ExamQuestion] = [
+        ExamQuestion(
+            id: 1,
+            title: "0段因果论证 · 赫西俄德神谱始基",
+            prompt: "在《神谱》116-122行中，关于卡俄斯（Χάος）的生成，下列哪项第一性原理推演完全符合一手文献？",
             options: [
-                "因为事物侵占了神圣祭坛",
-                "因为单一元素在生成中逾界侵犯对方，构成 ἀδικία",
-                "因为城邦法官下达了强制死刑判决",
-                "因为四根被爱憎力量彻底撕裂"
+                "A. 卡俄斯是由无定（ἄπειρον）在时间秩序下因不义而分裂出的第一质料",
+                "B. 卡俄斯是‘裂开的深渊与原初虚空’（动词 chasko），它是万物分化生成的物理与几何容器空间",
+                "C. 卡俄斯是宙斯用闪电击碎克罗诺斯后创造出的神圣正义（δίκη）秩序",
+                "D. 卡俄斯是乌拉诺斯被阉割后生殖器落入大海泛起的白色泡沫"
             ],
-            correctIndex: 1
+            correctIndex: 1,
+            explanation: "词源考证：Χάος 派生自动词 χάσκω（裂开/敞开），指天地未分时的原初裂隙容器空间，而非现代语义中的混乱或无中生有神创。"
         ),
-        ExamQuestionModel(
-            id: "Q2",
-            prompt: "赫西俄德《劳作与时日》中，将 Ἔρις（争斗）一分为二的哲学动机是什么？",
+        ExamQuestion(
+            id: 2,
+            title: "阶段A本体论 · 巴门尼德真理之路",
+            prompt: "巴门尼德在 DK 28 B2/B6 中给出‘思维与存在同一（τὸ γὰρ αὐτὸ νοεῖν ἐστίν τε καὶ εἶναι）’的形式化归谬证明，其核心逻辑是什么？",
             options: [
-                "区分健康的劳动竞争与破坏性的诉讼掠夺",
-                "区分奥林匹斯神与提坦神",
-                "区分男人与女人的城邦分工",
-                "区分诗歌灵感与神谕真理"
+                "A. 因为非存在（无）不可被思维和言说，一旦试图思维‘无’，‘无’就成了思维的对象（有），故非存在在逻辑上不可能存在",
+                "B. 因为神灵通过赫拉的孔雀将存在者的真理直接启示给了沉睡的哲学家",
+                "C. 因为万物都是永恒活火按尺度点燃与熄灭的产物，相反者斗争构成了一",
+                "D. 因为数字是一切事物的本原，点线面体构成了球形宇宙"
             ],
-            correctIndex: 0
+            correctIndex: 0,
+            explanation: "排中律与反证法归谬：凡能被思维与言说的必是存在者，非存在（无）不可思议、不可言说，因此‘生成与毁灭’皆为虚妄幻觉。"
+        ),
+        ExamQuestion(
+            id: 3,
+            title: "Rust 系统内存 · 仿射类型系统证明",
+            prompt: "在 Rust 内存模型与 POPL 2018 Iris 分离逻辑证明中，‘别名异或可变性（Aliasing XOR Mutability）’的根本意义是什么？",
+            options: [
+                "A. 允许垃圾回收器在后台 STW 停顿时任意移动指针地址",
+                "B. 在同一时空内禁止同时存在共享只读与排他可变，既在编译期根除 UAF/数据竞争，又为 LLVM noalias 激进指令重排提供数学保证",
+                "C. 强行将所有堆内存分配重定向到操作系统栈帧顶端",
+                "D. 禁用所有的裸指针与汇编内联操作"
+            ],
+            correctIndex: 1,
+            explanation: "数学保证：∀x, (Shared(x) ∧ ¬Mutable(x)) ⊕ (Mutable(x) ∧ Unique(x))，同时锁死内存安全与编译器极端优化潜力。"
         )
     ]
 
@@ -49,158 +70,194 @@ public struct ExitExamModalView: View {
         self._isPresented = isPresented
     }
 
-    private var currentQuestion: ExamQuestionModel {
-        questions[activeQuestionIndex]
-    }
-
     public var body: some View {
         ZStack {
-            // 半透明遮罩
-            Color.black.opacity(0.4)
+            // 背景压暗与触觉阻断
+            Color.black.opacity(0.55)
                 .ignoresSafeArea()
                 .onTapGesture {
-                    isPresented = false
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                        isPresented = false
+                    }
                 }
 
-            // 640x520pt 液态玻璃模态框
+            // 640x540pt 核心液态磨砂大考模态卡片
             VStack(spacing: 0) {
-                // Header Bar (52pt)
-                HStack(spacing: 12) {
-                    VStack(alignment: .leading, spacing: 1) {
-                        Text("EXIT_EXAM_SYSTEM")
-                            .font(.system(size: 9, weight: .bold, design: .serif))
-                            .tracking(2)
-                            .foregroundStyle(TTZipTheme.kintsugiGold)
-                        Text("阶段出段综合大考")
-                            .font(.system(size: 15, weight: .bold, design: .serif))
-                            .foregroundStyle(.primary)
-                    }
+                // 模态顶栏
+                HStack(spacing: 10) {
+                    Image(systemName: "pencil.and.outline")
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundStyle(StudyLineTheme.bambooGreen)
+
+                    Text("STUDYLINE EXIT EXAM ARENA")
+                        .font(.system(size: 11, weight: .bold, design: .monospaced))
+                        .tracking(2)
+                        .foregroundStyle(StudyLineTheme.bambooGreen)
 
                     Spacer()
 
-                    HStack(spacing: 4) {
-                        Image(systemName: "clock.badge.checkmark")
-                            .font(.system(size: 10))
-                            .foregroundStyle(TTZipTheme.bambooGreen)
-                        Text("第 \(activeQuestionIndex + 1)/\(questions.count) 题")
-                            .font(.system(size: 11, weight: .bold, design: .monospaced))
-                            .foregroundStyle(TTZipTheme.bambooGreen)
-                    }
-                    .padding(.horizontal, 9)
-                    .padding(.vertical, 4)
-                    .background(TTZipTheme.bambooGreen.opacity(0.12))
-                    .clipShape(Capsule())
-
-                    Button(action: { isPresented = false }) {
+                    Button(action: {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                            isPresented = false
+                        }
+                    }) {
                         Image(systemName: "xmark.circle.fill")
                             .font(.system(size: 16))
-                            .foregroundStyle(Color.gray.opacity(0.6))
+                            .foregroundStyle(.secondary)
                     }
                     .buttonStyle(.plain)
                 }
-                .padding(.horizontal, 20)
-                .frame(height: 52)
+                .padding(.horizontal, 24)
+                .padding(.top, 20)
+                .padding(.bottom, 14)
 
-                // 1.5pt 金线
                 Rectangle()
-                    .fill(TTZipTheme.kintsugiGold)
-                    .frame(height: 1.5)
+                    .fill(StudyLineTheme.hairlineBorder)
+                    .frame(height: 0.8)
 
-                // 题目内容区
-                VStack(alignment: .leading, spacing: 20) {
-                    Text(currentQuestion.prompt)
-                        .font(.system(size: 14, weight: .semibold))
-                        .foregroundStyle(.primary)
-                        .lineSpacing(4)
-
-                    VStack(spacing: 10) {
-                        ForEach(0..<currentQuestion.options.count, id: \.self) { idx in
-                            let isSelected = selectedOptionIndex == idx
-                            HStack(spacing: 12) {
-                                Circle()
-                                    .fill(isSelected ? TTZipTheme.kintsugiGold : Color.clear)
-                                    .frame(width: 14, height: 14)
-                                    .overlay(Circle().stroke(isSelected ? TTZipTheme.kintsugiGold : Color.gray.opacity(0.5), lineWidth: 1.5))
-
-                                Text(currentQuestion.options[idx])
-                                    .font(.system(size: 13))
-                                    .foregroundStyle(isSelected ? TTZipTheme.kintsugiGold : .primary)
-                                Spacer()
-                            }
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 10)
-                            .background(isSelected ? TTZipTheme.kintsugiGold.opacity(0.08) : Color.primary.opacity(0.02))
-                            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: 10, style: .continuous).strokeBorder(isSelected ? TTZipTheme.kintsugiGold : TTZipTheme.hairlineBorder, lineWidth: 0.8))
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                selectedOptionIndex = idx
-                                NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .now)
-                            }
-                        }
-                    }
-
-                    Spacer()
-
-                    // 底部操作栏
-                    if isSubmitted {
-                        HStack {
-                            Image(systemName: "checkmark.seal.fill")
-                                .foregroundStyle(TTZipTheme.bambooGreen)
-                                .font(.system(size: 20))
-                            Text("考核通过！得分：\(score) 分 (出段判据满足)")
-                                .font(.system(size: 13, weight: .bold))
-                                .foregroundStyle(TTZipTheme.bambooGreen)
-                            Spacer()
-                            Button("完成 (↵)") {
-                                isPresented = false
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 6)
-                            .background(TTZipTheme.bambooGreen)
-                            .foregroundStyle(.white)
-                            .clipShape(Capsule())
-                            .buttonStyle(.plain)
-                        }
-                    } else {
-                        HStack {
-                            Text("[快捷键: 1-4 选择答案 │ 回车提交]")
-                                .font(.system(size: 11))
-                                .foregroundStyle(.secondary)
-                            Spacer()
-                            Button("提交试卷 (↵)") {
-                                submitExam()
-                            }
-                            .padding(.horizontal, 18)
-                            .padding(.vertical, 7)
-                            .background(selectedOptionIndex != nil ? TTZipTheme.bambooGreen : Color.gray.opacity(0.3))
-                            .foregroundStyle(.white)
-                            .clipShape(Capsule())
-                            .buttonStyle(.plain)
-                            .disabled(selectedOptionIndex == nil)
-                        }
-                    }
+                if !isCompleted {
+                    examBodyView
+                } else {
+                    examResultView
                 }
-                .padding(24)
             }
             .frame(width: 640, height: 520)
-            .background(
-                VisualEffectBlur(material: .hudWindow, blendingMode: .withinWindow)
-                    .overlay(Color.primary.opacity(0.025))
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(TTZipTheme.hairlineBorder, lineWidth: 0.8))
-            .shadow(color: Color.black.opacity(0.2), radius: 24, x: 0, y: 12)
+            .studylineLiquidGlass(cornerRadius: StudyLineTheme.Radius.xxl, padding: 0)
+            .shadow(color: Color.black.opacity(0.4), radius: 24, y: 12)
         }
     }
 
-    private func submitExam() {
-        if selectedOptionIndex == currentQuestion.correctIndex {
-            score = 100
-        } else {
-            score = 50
+    // MARK: - 答题面板
+    private var examBodyView: some View {
+        let q = questions[currentQuestionIndex]
+
+        return VStack(alignment: .leading, spacing: 16) {
+            HStack {
+                Text("问题 \(currentQuestionIndex + 1) / \(questions.count)")
+                    .font(.system(size: 11, weight: .bold, design: .monospaced))
+                    .foregroundStyle(StudyLineTheme.kintsugiGold)
+
+                Spacer()
+
+                Text(q.title)
+                    .font(StudyLineTheme.Typography.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            Text(q.prompt)
+                .font(StudyLineTheme.Typography.title2)
+                .foregroundStyle(.primary)
+                .lineSpacing(4)
+                .fixedSize(horizontal: false, vertical: true)
+
+            // 选项列表
+            VStack(spacing: 8) {
+                ForEach(0..<q.options.count, id: \.self) { idx in
+                    let opt = q.options[idx]
+                    Button(action: {
+                        if !isSubmitted {
+                            selectedOption = idx
+                            NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .now)
+                        }
+                    }) {
+                        HStack(alignment: .top, spacing: 10) {
+                            Circle()
+                                .strokeBorder(selectedOption == idx ? StudyLineTheme.kintsugiGold : StudyLineTheme.hairlineBorder, lineWidth: selectedOption == idx ? 4 : 1)
+                                .frame(width: 14, height: 14)
+                                .padding(.top, 2)
+
+                            Text(opt)
+                                .font(StudyLineTheme.Typography.callout)
+                                .foregroundStyle(.primary)
+                                .lineSpacing(2)
+                                .multilineTextAlignment(.leading)
+
+                            Spacer()
+                        }
+                        .padding(12)
+                        .background(selectedOption == idx ? StudyLineTheme.kintsugiGold.opacity(0.12) : Color.primary.opacity(0.025))
+                        .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .strokeBorder(selectedOption == idx ? StudyLineTheme.kintsugiGold.opacity(0.4) : StudyLineTheme.hairlineBorder, lineWidth: 0.8)
+                        )
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+
+            Spacer()
+
+            // 底部操作栏
+            HStack {
+                Spacer()
+
+                Button(action: {
+                    if let selected = selectedOption {
+                        if selected == q.correctIndex {
+                            score += 1
+                        }
+                        if currentQuestionIndex + 1 < questions.count {
+                            currentQuestionIndex += 1
+                            selectedOption = nil
+                        } else {
+                            isCompleted = true
+                            NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
+                        }
+                    }
+                }) {
+                    HStack(spacing: 6) {
+                        Text(currentQuestionIndex + 1 == questions.count ? "完成大考结算" : "下一题")
+                            .font(.system(size: 12, weight: .bold))
+                        Image(systemName: "arrow.right")
+                            .font(.system(size: 11, weight: .bold))
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 9)
+                    .background(selectedOption != nil ? StudyLineTheme.bambooGreen : Color.secondary.opacity(0.2))
+                    .foregroundStyle(Color.white)
+                    .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                .disabled(selectedOption == nil)
+            }
         }
-        isSubmitted = true
-        NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
+        .padding(24)
+    }
+
+    // MARK: - 结算报告面板
+    private var examResultView: some View {
+        VStack(spacing: 20) {
+            Spacer()
+
+            Image(systemName: score == questions.count ? "laurel.leading" : "checkmark.seal.fill")
+                .font(.system(size: 54))
+                .foregroundStyle(StudyLineTheme.kintsugiGold)
+
+            Text(score == questions.count ? "出段大考满分通过！" : "考核完成")
+                .font(StudyLineTheme.Typography.displayTitle)
+                .foregroundStyle(.primary)
+
+            Text("得分：\(score) / \(questions.count) · 获得【巴门尼德存在论与仿射内存大师】金缮勋章")
+                .font(StudyLineTheme.Typography.body)
+                .foregroundStyle(.secondary)
+
+            Spacer()
+
+            Button("返回研读宇宙") {
+                withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                    isPresented = false
+                }
+            }
+            .padding(.horizontal, 24)
+            .padding(.vertical, 10)
+            .background(StudyLineTheme.bambooGreen)
+            .foregroundStyle(Color.white)
+            .clipShape(Capsule())
+            .shadow(color: StudyLineTheme.bambooGreen.opacity(0.35), radius: 8, y: 3)
+
+            Spacer().frame(height: 10)
+        }
+        .padding(24)
     }
 }

@@ -1,6 +1,7 @@
 // =============================================================================
 // StudyLine macOS Native MainSplitView (2-Column + Inspector)
 // Strict Y=90pt Kintsugi Gold Line Alignment across all three columns
+// Fluid Background Compatible & TTZip Zen Liquid Glass
 // =============================================================================
 
 import SwiftUI
@@ -27,10 +28,11 @@ public struct MainSplitView: View {
         NodeModel(id: "E29", title: "两种争斗与正义的发生", stage: "0段·神话", lines: "1-41", stars: 4),
         NodeModel(id: "E66", title: "战神山法庭与司法的诞生", stage: "0段·悲剧", lines: "566-777", stars: 5),
         NodeModel(id: "E82", title: "0段出段综合大考", stage: "0段·考核", lines: "94期全景", stars: 5),
-        NodeModel(id: "A01", title: "泰勒斯：水是万物的始基", stage: "阶段A·米利都", lines: "DK 11 A12", stars: 4),
-        NodeModel(id: "A04", title: "阿那克西曼德残篇 B1", stage: "阶段A·米利都", lines: "DK 12 B1", stars: 5),
-        NodeModel(id: "A16", title: "赫拉克利特：活火与对立", stage: "阶段A·爱非斯", lines: "DK 22 B30", stars: 4),
-        NodeModel(id: "A25", title: "巴门尼德：真理之路", stage: "阶段A·爱利亚", lines: "DK 28 B2", stars: 5),
+        NodeModel(id: "A01", title: "世界的质料：米利都三杰与阿派朗", stage: "阶段A·米利都", lines: "DK 12 B1", stars: 5),
+        NodeModel(id: "A04", title: "巴门尼德真理之路与存在论之锚", stage: "阶段A·爱利亚", lines: "DK 28 B2-B8", stars: 5),
+        NodeModel(id: "R01", title: "栈堆物理布局与 CPU 缓存行", stage: "Rust 0段", lines: "硬件物理", stars: 5),
+        NodeModel(id: "R07", title: "从 C 缺陷到所有权发生学：UAF 与数据竞争", stage: "Rust 0段", lines: "缺陷发生学", stars: 5),
+        NodeModel(id: "R12", title: "仿射类型系统（Affine Types）数学证明", stage: "Rust 0段", lines: "形式化逻辑", stars: 5)
     ]
 
     public init(
@@ -43,139 +45,155 @@ public struct MainSplitView: View {
         self._isExamPresented = isExamPresented
     }
 
-    private var activeNode: NodeModel {
-        nodes.first(where: { $0.id == selectedNodeId }) ?? nodes[6]
-    }
-
     public var body: some View {
         NavigationSplitView {
-            // 1. Sidebar (左侧学科树)
+            // MARK: - 左侧 200pt 导航侧边栏
             VStack(spacing: 0) {
-                TTZipHeaderBar(
-                    sectionName: "DISCIPLINE_TREE",
-                    title: "学科大纲",
-                    badgeText: "\(nodes.count) 讲"
+                StudyLineHeaderBar(
+                    sectionName: "PHILOSOPHY & RUST",
+                    title: "因果学线",
+                    badgeText: "\(nodes.count)"
                 )
 
-                List(nodes, id: \.id, selection: $selectedNodeId) { node in
+                // 搜索栏
+                HStack(spacing: 6) {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                    TextField("快速索引节点...", text: $searchQuery)
+                        .textFieldStyle(.plain)
+                        .font(.system(size: 12))
+                }
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(Color.primary.opacity(0.03))
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).strokeBorder(StudyLineTheme.hairlineBorder, lineWidth: 0.5))
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+
+                List(nodes.filter { searchQuery.isEmpty || $0.title.contains(searchQuery) || $0.id.contains(searchQuery) }, id: \.id, selection: $selectedNodeId) { node in
                     HStack(spacing: 8) {
                         Circle()
-                            .fill(node.id == selectedNodeId ? TTZipTheme.kintsugiGold : Color.gray.opacity(0.4))
+                            .fill(node.id.hasPrefix("R") ? StudyLineTheme.bambooGreen : StudyLineTheme.kintsugiGold)
                             .frame(width: 6, height: 6)
 
                         VStack(alignment: .leading, spacing: 2) {
-                            Text("\(node.id): \(node.title)")
-                                .font(.system(size: 13, weight: node.id == selectedNodeId ? .semibold : .regular))
-                                .foregroundStyle(node.id == selectedNodeId ? TTZipTheme.kintsugiGold : .primary)
-                            Text(node.stage)
-                                .font(.system(size: 10))
-                                .foregroundStyle(.secondary)
+                            HStack {
+                                Text(node.id)
+                                    .font(.system(size: 11, weight: .bold, design: .monospaced))
+                                    .foregroundStyle(selectedNodeId == node.id ? StudyLineTheme.kintsugiGold : .secondary)
+                                Spacer()
+                                Text(node.stage)
+                                    .font(.system(size: 9, weight: .medium))
+                                    .foregroundStyle(.tertiary)
+                            }
+                            Text(node.title)
+                                .font(.system(size: 12, weight: selectedNodeId == node.id ? .semibold : .regular))
+                                .foregroundStyle(.primary)
+                                .lineLimit(1)
                         }
-                        Spacer()
                     }
-                    .padding(.vertical, 2)
-                    .contentShape(Rectangle())
-                    .onTapGesture {
-                        selectedNodeId = node.id
-                        NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .now)
-                    }
+                    .padding(.vertical, 4)
+                    .tag(node.id)
                 }
                 .listStyle(.sidebar)
+                .scrollContentBackground(.hidden)
             }
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200, max: 240)
-            .background(VisualEffectBlur(material: .sidebar))
+            .navigationSplitViewColumnWidth(min: 180, ideal: 210, max: 250)
+            .background(Color.clear)
         } detail: {
-            // 2. Central Lecture Workbench (中央原典研读区)
-            VStack(spacing: 0) {
-                TTZipHeaderBar(
-                    sectionName: "PRIMARY_SOURCE",
-                    title: "\(activeNode.id) · \(activeNode.title)",
-                    badgeText: "DK 12 B1"
+            // MARK: - 中央核心学术讲义研读工作台
+            HStack(spacing: 0) {
+                LectureWorkbenchView(
+                    selectedNodeId: $selectedNodeId,
+                    isZenMode: $isZenMode,
+                    showInspector: $showInspector
                 )
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-                LectureWorkbenchView(node: activeNode, onOpenExam: {
-                    isExamPresented = true
-                    NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
-                })
-            }
-            .background(Color.primary.opacity(0.015))
-            .inspector(isPresented: $showInspector) {
-                // 3. Inspector (右侧检查器：TOC 与掌握度)
-                VStack(spacing: 0) {
-                    TTZipHeaderBar(
-                        sectionName: "MASTERY_TOC",
-                        title: "大纲与掌握度",
-                        badgeText: "85%"
-                    )
+                // MARK: - 右侧 280pt 检查器边栏
+                if showInspector && !isZenMode {
+                    Rectangle()
+                        .fill(StudyLineTheme.hairlineBorder)
+                        .frame(width: 0.8)
 
-                    ScrollView {
-                        VStack(alignment: .leading, spacing: 16) {
-                            // 掌握度星级
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text("当前章节掌握度")
-                                    .font(.system(size: 11, weight: .bold, design: .serif))
-                                    .foregroundStyle(.secondary)
-                                HStack(spacing: 4) {
-                                    ForEach(0..<5) { star in
-                                        Image(systemName: star < activeNode.stars ? "star.fill" : "star")
-                                            .font(.system(size: 12))
-                                            .foregroundStyle(TTZipTheme.kintsugiGold)
+                    VStack(spacing: 0) {
+                        StudyLineHeaderBar(
+                            sectionName: "INSPECTOR",
+                            title: "知识因果分析",
+                            badgeText: "DAG"
+                        )
+
+                        ScrollView {
+                            VStack(alignment: .leading, spacing: 18) {
+                                // 节点基本信息卡片
+                                VStack(alignment: .leading, spacing: 10) {
+                                    Text("当前研读节点")
+                                        .font(.system(size: 10, weight: .bold, design: .serif))
+                                        .foregroundStyle(StudyLineTheme.kintsugiGold)
+
+                                    HStack {
+                                        Text(selectedNodeId)
+                                            .font(.system(size: 18, weight: .bold, design: .monospaced))
+                                            .foregroundStyle(StudyLineTheme.kintsugiGold)
+                                        Spacer()
+                                        HStack(spacing: 2) {
+                                            ForEach(0..<5) { _ in
+                                                Image(systemName: "star.fill")
+                                                    .font(.system(size: 10))
+                                                    .foregroundStyle(StudyLineTheme.kintsugiGold)
+                                            }
+                                        }
                                     }
-                                    Text("5星达标")
-                                        .font(.system(size: 11, weight: .semibold))
-                                        .foregroundStyle(TTZipTheme.bambooGreen)
-                                        .padding(.leading, 4)
-                                }
-                            }
-                            .padding(14)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color.primary.opacity(0.03))
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(TTZipTheme.hairlineBorder, lineWidth: 0.8))
 
-                            // 目录大纲
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text("目录导航 (TOC)")
-                                    .font(.system(size: 11, weight: .bold, design: .serif))
-                                    .foregroundStyle(.secondary)
-
-                                ForEach(["1. 一手原典文献锚点", "2. 核心哲学发生学解析", "3. 形式化论证三段论", "4. 核心范畴演进对照表"], id: \.self) { item in
-                                    Text(item)
-                                        .font(.system(size: 12))
-                                        .foregroundStyle(.primary.opacity(0.8))
-                                        .padding(.vertical, 2)
+                                    Text(nodes.first(where: { $0.id == selectedNodeId })?.title ?? "真理之路与存在论之锚")
+                                        .font(StudyLineTheme.Typography.title2)
+                                        .foregroundStyle(.primary)
                                 }
-                            }
-                            .padding(14)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background(Color.primary.opacity(0.03))
-                            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                            .overlay(RoundedRectangle(cornerRadius: 12, style: .continuous).strokeBorder(TTZipTheme.hairlineBorder, lineWidth: 0.8))
+                                .studylineLiquidGlass(cornerRadius: 12, padding: 14)
 
-                            // 快捷出段考核胶囊按钮
-                            Button(action: {
-                                isExamPresented = true
-                                NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
-                            }) {
-                                HStack {
-                                    Image(systemName: "pencil.and.outline")
-                                        .font(.system(size: 12, weight: .bold))
-                                    Text("启动出段考核 (⌘E)")
-                                        .font(.system(size: 12, weight: .bold))
+                                // 形式化因果推演卡片
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("前置公理依赖 (Prerequisites)")
+                                        .font(.system(size: 10, weight: .bold, design: .serif))
+                                        .foregroundStyle(StudyLineTheme.kintsugiGold)
+
+                                    Text(selectedNodeId.hasPrefix("R") ? "• R01: 栈堆物理布局与 Cache Line\n• R06: C 指针别名与就地突变\n• R12: 仿射类型系统证明" : "• E07: 卡俄斯虚空裂开\n• E29: 两种争斗与正义发生\n• A01: 始基与无定阿派朗")
+                                        .font(.system(size: 11, design: .monospaced))
+                                        .foregroundStyle(.secondary)
+                                        .lineSpacing(4)
                                 }
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 9)
-                                .background(TTZipTheme.bambooGreen)
-                                .foregroundStyle(Color.white)
-                                .clipShape(Capsule())
+                                .studylineLiquidGlass(cornerRadius: 12, padding: 14)
+
+                                // 快捷出段考核胶囊按钮
+                                Button(action: {
+                                    isExamPresented = true
+                                    NSHapticFeedbackManager.defaultPerformer.perform(.alignment, performanceTime: .now)
+                                }) {
+                                    HStack {
+                                        Image(systemName: "pencil.and.outline")
+                                            .font(.system(size: 12, weight: .bold))
+                                        Text("启动出段考核 (⌘E)")
+                                            .font(.system(size: 12, weight: .bold))
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding(.vertical, 10)
+                                    .background(StudyLineTheme.bambooGreen)
+                                    .foregroundStyle(Color.white)
+                                    .clipShape(Capsule())
+                                    .shadow(color: StudyLineTheme.bambooGreen.opacity(0.35), radius: 6, y: 2)
+                                }
+                                .buttonStyle(.plain)
                             }
-                            .buttonStyle(.plain)
+                            .padding(16)
                         }
-                        .padding(16)
+                        .frame(width: 280)
                     }
-                    .inspectorColumnWidth(min: 240, ideal: 280, max: 320)
+                    .background(Color.clear)
                 }
             }
         }
+        .background(Color.clear)
     }
 }
