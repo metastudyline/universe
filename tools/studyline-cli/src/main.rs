@@ -47,6 +47,20 @@ enum Commands {
         #[arg(short, long, default_value = "domains")]
         domains_dir: PathBuf,
     },
+    /// 🗺 View main quest tree, fog-of-war progress, and unlocked battle pathways
+    Quest {
+        #[arg(default_value = "rust")]
+        domain: String,
+        #[arg(short, long, default_value = "domains")]
+        domains_dir: PathBuf,
+    },
+    /// 🏗 Step-by-step industrial project workshops (Mini-Grep, Sysmon, etc.)
+    Workshop {
+        #[arg(default_value = "list")]
+        action: String,
+        #[arg(default_value = "")]
+        name: String,
+    },
     /// Launch interactive 60FPS Terminal Academic Reader & Exit Exam (TUI)
     Tui {
         #[arg(short, long, default_value = "domains")]
@@ -700,6 +714,83 @@ fn main() {
             let _ = std::process::Command::new(&editor).arg(&file_path).status();
 
             println!("  \x1b[32m✔ 编辑完成！运行 `./studyline run {}` 可直接查看你的修改输出！\x1b[0m\n", node.id);
+        }
+        Commands::Quest { domain, domains_dir } => {
+            println!("\n  \x1b[1;33m╔═══════════════════════════════════════════════════════════════════════╗\x1b[0m");
+            println!("  \x1b[1;33m║\x1b[0m            \x1b[1;37m✦  S T U D Y L I N E   Q U E S T   T R E E  ✦\x1b[0m              \x1b[1;33m║\x1b[0m");
+            println!("  \x1b[1;33m║\x1b[0m      \x1b[36m第一性原理关卡状态机 · 渐进式迷雾解锁 · 金色活火主线\x1b[0m            \x1b[1;33m║\x1b[0m");
+            println!("  \x1b[1;33m╚═══════════════════════════════════════════════════════════════════════╝\x1b[0m\n");
+
+            let nodes = scan_all_nodes(&domains_dir);
+            let domain_nodes: Vec<_> = nodes.iter()
+                .filter(|n| n.domain.eq_ignore_ascii_case(&domain))
+                .collect();
+
+            if domain_nodes.is_empty() {
+                println!("  \x1b[31m[EMPTY]\x1b[0m 领域 {} 下暂无关卡数据。\n", domain);
+            } else {
+                let mut stage_map: HashMap<String, Vec<&PhysicalNodeInfo>> = HashMap::new();
+                for n in domain_nodes {
+                    stage_map.entry(n.stage.clone()).or_default().push(n);
+                }
+
+                println!("  \x1b[1m【当前主线关卡推进图谱】\x1b[0m\n");
+                for (stage_idx, (stage_name, mut list)) in stage_map.into_iter().enumerate() {
+                    list.sort_by(|a, b| a.id.cmp(&b.id));
+                    println!("  \x1b[1;35mPhase {:02}: {}\x1b[0m", stage_idx, stage_name);
+                    for (i, node) in list.iter().enumerate() {
+                        let (icon, status_label, color_code) = if node.id == "R00" || node.id == "R01" {
+                            ("🌟", "[AVAILABLE 当前主线关卡]", "\x1b[1;32m")
+                        } else if stage_idx == 0 {
+                            ("🔓", "[AVAILABLE 已解锁可探索]", "\x1b[1;33m")
+                        } else {
+                            ("🌫️ ", "[LOCKED 迷雾锁定·待前置通关]", "\x1b[90m")
+                        };
+
+                        let branch = if i == list.len() - 1 { "└──" } else { "├──" };
+                        println!("    {} {} {}{:7}\x1b[0m \x1b[1m{}\x1b[0m \x1b[90m{}\x1b[0m",
+                            branch, icon, color_code, node.id, node.title, status_label);
+                    }
+                    println!();
+                }
+
+                println!("  ═══════════════════════════════════════════════════════════════════════");
+                println!("  👉 \x1b[1;33m今日推荐主线行动\x1b[0m: 运行 \x1b[36m./studyline run R00\x1b[0m 跑通第 0 讲，或 \x1b[36m./studyline exam R00\x1b[0m 通关点亮！\n");
+            }
+        }
+        Commands::Workshop { action, name } => {
+            println!("\n  \x1b[1;33m╔═══════════════════════════════════════════════════════════════════════╗\x1b[0m");
+            println!("  \x1b[1;33m║\x1b[0m        \x1b[1;37m✦  S T U D Y L I N E   P R O J E C T   W O R K S H O P  ✦\x1b[0m        \x1b[1;33m║\x1b[0m");
+            println!("  \x1b[1;33m║\x1b[0m          \x1b[36m真实工业级工程实战工坊 · 伴随式 Step-by-Step TDD 验收\x1b[0m         \x1b[1;33m║\x1b[0m");
+            println!("  \x1b[1;33m╚═══════════════════════════════════════════════════════════════════════╝\x1b[0m\n");
+
+            let workshops = [
+                ("workshop0-sysmon", "0段·物理内存", "手写跨平台终端实时系统与内存监控器 (Sysmon)", "2.0h"),
+                ("workshopA-mini-grep", "阶段A·所有权与生命周期", "手写多线程极速文本检索器 (Mini-Ripgrep)", "4.0h"),
+                ("workshopB-plugin-engine", "阶段B·特质系统与泛型", "手写基于 Trait 动态分发的可扩展插件引擎", "5.0h"),
+                ("workshopC-mini-redis", "阶段C·异步与网络编程", "手写基于 Tokio 的高并发 Mini-Redis 协议服务器", "8.0h"),
+            ];
+
+            if action == "init" && !name.is_empty() {
+                let ws_dir = format!("workshops/{}", name);
+                let _ = fs::create_dir_all(&ws_dir);
+                let main_rs = format!(r#"// ✦ StudyLine 工程实战工坊: {}
+fn main() {{
+    println!("✦ 欢迎来到 {} 实战工坊！");
+    println!("请按照 README.md 指引逐步实现各模块功能并通过 cargo test 验收！");
+}}
+"#, name, name);
+                let _ = fs::write(format!("{}/main.rs", ws_dir), main_rs);
+                println!("  \x1b[32m✔ 成功初始化工程脚手架: \x1b[1m{}\x1b[0m", ws_dir);
+                println!("    👉 进入目录开始编码: \x1b[36mcd {} && cargo test\x1b[0m\n", ws_dir);
+            } else {
+                println!("  \x1b[1m【已开放工程实战工坊清单】\x1b[0m\n");
+                for (id, stage, title, est) in workshops {
+                    println!("  🚀 \x1b[1;33m[{}]\x1b[0m \x1b[1m{}\x1b[0m", id, title);
+                    println!("     \x1b[90m所属阶段: {}\x1b[0m | \x1b[36m预计耗时: {}\x1b[0m", stage, est);
+                    println!("     👉 初始化脚手架: \x1b[32m./studyline workshop init {}\x1b[0m\n", id);
+                }
+            }
         }
         Commands::Tui { domains_dir: _ } => {
             let (mut terminal, _guard) = setup_terminal()?;

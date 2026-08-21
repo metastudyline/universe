@@ -1,0 +1,27 @@
+workshop_id: "workshop0-sysmon"
+title: "0段实战工坊：手写跨平台终端实时系统与内存监控器"
+stage: "0段·物理内存"
+estimated_hours: 2.0
+summary: "运用 0 段学到的栈/堆内存物理模型与基础语法，不依赖庞大框架，手写一个轻量终端 CPU/内存状态监控小工具。"
+steps:
+  - step_number: 1
+    title: "读取系统内存与 CPU 基础统计信息"
+    goal: "从 /proc/meminfo (Linux) 或 sysctl (macOS) 提取总内存与空闲内存字节数"
+    target_files: ["src/sys_reader.rs"]
+    test_suite: "tests/test_reader.rs"
+    hints: ["在 macOS 上可使用 `sysctlbyname` 或简单的命令封装"]
+  - step_number: 2
+    title: "构建固定容量环形历史缓冲区 (Ring Buffer)"
+    goal: "在栈上预分配固定尺寸数组，记录最近 30 秒的 CPU 负载波动"
+    target_files: ["src/ring_buffer.rs"]
+    test_suite: "tests/test_buffer.rs"
+    hints: ["利用取模运算 `% BUFFER_SIZE` 实现无内存分配的极速环形队列"]
+  - step_number: 3
+    title: "ANSI 彩色终端渲染与动态火花图 (Sparkline)"
+    goal: "将缓冲区历史数据转换为 Unicode 柱状火花图 ` ▂▃▄▅▆▇█` 并在终端平滑刷新"
+    target_files: ["src/render.rs"]
+    test_suite: "tests/test_render.rs"
+    hints: ["使用 ANSI 控制字符 `\\x1b[2J\\x1b[H` 实现无闪烁原位重绘"]
+passing_criteria:
+  minimum_score: 100
+  badge_name: "0段系统级工程师·内存监控先锋"

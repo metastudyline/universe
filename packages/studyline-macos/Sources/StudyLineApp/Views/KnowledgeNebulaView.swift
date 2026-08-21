@@ -330,17 +330,23 @@ public struct KnowledgeNebulaView: View {
             let py = CGFloat(node.position.y)
             let rad = CGFloat(node.radius)
 
+            let isAvailable = node.id == "R00" || node.id == "R01" || node.domain != "rust"
+            let isLocked = !isAvailable
+
             var nodeCircle = Path()
             nodeCircle.addEllipse(in: CGRect(x: px - rad, y: py - rad, width: rad * 2, height: rad * 2))
 
-            let baseColor = node.domain == "rust" ? StudyLineTheme.cosmicUltramarine : StudyLineTheme.bambooGreen
+            let baseColor: Color = isLocked ? Color.gray.opacity(0.35) : (node.domain == "rust" ? StudyLineTheme.cosmicUltramarine : StudyLineTheme.bambooGreen)
+            let strokeColor: Color = isLocked ? Color.white.opacity(0.2) : StudyLineTheme.kintsugiGold
+
             ctx.fill(nodeCircle, with: .color(baseColor))
-            ctx.stroke(nodeCircle, with: .color(StudyLineTheme.kintsugiGold), lineWidth: 1.5)
+            ctx.stroke(nodeCircle, with: .color(strokeColor), lineWidth: isAvailable ? 2.0 : 1.0)
 
             // 绘制节点文字标号
             if totalScale >= 0.65 {
+                let textColor: Color = isLocked ? Color.white.opacity(0.4) : Color.white
                 ctx.draw(
-                    Text(node.id).font(.system(size: 10, weight: .bold)).foregroundColor(.white),
+                    Text(node.id).font(.system(size: 10, weight: .bold)).foregroundColor(textColor),
                     at: CGPoint(x: px, y: py)
                 )
             }

@@ -1,0 +1,27 @@
+workshop_id: "workshopA-mini-grep"
+title: "阶段A结业大作业：手写多线程极速文本检索器 (Mini-Ripgrep)"
+stage: "阶段A·所有权与生命周期"
+estimated_hours: 4.0
+summary: "综合运用所有权、借用检查器（&str/String）、生命周期注解与多线程并发，手写一个性能逼近 ripgrep 的命令行搜索工具。"
+steps:
+  - step_number: 1
+    title: "命令行参数解析与模式编译"
+    goal: "解析 CLI 参数（query 关键词, target 目录, -i 忽略大小写, -n 显示行号）"
+    target_files: ["src/config.rs"]
+    test_suite: "tests/test_config.rs"
+    hints: ["使用生命周期注解定义 `Config<'a>`，避免不必要的 String 内存分配"]
+  - step_number: 2
+    title: "零拷贝行切分与极速搜索核心算法"
+    goal: "在文本行中匹配模式，返回带生命周期的匹配切片 `&'a str` 与高亮 ANSI 片段"
+    target_files: ["src/search.rs"]
+    test_suite: "tests/test_search.rs"
+    hints: ["绝不为每一行调用 `.to_string()`，全程维持 `&str` 零拷贝引用借用"]
+  - step_number: 3
+    title: "多线程工作池并发扫描目录 (Work-Stealing / Rayon)"
+    goal: "使用标准库 `std::thread` 或 `rayon` 将目录树文件分发到多核 CPU 并行检索"
+    target_files: ["src/parallel.rs"]
+    test_suite: "tests/test_parallel.rs"
+    hints: ["使用 `Arc<Config>` 跨线程共享只读配置，消除数据竞争"]
+passing_criteria:
+  minimum_score: 100
+  badge_name: "阶段A系统级架构师·零拷贝检索大师"
