@@ -25,6 +25,12 @@ done
 
 START_TOTAL=$(python3 -c 'import time; print(int(time.time_ns()))')
 
+# macOS Binary CodeSign Guard
+if [[ "$(uname)" == "Darwin" ]]; then
+    if [[ -f "$ROOT_DIR/noteboot" ]]; then codesign -s - -f "$ROOT_DIR/noteboot" > /dev/null 2>&1 || true; fi
+    if [[ -f "$ROOT_DIR/studyline" ]]; then codesign -s - -f "$ROOT_DIR/studyline" > /dev/null 2>&1 || true; fi
+fi
+
 echo -e "${BOLD}${CYAN}╔═══════════════════════════════════════════════════════════════════════╗${NC}"
 echo -e "${BOLD}${CYAN}║     ✦  S T U D Y L I N E   5 - S T A G E   C I   G A T E K E E P E R  ║${NC}"
 echo -e "${BOLD}${CYAN}║         工业级 5 阶门禁 · 零警告 · 零循环依赖 · 确定性性能防劣化         ║${NC}"

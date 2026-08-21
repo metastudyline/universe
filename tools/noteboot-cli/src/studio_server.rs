@@ -327,13 +327,13 @@ async fn mounts_handler(State(state): State<AppState>) -> Json<ApiResponse<Vec<c
     })
 }
 
-// ✦ NoteBoot Studio Modern Liquid Glass Single-Page Application (HTML/JS/Tailwind)
+// ✦ NoteBoot Studio Modern Liquid Glass Single-Page Application (TTZip Design System)
 const STUDIO_HTML: &str = r###"<!DOCTYPE html>
 <html lang="zh-CN" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NoteBoot Studio — 知识构建操作系统</title>
+  <title>NoteBoot Studio — Zen 知识构建操作系统</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -341,75 +341,97 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
       theme: {
         extend: {
           colors: {
-            brand: { gold: '#e5a93b', dark: '#0d1117', surface: 'rgba(22, 27, 34, 0.75)' }
+            kintsugi: { gold: '#D4AF37', light: '#D4B87D', glow: 'rgba(212, 175, 55, 0.25)' },
+            bamboo: { green: '#2E8B57', light: '#8FA876', surface: 'rgba(46, 139, 87, 0.15)' },
+            cinnabar: { red: '#C84B31', light: '#E05A47' },
+            graphite: '#1C1C1E',
+            ink: '#0B0B0C'
+          },
+          fontFamily: {
+            serif: ['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'],
+            mono: ['"SF Mono"', 'Menlo', 'Monaco', 'Consolas', 'monospace']
           }
         }
       }
     }
   </script>
   <style>
-    body { background-color: #0b0f17; color: #e6edf3; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    .glass-panel { background: rgba(18, 24, 38, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.08); }
-    .glass-card { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); }
-    .glass-card:hover { background: rgba(255, 255, 255, 0.06); border-color: rgba(229, 169, 59, 0.3); }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 3px; }
+    body { background-color: #0B0B0C; color: #E6EDF3; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    .glass-island { background: rgba(28, 28, 30, 0.65); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 0.8px solid rgba(255, 255, 255, 0.08); border-radius: 16px; }
+    .glass-panel { background: rgba(28, 28, 30, 0.55); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 0.8px solid rgba(255, 255, 255, 0.08); }
+    .glass-card { background: rgba(255, 255, 255, 0.025); border: 0.8px solid rgba(255, 255, 255, 0.06); border-radius: 12px; }
+    .glass-card:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(212, 175, 55, 0.35); }
+    .golden-rule { height: 1.5px; background: linear-gradient(90deg, #D4AF37 0%, rgba(212, 175, 55, 0.2) 100%); }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 3px; }
   </style>
 </head>
-<body class="h-screen w-screen flex flex-col overflow-hidden select-none">
-  <!-- 顶栏导航 -->
-  <header class="h-12 border-b border-white/10 glass-panel flex items-center justify-between px-4 z-20">
+<body class="h-screen w-screen flex flex-col overflow-hidden select-none bg-ink">
+  <!-- 52pt 标准 Header Bar (TTZip Design System) -->
+  <header class="h-[52px] glass-panel flex items-center justify-between px-5 z-20 shrink-0">
     <div class="flex items-center gap-3">
-      <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
-      <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
-      <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
-      <div class="h-4 w-px bg-white/10 ml-2"></div>
-      <span class="text-xs font-bold tracking-wider text-amber-400 font-mono flex items-center gap-1.5">
-        ✦ NOTEBOOT STUDIO
-      </span>
+      <!-- macOS 红绿灯 -->
+      <div class="flex items-center gap-1.5 mr-2">
+        <span class="w-3 h-3 rounded-full bg-[#FF5F56] inline-block shadow-sm"></span>
+        <span class="w-3 h-3 rounded-full bg-[#FFBD2E] inline-block shadow-sm"></span>
+        <span class="w-3 h-3 rounded-full bg-[#27C93F] inline-block shadow-sm"></span>
+      </div>
+      <div class="h-4 w-px bg-white/10"></div>
+      <div class="flex flex-col">
+        <span class="text-[9px] font-serif font-bold tracking-[2px] text-kintsugi-gold uppercase">NOTEBOOT · TTZIP EDITION</span>
+        <span class="text-xs font-serif font-bold text-white tracking-wide">知识构建操作系统</span>
+      </div>
     </div>
 
     <!-- 视图切换 Tab -->
-    <div class="flex bg-black/40 rounded-lg p-0.5 border border-white/5 text-xs">
-      <button id="btn-tab-editor" onclick="switchTab('editor')" class="px-3 py-1 rounded-md bg-amber-500/20 text-amber-300 font-medium">双链编辑器</button>
-      <button id="btn-tab-bento" onclick="switchTab('bento')" class="px-3 py-1 rounded-md text-neutral-400 hover:text-white">Bento 多维表格</button>
+    <div class="flex bg-black/40 rounded-full p-0.5 border border-white/5 text-xs">
+      <button id="btn-tab-editor" onclick="switchTab('editor')" class="px-4 py-1 rounded-full bg-kintsugi-gold/20 text-kintsugi-light font-medium tracking-wide">双链 Live Canvas</button>
+      <button id="btn-tab-bento" onclick="switchTab('bento')" class="px-4 py-1 rounded-full text-neutral-400 hover:text-white transition">Bento 多维表格</button>
     </div>
 
-    <!-- 状态指示 -->
-    <div class="flex items-center gap-3 text-xs text-neutral-400">
-      <span id="active-note-label" class="text-neutral-300 font-mono">Ready</span>
-      <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">SQLite WAL</span>
+    <!-- 硬件感知与状态指示器 -->
+    <div class="flex items-center gap-3 text-xs">
+      <span id="active-note-label" class="text-neutral-400 font-mono text-[11px]">Ready</span>
+      <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-bamboo-surface border border-bamboo-green/30 text-bamboo-light text-[11px] font-mono font-bold">
+        <span class="w-1.5 h-1.5 rounded-full bg-bamboo-green animate-pulse"></span>
+        <span>SQLite WAL · TTZip Zero-Copy</span>
+      </div>
     </div>
   </header>
+  <!-- Y = 90pt 金线高光对齐 -->
+  <div class="golden-rule w-full"></div>
 
-  <!-- 主体三栏布局 -->
+  <!-- 主体三栏布局 (Sidebar 240pt, Main Flex, Inspector 300pt) -->
   <div class="flex-1 flex overflow-hidden">
-    <!-- 左侧栏: 知识库文件树与挂载宇宙 -->
-    <aside class="w-64 border-r border-white/10 glass-panel flex flex-col">
-      <div class="p-3 border-b border-white/5 flex items-center justify-between">
-        <span class="text-xs font-semibold text-neutral-400 uppercase tracking-wider">知识宇宙</span>
-        <button onclick="loadTree()" class="text-xs text-amber-400 hover:underline">刷新</button>
+    <!-- 左侧栏: 知识库文件树与只读宇宙 -->
+    <aside class="w-64 border-r border-white/10 glass-panel flex flex-col shrink-0">
+      <div class="p-3.5 border-b border-white/5 flex items-center justify-between">
+        <div class="flex flex-col">
+          <span class="text-[9px] font-serif font-bold tracking-[2px] text-kintsugi-gold uppercase">KNOWLEDGE UNIVERSE</span>
+          <span class="text-xs font-bold text-neutral-300">知识宇宙与挂载库</span>
+        </div>
+        <button onclick="loadTree()" class="text-xs text-kintsugi-light hover:underline font-mono">刷新</button>
       </div>
-      <div id="tree-container" class="flex-1 overflow-y-auto p-2 space-y-1 text-xs">
+      <div id="tree-container" class="flex-1 overflow-y-auto p-2.5 space-y-1.5 text-xs">
         <!-- 动态生成 -->
       </div>
     </aside>
 
     <!-- 中央核心工作区 -->
-    <main id="main-workbench" class="flex-1 flex flex-col overflow-hidden bg-black/20 relative">
+    <main id="main-workbench" class="flex-1 flex flex-col overflow-hidden bg-black/30 relative">
       <!-- 单画布所见即所得双链与类杂志编辑器 -->
       <div id="view-editor" class="flex-1 flex flex-col overflow-hidden">
-        <div class="h-10 border-b border-white/5 flex items-center justify-between px-4 text-xs bg-black/10">
-          <div class="flex items-center gap-3">
-            <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono font-medium">✦ LIVE PREVIEW (所见即所得)</span>
-            <span class="text-neutral-500">点击任意段落直接就地编辑 · 支持输入「/」插入交互组件</span>
-          </div>
+        <div class="h-10 border-b border-white/5 flex items-center justify-between px-5 text-xs bg-black/20">
           <div class="flex items-center gap-2">
-            <button onclick="triggerSlashMenu()" class="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/30 font-medium flex items-center gap-1">
-              <span>+</span> 插入积木 (Slash)
+            <span class="px-2 py-0.5 rounded-full bg-kintsugi-gold/15 text-kintsugi-light border border-kintsugi-gold/30 font-mono text-[10px] font-bold">✦ WYSIWYG LIVE CANVAS</span>
+            <span class="text-neutral-500 font-serif text-[11px]">点击段落就地编辑 · 键入「/」插入交互积木</span>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <button onclick="triggerSlashMenu()" class="px-3 py-1 rounded-full bg-kintsugi-gold/20 text-kintsugi-light hover:bg-kintsugi-gold/30 border border-kintsugi-gold/40 text-xs font-medium flex items-center gap-1 transition">
+              <span>+</span> 挂载积木 (Slash)
             </button>
-            <button onclick="saveCurrentNote()" class="px-2.5 py-1 rounded-md bg-white/10 text-white hover:bg-white/20 border border-white/10">
-              💾 保存修改
+            <button onclick="saveCurrentNote()" class="px-3.5 py-1 rounded-full bg-bamboo-green text-white hover:bg-bamboo-green/90 text-xs font-bold shadow-md transition flex items-center gap-1">
+              <span>✓</span> 保存修改 (↵)
             </button>
           </div>
         </div>
@@ -679,55 +701,61 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
     function renderInteractiveComponent(component, props) {
       if (component === 'StackFrameSimulator') {
         return `
-          <div class="p-4 rounded-xl border border-amber-500/30 bg-black/50 glass-panel shadow-2xl">
-            <div class="flex items-center justify-between text-xs mb-3 pb-2 border-b border-white/10">
-              <span class="font-bold text-amber-400 font-mono flex items-center gap-1.5">
-                <span>⚡</span> 硬件栈帧物理仿真器 (StackFrameSimulator)
-              </span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">LIVE COMPONENT</span>
-            </div>
-            <div class="grid grid-cols-2 gap-4 text-xs font-mono">
-              <div class="space-y-2">
-                <div class="text-neutral-400">RSP 栈顶指针调节:</div>
-                <input type="range" min="0" max="64" value="16" class="w-full accent-amber-400" oninput="document.getElementById('sim-rsp').innerText = '0x7fffffffde' + (40 - parseInt(this.value)).toString(16)" />
-                <div class="text-neutral-300">当前 RSP: <span id="sim-rsp" class="text-amber-300 font-bold">0x7fffffffde28</span></div>
-                <button onclick="alert('单步指令执行成功！RSP 已更新。')" class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40">▶ 单步 call 指令压栈</button>
+          <div class="p-5 glass-island my-5 shadow-2xl border border-white/10 relative overflow-hidden">
+            <div class="flex items-center justify-between text-xs mb-4 pb-2.5 border-b border-white/10">
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-kintsugi-gold">⚡</span>
+                <span class="font-serif font-bold text-white text-sm">硬件栈帧物理仿真器</span>
+                <span class="text-[9px] font-mono font-bold tracking-wider text-kintsugi-gold uppercase">StackFrameSimulator</span>
               </div>
-              <div class="border border-white/10 rounded-lg p-2 bg-white/5 space-y-1 text-[11px]">
-                <div class="text-neutral-400 pb-1 border-b border-white/5">栈内存物理布局:</div>
-                <div class="p-1 bg-amber-500/10 text-amber-200 rounded">[ 0x7fffffffde38 ] Return Address (RIP)</div>
-                <div class="p-1 bg-white/5 text-neutral-300 rounded">[ 0x7fffffffde30 ] Saved RBP Frame</div>
-                <div class="p-1 bg-cyan-500/10 text-cyan-200 rounded">[ 0x7fffffffde28 ] Local Var a = 42 &lt;-- RSP</div>
+              <span class="px-2.5 py-0.5 rounded-full bg-bamboo-surface text-bamboo-light border border-bamboo-green/30 text-[10px] font-mono font-bold">HARDWARE SIM</span>
+            </div>
+            <div class="grid grid-cols-2 gap-5 text-xs font-mono">
+              <div class="space-y-3">
+                <div class="text-neutral-400 font-serif">RSP 栈顶寄存器指针微调:</div>
+                <input type="range" min="0" max="64" value="16" class="w-full accent-kintsugi-gold cursor-pointer" oninput="document.getElementById('sim-rsp').innerText = '0x7fffffffde' + (40 - parseInt(this.value)).toString(16)" />
+                <div class="text-neutral-300">当前 RSP: <span id="sim-rsp" class="text-kintsugi-light font-bold text-sm">0x7fffffffde28</span></div>
+                <button onclick="alert('单步 call 指令压栈成功！RSP 已自动偏移 8 字节。')" class="px-4 py-1.5 rounded-full bg-bamboo-green text-white hover:bg-bamboo-green/90 text-xs font-bold transition shadow-sm flex items-center gap-1.5">
+                  <span>▶</span> 单步 call 指令压栈 (↵)
+                </button>
+              </div>
+              <div class="glass-card p-3 space-y-1.5 text-[11px]">
+                <div class="text-kintsugi-gold pb-1.5 border-b border-white/10 font-bold font-serif">栈内存物理布局 (High ➔ Low):</div>
+                <div class="p-1.5 bg-white/5 text-neutral-300 rounded border border-white/5">[ 0x7fffffffde38 ] Return Address (RIP)</div>
+                <div class="p-1.5 bg-white/5 text-neutral-300 rounded border border-white/5">[ 0x7fffffffde30 ] Saved RBP Frame</div>
+                <div class="p-1.5 bg-kintsugi-gold/15 text-kintsugi-light rounded border border-kintsugi-gold/30 font-bold">[ 0x7fffffffde28 ] Local Var a = 42 &lt;-- RSP</div>
               </div>
             </div>
           </div>
         `;
       } else if (component === 'WSJVideoPlayer') {
         return `
-          <div class="p-3 rounded-xl border border-cyan-500/30 bg-black/50 glass-panel">
-            <div class="flex items-center justify-between text-xs mb-2">
-              <span class="font-bold text-cyan-400 font-mono flex items-center gap-1.5">
-                <span>🎬</span> WSJ 4K 演示视频 (WSJVideoPlayer)
-              </span>
-              <span class="text-[10px] text-neutral-400">4K Ultra HD</span>
+          <div class="p-4 glass-island my-5 border border-white/10">
+            <div class="flex items-center justify-between text-xs mb-3">
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-kintsugi-gold">🎬</span>
+                <span class="font-serif font-bold text-white text-sm">WSJ 4K 演示视频</span>
+                <span class="text-[9px] font-mono text-neutral-400">4K ULTRA HD · 60FPS</span>
+              </div>
+              <span class="px-2 py-0.5 rounded-full bg-white/5 text-neutral-400 border border-white/10 text-[10px] font-mono">B-ROLL</span>
             </div>
-            <div class="aspect-video bg-neutral-900 rounded-lg border border-white/10 flex flex-col items-center justify-center relative overflow-hidden">
-              <div class="w-12 h-12 rounded-full bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-xl cursor-pointer hover:scale-110 transition border border-cyan-500/40" onclick="alert('播放 WSJ 4K 演示动画')">▶</div>
-              <span class="text-[11px] text-neutral-400 mt-2 font-mono">${(props && props.caption) || 'WSJ 4K: RSP 栈帧风箱压伸与释放机制'}</span>
+            <div class="aspect-video bg-ink rounded-xl border border-white/10 flex flex-col items-center justify-center relative overflow-hidden group shadow-inner">
+              <div class="w-14 h-14 rounded-full bg-kintsugi-gold/20 text-kintsugi-light flex items-center justify-center text-xl cursor-pointer group-hover:scale-110 transition border border-kintsugi-gold/40 shadow-lg" onclick="alert('播放 WSJ 4K 演示动画')">▶</div>
+              <span class="text-[11px] text-neutral-400 mt-3 font-serif">${(props && props.caption) || 'WSJ 4K: RSP 栈帧风箱压伸与释放机制'}</span>
             </div>
           </div>
         `;
       } else if (component === 'BilingualPrimarySource') {
         return `
-          <div class="p-3.5 rounded-xl border border-purple-500/30 bg-black/50 glass-panel">
-            <div class="text-xs font-bold text-purple-400 font-mono mb-2 flex items-center gap-1.5">
-              <span>🔬</span> 一手文献古希腊/拉丁双语对照 (BilingualPrimarySource)
+          <div class="p-5 glass-island my-5 border border-kintsugi-gold/30 relative">
+            <div class="text-xs font-serif font-bold text-kintsugi-gold mb-3 flex items-center gap-2">
+              <span>🔬</span> 一手文献双语对照 (DK 28 B 3)
             </div>
-            <div class="grid grid-cols-2 gap-3 text-xs font-serif leading-relaxed">
-              <div class="p-2.5 rounded bg-white/5 text-purple-200 border-r border-purple-500/20 italic">
-                "Τὸ γὰρ αὐτὸ νοεῖν ἐστίν τε καὶ εἶναι." (Parmenides, DK 28 B 3)
+            <div class="grid grid-cols-2 gap-4 text-xs font-serif leading-relaxed">
+              <div class="p-3.5 rounded-xl bg-white/5 text-kintsugi-light border border-white/5 italic">
+                "Τὸ γὰρ αὐτὸ νοεῖν ἐστίν τε καὶ εἶναι." (Parmenides, Fragment B 3)
               </div>
-              <div class="p-2.5 rounded bg-white/5 text-neutral-300">
+              <div class="p-3.5 rounded-xl bg-white/5 text-neutral-200 border border-white/5">
                 “因为能够被思想的和能够存在的是同一回事。”（巴门尼德 残篇 B 3）
               </div>
             </div>
@@ -735,14 +763,14 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
         `;
       } else if (component === 'FormalSyllogism') {
         return `
-          <div class="p-3.5 rounded-xl border border-emerald-500/30 bg-black/50 glass-panel">
-            <div class="text-xs font-bold text-emerald-400 font-mono mb-2 flex items-center gap-1.5">
+          <div class="p-5 glass-island my-5 border border-white/10">
+            <div class="text-xs font-serif font-bold text-kintsugi-gold mb-3 flex items-center gap-2">
               <span>🏛️</span> 形式化逻辑三段论推演 (FormalSyllogism)
             </div>
-            <div class="space-y-1.5 text-xs">
-              <div class="p-2 rounded bg-white/5 text-neutral-300"><span class="font-bold text-emerald-400">[大前提]</span> 物理资源必须在离开作用域时确定性释放一次且仅一次。</div>
-              <div class="p-2 rounded bg-white/5 text-neutral-300"><span class="font-bold text-emerald-400">[小前提]</span> 编译器基于 CFG 控制流图在编译期推导出局部变量的最后活跃点。</div>
-              <div class="p-2 rounded bg-emerald-500/10 text-emerald-300 font-medium"><span class="font-bold">[必然结论]</span> 零运行期垃圾回收开销，从类型系统层面消除内存缺陷。</div>
+            <div class="space-y-2 text-xs font-serif">
+              <div class="p-2.5 rounded-lg bg-white/5 text-neutral-300 border border-white/5"><span class="font-bold text-kintsugi-gold font-mono mr-1.5">[大前提]</span> 物理资源必须在离开作用域时确定性释放一次且仅一次。</div>
+              <div class="p-2.5 rounded-lg bg-white/5 text-neutral-300 border border-white/5"><span class="font-bold text-kintsugi-gold font-mono mr-1.5">[小前提]</span> 编译器基于 CFG 控制流图在编译期推导出局部变量的最后活跃点。</div>
+              <div class="p-2.5 rounded-lg bg-bamboo-surface text-bamboo-light font-bold border border-bamboo-green/40"><span class="font-mono mr-1.5">[必然结论]</span> 零运行期垃圾回收开销，从类型系统层面消除内存缺陷。</div>
             </div>
           </div>
         `;
@@ -795,34 +823,37 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
       let companionHtml = '';
       if (prereqs.length > 0) {
         companionHtml += `
-          <div class="mb-3">
-            <div class="text-[11px] font-bold text-amber-400 mb-1 flex items-center gap-1">
+          <div class="mb-4">
+            <div class="text-[10px] font-serif font-bold tracking-[1.5px] text-kintsugi-gold uppercase mb-2 flex items-center gap-1.5">
               <span>⬅️</span> 前置依赖穿透抽屉 (Prerequisites)
             </div>
             <div class="flex flex-wrap gap-1.5">
-              ${prereqs.map(p => `<span class="px-2 py-0.5 rounded bg-white/5 border border-amber-500/20 text-[11px] text-amber-200">${p}</span>`).join('')}
+              ${prereqs.map(p => `<span class="px-2.5 py-1 rounded-full bg-white/5 border border-kintsugi-gold/25 text-[11px] text-kintsugi-light font-mono font-medium">${p}</span>`).join('')}
             </div>
           </div>
         `;
       }
       if (injections.length > 0) {
         companionHtml += `
-          <div class="mb-3">
-            <div class="text-[11px] font-bold text-cyan-400 mb-1 flex items-center gap-1">
+          <div class="mb-4">
+            <div class="text-[10px] font-serif font-bold tracking-[1.5px] text-kintsugi-gold uppercase mb-2 flex items-center gap-1.5">
               <span>🧩</span> 原地挂载组件 (Mounted Injections)
             </div>
-            <div class="space-y-1.5">
+            <div class="space-y-2">
               ${injections.map(inj => `
-                <div class="p-2 rounded bg-white/5 border border-cyan-500/20 text-[11px]">
-                  <div class="font-bold text-cyan-300">${inj.component}</div>
-                  <div class="text-[10px] text-neutral-400">挂载于: ${inj.target_section}</div>
+                <div class="p-2.5 glass-card text-[11px]">
+                  <div class="font-bold text-white font-serif flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-kintsugi-gold"></span>
+                    <span>${inj.component}</span>
+                  </div>
+                  <div class="text-[10px] text-neutral-400 mt-1 font-mono">挂载于: ${inj.target_section}</div>
                 </div>
               `).join('')}
             </div>
           </div>
         `;
       }
-      container.innerHTML = companionHtml + '<div class="border-t border-white/5 pt-2 mt-2 font-bold text-neutral-400 text-[11px]">反向链接 (Backlinks)</div>';
+      container.innerHTML = companionHtml + '<div class="border-t border-white/10 pt-3 mt-3 font-serif font-bold text-kintsugi-gold text-[10px] tracking-[1.5px] uppercase">反向链接 (Backlinks)</div>';
     }
 
     async function loadBacklinks(path) {
