@@ -771,7 +771,64 @@ fn main() {
                 ("workshopC-mini-redis", "阶段C·异步与网络编程", "手写基于 Tokio 的高并发 Mini-Redis 协议服务器", "8.0h"),
             ];
 
-            if action == "init" && !name.is_empty() {
+            if action == "test" && !name.is_empty() {
+                let ws_path = format!("domains/rust/workshops/{}", name);
+                if !Path::new(&ws_path).exists() {
+                    eprintln!("  \x1b[31m[ERROR]\x1b[0m 未找到工坊目录: {}\n", ws_path);
+                    return Ok(());
+                }
+
+                println!("  \x1b[1;33m✦ [WORKSHOP TDD RUNNER]\x1b[0m 正在为 \x1b[1m{}\x1b[0m 运行自动化集成测试套件...\n", name);
+                let start = Instant::now();
+
+                let output = std::process::Command::new("cargo")
+                    .arg("test")
+                    .arg("--")
+                    .arg("--nocapture")
+                    .current_dir(&ws_path)
+                    .output();
+
+                match output {
+                    Ok(res) => {
+                        let stdout = String::from_utf8_lossy(&res.stdout);
+                        let elapsed = start.elapsed();
+
+                        let mut passed_tests = 0;
+                        let mut failed_tests = 0;
+
+                        for line in stdout.lines() {
+                            if line.starts_with("test ") && line.ends_with("... ok") {
+                                passed_tests += 1;
+                                let test_name = line.trim_start_matches("test ").trim_end_matches(" ... ok");
+                                println!("  \x1b[32m✔\x1b[0m \x1b[1m{:30}\x1b[0m \x1b[32m[PASSED]\x1b[0m", test_name);
+                            } else if line.starts_with("test ") && line.ends_with("... FAILED") {
+                                failed_tests += 1;
+                                let test_name = line.trim_start_matches("test ").trim_end_matches(" ... FAILED");
+                                println!("  \x1b[31m✘\x1b[0m \x1b[1m{:30}\x1b[0m \x1b[31m[FAILED]\x1b[0m", test_name);
+                            }
+                        }
+
+                        let total = passed_tests + failed_tests;
+                        let pct = if total > 0 { (passed_tests as f64 / total as f64) * 100.0 } else { 0.0 };
+
+                        println!("\n  ═══════════════════════════════════════════════════════════════════════");
+                        println!("  \x1b[1;37m【工坊测试验收战报】\x1b[0m");
+                        println!("  - 验收工程: \x1b[1m{}\x1b[0m", name);
+                        println!("  - 测试用例: \x1b[1;32m{} passed\x1b[0m, \x1b[1;31m{} failed\x1b[0m, 共 {} 项", passed_tests, failed_tests, total);
+                        println!("  - 最终得分: \x1b[1;33m{:.1}%\x1b[0m | 耗时: \x1b[1m{:?}\x1b[0m", pct, elapsed);
+
+                        if pct >= 100.0 {
+                            println!("\n  \x1b[1;32m╔═══════════════════════════════════════════════════════════════════╗\x1b[0m");
+                            println!("  \x1b[1;32m║\x1b[0m          \x1b[1;37m🎖️  恭喜！你已 100% 满分通过该阶段实战工坊！  🎖️\x1b[0m          \x1b[1;32m║\x1b[0m");
+                            println!("  \x1b[1;32m║\x1b[0m        \x1b[36m授予系统级工程师勋章 · 知识星云下游迷雾已全线点亮\x1b[0m         \x1b[1;32m║\x1b[0m");
+                            println!("  \x1b[1;32m╚═══════════════════════════════════════════════════════════════════╝\x1b[0m\n");
+                        } else {
+                            println!("  \x1b[33m[TIP]\x1b[0m 仍有测试未通过，请根据报错提示修改代码后重新运行验收！\n");
+                        }
+                    }
+                    Err(e) => eprintln!("  \x1b[31m[CARGO ERROR]\x1b[0m 无法执行 cargo test: {}", e),
+                }
+            } else if action == "init" && !name.is_empty() {
                 let ws_dir = format!("workshops/{}", name);
                 let _ = fs::create_dir_all(&ws_dir);
                 let main_rs = format!(r#"// ✦ StudyLine 工程实战工坊: {}
