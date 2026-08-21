@@ -1,7 +1,4 @@
-// =============================================================================
-// StudyLine Unified Command Hub (Native CLI & TUI Launcher)
-// All Knowledge Logic Downstreamed into Rust Core Engine
-// =============================================================================
+mod synthesizer;
 
 use std::collections::HashMap;
 use std::fs;
@@ -11,6 +8,7 @@ use std::time::Instant;
 use anyhow::{Context, Result};
 use clap::{Parser, Subcommand};
 use studyline_tui::{setup_terminal, TUIApp};
+use synthesizer::MasterySynthesizer;
 
 #[derive(Parser)]
 #[command(name = "studyline")]
@@ -178,6 +176,18 @@ enum Commands {
     Status {
         #[arg(short, long, default_value = "domains")]
         domains_dir: PathBuf,
+    },
+    /// 为通关节点生成 4 维认知发生学掌握度手记 (Mastery Synthesis Note)
+    Synthesize {
+        node_id: String,
+        #[arg(short, long, default_value = "rust")]
+        domain: String,
+        #[arg(short, long, default_value = "100")]
+        score: u32,
+        #[arg(short, long, default_value = "domains")]
+        domains_dir: PathBuf,
+        #[arg(short, long, default_value = ".")]
+        vault_path: PathBuf,
     },
 }
 
@@ -987,7 +997,20 @@ fn main() {{
             let score_pct = (correct_count as f64 / total as f64) * 100.0;
             println!("  ═══════════════════════════════════════════════════════════");
             if score_pct >= 80.0 {
-                println!("  \x1b[1;32m[CONGRATULATIONS]\x1b[0m 考核通过！得分: \x1b[1m{:.1}%\x1b[0m 授予掌握度: \x1b[1;33m★★★★★ (Mastery)\x1b[0m\n", score_pct);
+                println!("  \x1b[1;32m[CONGRATULATIONS]\x1b[0m 考核通过！得分: \x1b[1m{:.1}%\x1b[0m 授予掌握度: \x1b[1;33m★★★★★ (Mastery)\x1b[0m", score_pct);
+                if let Ok(note_path) = MasterySynthesizer::generate_mastery_note(
+                    &node.id,
+                    &node.domain,
+                    &node.stage,
+                    &node.title,
+                    score_pct.round() as u32,
+                    &domains_dir,
+                    Path::new("."),
+                ) {
+                    println!("  \x1b[1;32m✔ [MASTERY SYNTHESIS]\x1b[0m 已在个人知识库生成通关认知手记: \x1b[1;33m{}\x1b[0m\n", note_path.display());
+                } else {
+                    println!();
+                }
             } else {
                 println!("  \x1b[1;31m[FAILED]\x1b[0m 考核未达标。得分: \x1b[1m{:.1}%\x1b[0m (需 >= 80% 通过)。建议复习前置公理讲义。\n", score_pct);
             }
@@ -1136,6 +1159,22 @@ fn main() {{
             if status.success() {
                 println!("\x1b[32m✔ Universe cloned successfully! Run `cd {} && studyline syllabus` to explore.\x1b[0m", dest_dir.display());
             }
+        }
+        Commands::Synthesize { node_id, domain, score, domains_dir, vault_path } => {
+            let nodes = scan_all_nodes(&domains_dir);
+            let target_info = nodes.iter().find(|n| n.id.eq_ignore_ascii_case(&node_id))
+                .context(format!("Node {} not found in universe", node_id))?;
+            let path = MasterySynthesizer::generate_mastery_note(
+                &node_id,
+                &domain,
+                &target_info.stage,
+                &target_info.title,
+                score,
+                &domains_dir,
+                &vault_path,
+            )?;
+            println!("\n  \x1b[1;32m✔ [MASTERY SYNTHESIS]\x1b[0m 4维认知发生学手记已自动生成并建立回指双链:");
+            println!("  • 目标路径: \x1b[1;33m{}\x1b[0m\n", path.display());
         }
     }
 

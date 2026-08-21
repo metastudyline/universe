@@ -2,6 +2,7 @@ mod db;
 mod mount;
 mod parser;
 mod studio_server;
+mod transclude;
 
 use clap::{Parser, Subcommand};
 use db::Database;
@@ -11,6 +12,7 @@ use prettytable::{Cell, Row, Table};
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::time::Instant;
+use transclude::{TransclusionContext, TransclusionEngine};
 
 #[derive(Parser)]
 #[command(name = "noteboot")]
@@ -22,6 +24,12 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// 展开与解析跨库 Markdown Transclusion 细粒度段落嵌入 (![[@namespace/path#^block]])
+    Transclude {
+        target: String,
+        #[arg(default_value = ".")]
+        vault_path: String,
+    },
     /// 初始化新的 NoteBoot 知识库 (Vault)
     Init {
         #[arg(default_value = ".")]
@@ -158,6 +166,26 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 
     match cli.command {
+        Commands::Transclude { target, vault_path } => {
+            let start = Instant::now();
+            let parsed_target = TransclusionEngine::parse_target(&target);
+            if let Some(t) = parsed_target {
+                let mut ctx = TransclusionContext::default();
+                let res = TransclusionEngine::resolve(&t, &vault_path, &mut ctx);
+                let elapsed = start.elapsed();
+
+                println!("\n  \x1b[1;33m✦ [NOTEBOOT TRANSCLUSION] 嵌入解析结果 ({:?})\x1b[0m", elapsed);
+                println!("  • 命名空间: \x1b[36m{}\x1b[0m", t.vault.as_deref().unwrap_or("@local"));
+                println!("  • 目标路径: \x1b[36m{}\x1b[0m", t.note_path);
+                if let Some(ref a) = t.anchor {
+                    println!("  • 段落锚点: \x1b[33m{}\x1b[0m", a);
+                }
+                println!("  • 只读原典: {}", if res.is_readonly { "是 (只读挂载)" } else { "否 (本地)" });
+                println!("  • 内容预览:\n{}", res.content);
+            } else {
+                eprintln!("\n  \x1b[1;31m✖ 无法解析的 Transclusion 语法: {}\x1b[0m\n", target);
+            }
+        }
         Commands::Init { path } => {
             println!("\n  \x1b[1;33m╔═══════════════════════════════════════════════════════════════════════╗\x1b[0m");
             println!("  \x1b[1;33m║\x1b[0m             \x1b[1;37m✦  N O T E B O O K   V A U L T   I N I T  ✦\x1b[0m                \x1b[1;33m║\x1b[0m");
