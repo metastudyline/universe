@@ -8,8 +8,7 @@
 *.zip
 *.dmg
 node_modules/
-target/
-.build/
-.swiftpm/
-studyline
-
+.noteboot/
+*.db
+*.tar.zst
+*.7z
