@@ -130,6 +130,14 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineCurriculumStore.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineDomainRepository.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineTheme.swift"
         },
         {
@@ -175,6 +183,8 @@
       "objects" : [
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineApp.swift.o",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/DailyEpigramEngine.swift.o",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineCurriculumStore.swift.o",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineDomainRepository.swift.o",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineTheme.swift.o",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/AppNavigationShell.swift.o",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/ExitExamModalView.swift.o",
@@ -247,6 +257,14 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineCurriculumStore.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineDomainRepository.swift.o"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineTheme.swift.o"
         },
         {
@@ -282,6 +300,8 @@
       "sources" : [
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/StudyLineApp.swift",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/DailyEpigramEngine.swift",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineCurriculumStore.swift",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineDomainRepository.swift",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineTheme.swift",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/AppNavigationShell.swift",
         "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/ExitExamModalView.swift",
@@ -370,6 +390,8 @@
       "-c",
       "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/StudyLineApp.swift",
       "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/DailyEpigramEngine.swift",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineCurriculumStore.swift",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineDomainRepository.swift",
       "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineTheme.swift",
       "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/AppNavigationShell.swift",
       "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/ExitExamModalView.swift",
@@ -488,6 +510,14 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineCurriculumStore.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineDomainRepository.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineTheme.swift"
         },
         {
@@ -555,6 +585,14 @@
         {
           "kind" : "file",
           "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineCurriculumStore.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineDomainRepository.swift.o"
         },
         {
           "kind" : "file",

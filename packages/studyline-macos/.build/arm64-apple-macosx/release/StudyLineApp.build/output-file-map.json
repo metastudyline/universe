@@ -16,6 +16,18 @@
     "swift-dependencies": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/DailyEpigramEngine.swiftdeps",
     "diagnostics": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/DailyEpigramEngine.dia"
   },
+  "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineCurriculumStore.swift": {
+    "object": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineCurriculumStore.swift.o",
+    "swiftmodule": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineCurriculumStore~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineCurriculumStore.swiftdeps",
+    "diagnostics": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineCurriculumStore.dia"
+  },
+  "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineDomainRepository.swift": {
+    "object": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineDomainRepository.swift.o",
+    "swiftmodule": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineDomainRepository~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineDomainRepository.swiftdeps",
+    "diagnostics": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineDomainRepository.dia"
+  },
   "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineTheme.swift": {
     "object": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineTheme.swift.o",
     "swiftmodule": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineTheme~partial.swiftmodule",

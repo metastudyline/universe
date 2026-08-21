@@ -2,6 +2,7 @@
 // StudyLine macOS Native LectureWorkbenchView (Academic Markdown Reader)
 // WSJ Editorial Typography × Typora Academic Fidelity × Bilingual Primary Source
 // Fluid Liquid Glass Cards & Syllogism Formal Deduction
+// Dynamically reads real physical `index.md` from the Git Monorepo
 // =============================================================================
 
 import SwiftUI
@@ -12,6 +13,7 @@ public struct LectureWorkbenchView: View {
     @Binding public var isZenMode: Bool
     @Binding public var showInspector: Bool
 
+    @ObservedObject private var repo = StudyLineDomainRepository.shared
     @State private var readingProgress: Double = 0.65
 
     public init(
@@ -24,12 +26,20 @@ public struct LectureWorkbenchView: View {
         self._showInspector = showInspector
     }
 
+    private var currentNode: DynamicNode? {
+        repo.allNodes.first(where: { $0.id == selectedNodeId })
+    }
+
+    private var nodeIndex: Int {
+        repo.allNodes.firstIndex(where: { $0.id == selectedNodeId }) ?? 0
+    }
+
     public var body: some View {
         VStack(spacing: 0) {
             // MARK: - 顶栏 (Y=90pt 金线绝对对齐)
             StudyLineHeaderBar(
                 sectionName: selectedNodeId.hasPrefix("R") ? "RUST FIRST-PRINCIPLES WORKBENCH" : "PHILOSOPHY ACADEMIC WORKBENCH",
-                title: selectedNodeId == "A04" ? "第 A04 讲 · 巴门尼德真理之路与存在论之锚" : (selectedNodeId == "R07" ? "第 R07 讲 · 从 C 语言缺陷到所有权发生学：UAF 与数据竞争" : "第 \(selectedNodeId) 讲 · 系统第一性原理研读"),
+                title: "第 \(selectedNodeId) 讲 · \(currentNode?.title ?? "第一性原理研读")",
                 badgeText: "Typora LaTeX"
             )
 
@@ -47,16 +57,24 @@ public struct LectureWorkbenchView: View {
                     
                     // 1. 讲义主标题区 (WSJ Editorial 典雅排版)
                     VStack(alignment: .leading, spacing: 8) {
-                        Text(selectedNodeId.hasPrefix("R") ? "RUST 0段 · 物理内存与安全缺陷发生学" : "阶段A · 世界的质料与存在之锚")
-                            .font(.system(size: 11, weight: .bold, design: .serif))
-                            .tracking(3)
-                            .foregroundStyle(selectedNodeId.hasPrefix("R") ? StudyLineTheme.bambooGreen : StudyLineTheme.kintsugiGold)
+                        HStack(spacing: 8) {
+                            Text(currentNode?.stage ?? "第一性原理阶段")
+                                .font(.system(size: 11, weight: .bold, design: .serif))
+                                .tracking(3)
+                                .foregroundStyle(selectedNodeId.hasPrefix("R") ? StudyLineTheme.bambooGreen : StudyLineTheme.kintsugiGold)
 
-                        Text(selectedNodeId == "A04" ? "巴门尼德真理之路与存在论之锚" : (selectedNodeId == "R07" ? "从 C 语言内存缺陷到所有权发生学：UAF 与数据竞争" : "第一性原理因果讲义"))
+                            Spacer()
+
+                            Text("节点 \(nodeIndex + 1) / \(repo.allNodes.count)")
+                                .font(StudyLineTheme.Typography.codeCaption)
+                                .foregroundStyle(.tertiary)
+                        }
+
+                        Text(currentNode?.title ?? "第一性原理因果讲义")
                             .font(StudyLineTheme.Typography.wsjHeadline)
                             .foregroundStyle(.primary)
 
-                        Text("一手文献直读 · 形式化三段论推演 · 机器汇编映射")
+                        Text(currentNode?.summary ?? "一手文献直读 · 形式化三段论推演 · 机器汇编与物理内存映射")
                             .font(StudyLineTheme.Typography.body)
                             .foregroundStyle(.secondary)
                     }
@@ -69,39 +87,94 @@ public struct LectureWorkbenchView: View {
                             translationText: "因为存在者存在，非存在者完全不可能存在；我命令你牢牢将这一真理印在心上。\n我要阻止你走那第一条探求之路。",
                             citation: "巴门尼德 · 《论自然》真理之路 DK 28 B6 (Simplicius Phys. 117, 4)"
                         )
+                    } else if selectedNodeId.hasPrefix("R") {
+                        bilingualSourceBlock(
+                            greekText: "// Rust 核心安全定理: 仿射类型系统 (Affine Types)\npub const fn forget<T>(t: T) {\n    let _ = ManuallyDrop::new(t);\n}",
+                            translationText: "变量占用的栈空间在函数返回时通过 `add rsp, N` 单周期正常销毁，但其管理的堆内存被移出析构管线，证明了所有权与硬件栈帧的确定性分离。",
+                            citation: "Rust 标准库 · library/core/src/mem/mod.rs"
+                        )
                     } else {
                         bilingualSourceBlock(
-                            greekText: "// C 缺陷: 指针别名与就地突变\nchar *buf = malloc(64);\nfree(buf);\n// UAF 漏洞 (CWE-416)\nprintf(\"%s\", buf);",
-                            translationText: "通过仿射类型系统 (Affine Types)，Rust 证明了当资源所有权被销毁后，原指针变量永久失效，彻底阻断 UAF 与 Double Free 攻击面。",
-                            citation: "RustBelt POPL 2018 · Iris 分离逻辑证明"
+                            greekText: "ἤτοι μὲν πρώτιστα Χάος γένετ' αὐτὰρ ἔπειτα\nΓαῖ' εὐρύστερνος, πάντων ἕδος ἀσφαλὲς αἰεὶ",
+                            translationText: "最初生成的是卡俄斯（原初裂开的虚空），接着是宽胸的大地（盖亚），万物永远稳固的居所。",
+                            citation: "赫西俄德 · 《神谱》116-118行"
                         )
                     }
 
                     // 3. 形式化论证三段论卡片 (Syllogism Card)
                     syllogismCard(
-                        p1: "大前提 (P1)：凡是能被思维和言说的对象，必须是某种‘存在者’（ἔστιν）；",
-                        p2: "小前提 (P2)：‘非存在（无）’既不可被感知，也不可在思维中呈现（οὐκ ἔστιν）；",
-                        reductio: "归谬推导 (R)：若主张‘非存在存在’或‘生成自非存在’，则必须思维‘无’，此举在逻辑上陷入自相矛盾；",
-                        conclusion: "结论 (C)：存在者不生不灭、完整单一、连续不动，它是万物唯一稳固的形而上学之锚。"
+                        p1: selectedNodeId.hasPrefix("R") ? "物理事实 (P1)：CPU 以 64 字节 Cache Line 访问内存，栈帧连续分配天然命中 L1 缓存；" : "大前提 (P1)：凡是能被思维和言说的对象，必须是某种‘存在者’（ἔστιν）；",
+                        p2: selectedNodeId.hasPrefix("R") ? "系统约束 (P2)：C 语言允许指针任意别名与就地突变，引发 UAF 与数据竞争；" : "小前提 (P2)：‘非存在（无）’既不可被感知，也不可在思维中呈现（οὐκ ἔστιν）；",
+                        reductio: selectedNodeId.hasPrefix("R") ? "归谬推导 (R)：若不引入编译期仿射类型系统，程序必须在运行期付出 GC STW 停顿或面临安全漏洞；" : "归谬推导 (R)：若主张‘非存在存在’或‘生成自非存在’，则必须思维‘无’，在逻辑上陷入自相矛盾；",
+                        conclusion: selectedNodeId.hasPrefix("R") ? "结论 (C)：Rust 的别名异或可变性定理在编译期同时锁死内存安全与零成本汇编优化。" : "结论 (C)：存在者不生不灭、完整单一、连续不动，它是万物唯一稳固的形而上学之锚。"
                     )
 
-                    // 4. 正文段落精读
+                    // 4. 真实物理 Markdown 讲义渲染区
                     VStack(alignment: .leading, spacing: 14) {
-                        Text("第一性原理发生学剖析")
-                            .font(StudyLineTheme.Typography.title1)
-                            .foregroundStyle(.primary)
+                        HStack {
+                            Image(systemName: "doc.text.fill")
+                                .font(.system(size: 12))
+                                .foregroundStyle(StudyLineTheme.cosmicUltramarine)
+                            Text("CANONICAL LECTURE TEXT (物理磁盘真实讲义)")
+                                .font(.system(size: 9, weight: .bold, design: .monospaced))
+                                .foregroundStyle(.secondary)
+                            Spacer()
+                            Text(currentNode?.markdownPath.components(separatedBy: "/").suffix(2).joined(separator: "/") ?? "index.md")
+                                .font(StudyLineTheme.Typography.codeCaption)
+                                .foregroundStyle(.tertiary)
+                        }
 
-                        Text("在古希腊思想史上，爱利亚学派的巴门尼德完成了人类理性思维第一次惊心动魄的跃迁。他不再满足于米利都学派追问‘万物的质料是什么’（水、无定阿派朗、气、火），而是直接追问‘存在者本身的逻辑必然性’。")
+                        Text(repo.loadNodeMarkdown(id: selectedNodeId))
                             .font(StudyLineTheme.Typography.body)
                             .lineSpacing(6)
-                            .foregroundStyle(.primary.opacity(0.9))
-
-                        Text("这一形而上学发现，与两千年后现代计算机体系结构中‘地址空间的确定性生命周期与仿射类型系统’具有惊人一致的形式化美感。")
-                            .font(StudyLineTheme.Typography.body)
-                            .lineSpacing(6)
-                            .foregroundStyle(.primary.opacity(0.9))
+                            .foregroundStyle(.primary.opacity(0.92))
+                            .textSelection(.enabled)
                     }
-                    .studylineLiquidGlass(cornerRadius: 14, padding: 18)
+                    .studylineLiquidGlass(cornerRadius: 14, padding: 20)
+
+                    // 5. 底部连贯学线跳转按钮 (Previous / Next Lesson)
+                    HStack {
+                        if nodeIndex > 0 {
+                            Button(action: {
+                                selectedNodeId = repo.allNodes[nodeIndex - 1].id
+                                NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .now)
+                            }) {
+                                HStack(spacing: 6) {
+                                    Image(systemName: "arrow.left")
+                                    Text("上一讲: \(repo.allNodes[nodeIndex - 1].id)")
+                                }
+                                .font(.system(size: 12, weight: .bold))
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color.primary.opacity(0.04))
+                                .clipShape(Capsule())
+                            }
+                            .buttonStyle(.plain)
+                        }
+
+                        Spacer()
+
+                        if nodeIndex + 1 < repo.allNodes.count {
+                            Button(action: {
+                                selectedNodeId = repo.allNodes[nodeIndex + 1].id
+                                NSHapticFeedbackManager.defaultPerformer.perform(.generic, performanceTime: .now)
+                            }) {
+                                HStack(spacing: 6) {
+                                    Text("下一讲: \(repo.allNodes[nodeIndex + 1].id) ➔")
+                                    Image(systemName: "arrow.right")
+                                }
+                                .font(.system(size: 12, weight: .bold))
+                                .padding(.horizontal, 18)
+                                .padding(.vertical, 8)
+                                .background(StudyLineTheme.bambooGreen)
+                                .foregroundStyle(Color.white)
+                                .clipShape(Capsule())
+                                .shadow(color: StudyLineTheme.bambooGreen.opacity(0.35), radius: 6, y: 2)
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
+                    .padding(.top, 8)
 
                     Spacer().frame(height: 60)
                 }
@@ -166,7 +239,7 @@ public struct LectureWorkbenchView: View {
                 Image(systemName: "function")
                     .font(.system(size: 11, weight: .bold))
                     .foregroundStyle(StudyLineTheme.bambooGreen)
-                Text("形式化哲学论证三段论 (FORMAL SYLLOGISM)")
+                Text("形式化论证三段论 (FORMAL SYLLOGISM)")
                     .font(.system(size: 9, weight: .bold, design: .monospaced))
                     .tracking(2)
                     .foregroundStyle(StudyLineTheme.bambooGreen)
