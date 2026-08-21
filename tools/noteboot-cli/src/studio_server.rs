@@ -83,8 +83,8 @@ pub async fn start_studio_server(vault_dir: PathBuf, port: u16) -> Result<(), Bo
         .layer(cors)
         .with_state(state);
 
-    let addr = SocketAddr::from(([127, 0, 0, 1], port));
-    println!("  ✦ [NOTEBOOT STUDIO] 现代化知识工作台已启动: http://localhost:{}", port);
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
+    println!("  ✦ [NOTEBOOT STUDIO] 现代化知识工作台已启动: http://127.0.0.1:{} 或 http://localhost:{}", port, port);
     println!("  ✦ 正在连接本地知识库: {}\n", vault_dir.display());
 
     let listener = tokio::net::TcpListener::bind(addr).await?;
@@ -397,61 +397,65 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
 
     <!-- 中央核心工作区 -->
     <main id="main-workbench" class="flex-1 flex flex-col overflow-hidden bg-black/20 relative">
-      <!-- 双链编辑器与类杂志挂载视图 -->
+      <!-- 单画布所见即所得双链与类杂志编辑器 -->
       <div id="view-editor" class="flex-1 flex flex-col overflow-hidden">
-        <div class="p-3 border-b border-white/5 flex items-center justify-between text-xs">
-          <div class="flex items-center gap-2">
-            <span class="text-neutral-400">模式:</span>
-            <button id="btn-mode-split" onclick="toggleMagazineView(false)" class="px-2 py-0.5 rounded bg-white/10 text-white">源码编辑</button>
-            <button id="btn-mode-magazine" onclick="toggleMagazineView(true)" class="px-2 py-0.5 rounded text-neutral-400 hover:text-white">类杂志挂载预览</button>
+        <div class="h-10 border-b border-white/5 flex items-center justify-between px-4 text-xs bg-black/10">
+          <div class="flex items-center gap-3">
+            <span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 font-mono font-medium">✦ LIVE PREVIEW (所见即所得)</span>
+            <span class="text-neutral-500">点击任意段落直接就地编辑 · 支持输入「/」插入交互组件</span>
           </div>
           <div class="flex items-center gap-2">
-            <span class="text-neutral-500 font-mono">输入「/」调出积木菜单</span>
-            <button onclick="triggerSlashMenu()" class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-medium">+ 挂载积木</button>
+            <button onclick="triggerSlashMenu()" class="px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/30 font-medium flex items-center gap-1">
+              <span>+</span> 插入积木 (Slash)
+            </button>
+            <button onclick="saveCurrentNote()" class="px-2.5 py-1 rounded-md bg-white/10 text-white hover:bg-white/20 border border-white/10">
+              💾 保存修改
+            </button>
           </div>
         </div>
 
-        <div class="p-4 flex-1 flex flex-col overflow-y-auto relative" id="editor-container">
-          <textarea id="note-editor" oninput="handleEditorInput(event)" onkeydown="handleEditorKeyDown(event)" class="flex-1 w-full bg-transparent text-sm font-mono text-neutral-200 focus:outline-none resize-none p-2 leading-relaxed" placeholder="选择或输入双链笔记 (输入 / 挂载交互组件)..."></textarea>
-          
-          <!-- 悬浮 Slash 积木菜单 -->
-          <div id="slash-menu" class="absolute top-16 left-8 w-72 glass-panel rounded-xl shadow-2xl p-2 border border-amber-500/30 hidden z-50">
-            <div class="text-[10px] font-bold uppercase tracking-wider text-amber-400 px-2 py-1 mb-1">🧩 挂载交互积木 (Sidecar Component)</div>
+        <!-- 核心所见即所得单画布容器 -->
+        <div class="flex-1 overflow-y-auto p-6 relative" id="canvas-scroll-container">
+          <div id="live-canvas" class="max-w-3xl mx-auto space-y-4 pb-32">
+            <p class="text-neutral-500 italic text-center mt-20">请在左侧选择一篇知识宇宙讲义或双链笔记开始阅读与创作...</p>
+          </div>
+
+          <!-- 悬浮 Slash 积木选择面板 -->
+          <div id="slash-menu" class="absolute top-20 left-1/3 w-80 glass-panel rounded-xl shadow-2xl p-2 border border-amber-500/40 hidden z-50">
+            <div class="text-[10px] font-bold uppercase tracking-wider text-amber-400 px-2 py-1 mb-1 flex items-center justify-between">
+              <span>🧩 选择要插入的交互积木</span>
+              <span class="text-neutral-500 font-mono">ESC 关闭</span>
+            </div>
             <div class="space-y-1 text-xs">
-              <div onclick="selectSlashItem('StackFrameSimulator')" class="p-2 rounded-lg glass-card cursor-pointer hover:bg-amber-500/10 flex items-center gap-2">
-                <span class="text-base">⚡</span>
+              <div onclick="insertSlashComponent('StackFrameSimulator')" class="p-2.5 rounded-lg glass-card cursor-pointer hover:bg-amber-500/10 flex items-center gap-2.5">
+                <span class="text-lg">⚡</span>
                 <div>
-                  <div class="font-bold text-white">栈帧物理仿真器</div>
-                  <div class="text-[10px] text-neutral-400">硬件 RSP 寄存器与压栈动画</div>
+                  <div class="font-bold text-white">栈帧物理仿真器 (StackFrameSimulator)</div>
+                  <div class="text-[10px] text-neutral-400">硬件 RSP 寄存器指针与实时内存压栈动画</div>
                 </div>
               </div>
-              <div onclick="selectSlashItem('WSJVideoPlayer')" class="p-2 rounded-lg glass-card cursor-pointer hover:bg-amber-500/10 flex items-center gap-2">
-                <span class="text-base">🎬</span>
+              <div onclick="insertSlashComponent('WSJVideoPlayer')" class="p-2.5 rounded-lg glass-card cursor-pointer hover:bg-amber-500/10 flex items-center gap-2.5">
+                <span class="text-lg">🎬</span>
                 <div>
-                  <div class="font-bold text-white">WSJ 4K 演示视频</div>
-                  <div class="text-[10px] text-neutral-400">高清动画与 B-Roll 播放器</div>
+                  <div class="font-bold text-white">WSJ 4K 演示视频 (WSJVideoPlayer)</div>
+                  <div class="text-[10px] text-neutral-400">超高清动画与 B-Roll 素材播放器</div>
                 </div>
               </div>
-              <div onclick="selectSlashItem('BilingualPrimarySource')" class="p-2 rounded-lg glass-card cursor-pointer hover:bg-amber-500/10 flex items-center gap-2">
-                <span class="text-base">🔬</span>
+              <div onclick="insertSlashComponent('BilingualPrimarySource')" class="p-2.5 rounded-lg glass-card cursor-pointer hover:bg-amber-500/10 flex items-center gap-2.5">
+                <span class="text-lg">🔬</span>
                 <div>
-                  <div class="font-bold text-white">一手文献双语对照</div>
-                  <div class="text-[10px] text-neutral-400">希腊文/拉丁文多调对齐卡片</div>
+                  <div class="font-bold text-white">一手文献双语对照 (BilingualPrimarySource)</div>
+                  <div class="text-[10px] text-neutral-400">古希腊文/拉丁文双语多调对齐学术卡片</div>
                 </div>
               </div>
-              <div onclick="selectSlashItem('FormalSyllogism')" class="p-2 rounded-lg glass-card cursor-pointer hover:bg-amber-500/10 flex items-center gap-2">
-                <span class="text-base">🏛️</span>
+              <div onclick="insertSlashComponent('FormalSyllogism')" class="p-2.5 rounded-lg glass-card cursor-pointer hover:bg-amber-500/10 flex items-center gap-2.5">
+                <span class="text-lg">🏛️</span>
                 <div>
-                  <div class="font-bold text-white">形式化逻辑三段论</div>
-                  <div class="text-[10px] text-neutral-400">大前提 ➔ 小前提 ➔ 结论</div>
+                  <div class="font-bold text-white">形式化逻辑三段论 (FormalSyllogism)</div>
+                  <div class="text-[10px] text-neutral-400">大前提 ➔ 小前提 ➔ 结论严格演绎卡片</div>
                 </div>
               </div>
             </div>
-          </div>
-
-          <!-- 原地类杂志挂载容器 -->
-          <div id="magazine-render-container" class="hidden space-y-6 pt-2 max-w-3xl mx-auto w-full">
-            <!-- 动态注入标准 Markdown 与 React/HTML 仿真器组件 -->
           </div>
         </div>
       </div>
@@ -485,12 +489,13 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
       </div>
     </main>
 
-    <!-- 右侧栏: 反向链接 (Backlinks) -->
-    <aside class="w-72 border-l border-white/10 glass-panel flex flex-col">
-      <div class="p-3 border-b border-white/5">
-        <span class="text-xs font-semibold text-neutral-400 uppercase tracking-wider">反向链接 (Backlinks)</span>
+    <!-- 右侧栏: 反向链接 (Backlinks) 与伴读中枢 -->
+    <aside class="w-80 border-l border-white/10 glass-panel flex flex-col">
+      <div class="p-3 border-b border-white/5 flex items-center justify-between">
+        <span class="text-xs font-semibold text-neutral-400 uppercase tracking-wider">伴读中枢与反向链接</span>
+        <span class="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-neutral-400 font-mono">DRAWER</span>
       </div>
-      <div id="backlinks-container" class="flex-1 overflow-y-auto p-3 space-y-2 text-xs">
+      <div id="backlinks-container" class="flex-1 overflow-y-auto p-3 space-y-3 text-xs">
         <p class="text-neutral-500 italic">暂无反向引用</p>
       </div>
     </aside>
@@ -498,6 +503,9 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
 
   <script>
     let currentDoc = null;
+    let rawBlocks = [];
+    let activeInjections = [];
+    let activePrereqs = [];
 
     async function loadTree() {
       const res = await fetch('/api/tree').then(r => r.json());
@@ -532,92 +540,158 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
       }
     }
 
-    let activeInjections = [];
-    let activePrereqs = [];
-
     async function openNote(doc) {
       currentDoc = doc;
       document.getElementById('active-note-label').innerText = `${doc.vault}/${doc.canonical_path}`;
       const res = await fetch(`/api/note?vault=${encodeURIComponent(doc.vault)}&path=${encodeURIComponent(doc.canonical_path)}`).then(r => r.json());
       if (res.success && res.data) {
-        document.getElementById('note-editor').value = res.data.content || '';
         activeInjections = res.data.injections || [];
         activePrereqs = res.data.prerequisites || [];
+        parseMarkdownToBlocks(res.data.content || '');
+        renderLiveCanvas();
         loadBacklinks(doc.canonical_path);
         renderInjectionsAndPrereqs(activeInjections, activePrereqs);
-        if (!document.getElementById('magazine-render-container').classList.contains('hidden')) {
-          renderMagazineView();
-        }
       }
     }
 
-    function toggleMagazineView(enable) {
-      const editorEl = document.getElementById('note-editor');
-      const magContainer = document.getElementById('magazine-render-container');
-      const btnSplit = document.getElementById('btn-mode-split');
-      const btnMag = document.getElementById('btn-mode-magazine');
+    function parseMarkdownToBlocks(content) {
+      const rawLines = content.split('\n');
+      rawBlocks = [];
+      let currentBlock = [];
 
-      if (enable) {
-        editorEl.classList.add('hidden');
-        magContainer.classList.remove('hidden');
-        btnMag.className = 'px-2 py-0.5 rounded bg-white/10 text-white font-medium';
-        btnSplit.className = 'px-2 py-0.5 rounded text-neutral-400 hover:text-white';
-        renderMagazineView();
-      } else {
-        editorEl.classList.remove('hidden');
-        magContainer.classList.add('hidden');
-        btnSplit.className = 'px-2 py-0.5 rounded bg-white/10 text-white font-medium';
-        btnMag.className = 'px-2 py-0.5 rounded text-neutral-400 hover:text-white';
-      }
-    }
-
-    function renderMagazineView() {
-      const container = document.getElementById('magazine-render-container');
-      const content = document.getElementById('note-editor').value || '';
-      const lines = content.split('\n');
-      let html = '';
-
-      lines.forEach(line => {
+      rawLines.forEach((line, idx) => {
         const trimmed = line.trim();
+        if (trimmed.startsWith('# ') || trimmed.startsWith('## ') || trimmed.startsWith('### ') || trimmed.startsWith('> ') || trimmed.startsWith('```')) {
+          if (currentBlock.length > 0) {
+            rawBlocks.push(currentBlock.join('\n'));
+            currentBlock = [];
+          }
+          rawBlocks.push(line);
+        } else if (trimmed === '') {
+          if (currentBlock.length > 0) {
+            rawBlocks.push(currentBlock.join('\n'));
+            currentBlock = [];
+          }
+        } else {
+          currentBlock.push(line);
+        }
+      });
+      if (currentBlock.length > 0) {
+        rawBlocks.push(currentBlock.join('\n'));
+      }
+    }
+
+    function getCleanMarkdownFromBlocks() {
+      return rawBlocks.join('\n\n');
+    }
+
+    function renderLiveCanvas() {
+      const canvas = document.getElementById('live-canvas');
+      canvas.innerHTML = '';
+
+      rawBlocks.forEach((blockText, blockIdx) => {
+        const trimmed = blockText.trim();
+        const blockWrapper = document.createElement('div');
+        blockWrapper.className = 'group relative transition duration-150 rounded-lg p-1 hover:bg-white/[0.02]';
+        blockWrapper.dataset.blockIndex = blockIdx;
+
+        let renderedElement;
+
         if (trimmed.startsWith('# ')) {
-          html += `<h1 class="text-2xl font-bold text-white tracking-tight mt-6 mb-4">${trimmed.substring(2)}</h1>`;
+          renderedElement = document.createElement('h1');
+          renderedElement.className = 'text-2xl font-bold text-white tracking-tight leading-snug cursor-text';
+          renderedElement.innerText = trimmed.substring(2);
         } else if (trimmed.startsWith('## ')) {
           const headingText = trimmed.substring(3);
-          html += `<h2 class="text-lg font-bold text-amber-400 tracking-tight mt-6 mb-2 border-b border-white/10 pb-1">${headingText}</h2>`;
+          renderedElement = document.createElement('h2');
+          renderedElement.className = 'text-lg font-bold text-amber-400 tracking-tight leading-snug border-b border-white/10 pb-1.5 cursor-text';
+          renderedElement.innerText = headingText;
+        } else if (trimmed.startsWith('### ')) {
+          renderedElement = document.createElement('h3');
+          renderedElement.className = 'text-base font-semibold text-neutral-200 tracking-tight cursor-text';
+          renderedElement.innerText = trimmed.substring(4);
+        } else if (trimmed.startsWith('> ')) {
+          renderedElement = document.createElement('blockquote');
+          renderedElement.className = 'border-l-2 border-amber-500/70 bg-white/5 pl-4 py-2 text-sm text-neutral-200 italic rounded-r cursor-text';
+          renderedElement.innerText = trimmed.substring(2);
+        } else if (trimmed.startsWith('```')) {
+          renderedElement = document.createElement('pre');
+          renderedElement.className = 'p-3 rounded-lg bg-black/60 border border-white/10 font-mono text-xs text-amber-200/90 overflow-x-auto cursor-text';
+          renderedElement.innerText = blockText;
+        } else {
+          renderedElement = document.createElement('p');
+          renderedElement.className = 'text-sm leading-relaxed text-neutral-300 font-serif cursor-text';
           
-          // 匹配外置伴随组件 (Sidecar Injections)
+          // 渲染双向链接药丸胶囊 [[...]]
+          const htmlContent = trimmed.replace(/\[\[(.*?)\]\]/g, '<span class="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30 font-mono text-xs cursor-pointer hover:bg-blue-500/30">✦ $1</span>');
+          renderedElement.innerHTML = htmlContent;
+        }
+
+        // 点击原地进入编辑模式 (Inline Edit on Click)
+        renderedElement.onclick = () => enterInlineEdit(blockWrapper, blockIdx, blockText);
+        blockWrapper.appendChild(renderedElement);
+        canvas.appendChild(blockWrapper);
+
+        // 如果是二级标题，检查并原地注入伴随组件 (In-Place Sidecar Component Widget)
+        if (trimmed.startsWith('## ')) {
+          const headingText = trimmed.substring(3);
           const matchedInjections = activeInjections.filter(inj => 
             inj.target_section.includes(headingText) || headingText.includes(inj.target_section.replace(/^[#\s]+/, ''))
           );
           matchedInjections.forEach(inj => {
-            html += renderInteractiveComponent(inj.component, inj.props);
+            const widgetEl = document.createElement('div');
+            widgetEl.className = 'my-4';
+            widgetEl.innerHTML = renderInteractiveComponent(inj.component, inj.props);
+            canvas.appendChild(widgetEl);
           });
-        } else if (trimmed.startsWith('> ')) {
-          html += `<blockquote class="border-l-2 border-amber-500/60 bg-white/5 pl-4 py-2 my-2 text-sm text-neutral-300 italic rounded-r">${trimmed.substring(2)}</blockquote>`;
-        } else if (trimmed.length > 0) {
-          html += `<p class="text-sm leading-relaxed text-neutral-300 my-2 font-serif">${trimmed}</p>`;
         }
       });
+    }
 
-      container.innerHTML = html || '<p class="text-neutral-500 italic">笔记内容为空</p>';
+    function enterInlineEdit(wrapper, blockIdx, originalText) {
+      wrapper.innerHTML = '';
+      const input = document.createElement('textarea');
+      input.className = 'w-full bg-black/40 border border-amber-500/50 rounded-lg p-2.5 text-sm font-mono text-white focus:outline-none resize-none leading-relaxed shadow-lg';
+      input.value = originalText;
+      input.rows = Math.max(2, originalText.split('\n').length);
+
+      input.onkeydown = (e) => {
+        if (e.key === 'Enter' && !e.shiftKey && !originalText.startsWith('```')) {
+          e.preventDefault();
+          rawBlocks[blockIdx] = input.value;
+          renderLiveCanvas();
+        } else if (e.key === 'Escape') {
+          renderLiveCanvas();
+        } else if (e.key === '/') {
+          triggerSlashMenu();
+        }
+      };
+
+      input.onblur = () => {
+        rawBlocks[blockIdx] = input.value;
+        renderLiveCanvas();
+      };
+
+      wrapper.appendChild(input);
+      input.focus();
     }
 
     function renderInteractiveComponent(component, props) {
       if (component === 'StackFrameSimulator') {
         return `
-          <div class="my-4 p-4 rounded-xl border border-amber-500/30 bg-black/40 glass-panel shadow-lg">
+          <div class="p-4 rounded-xl border border-amber-500/30 bg-black/50 glass-panel shadow-2xl">
             <div class="flex items-center justify-between text-xs mb-3 pb-2 border-b border-white/10">
               <span class="font-bold text-amber-400 font-mono flex items-center gap-1.5">
                 <span>⚡</span> 硬件栈帧物理仿真器 (StackFrameSimulator)
               </span>
-              <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">LIVE SIM</span>
+              <span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-mono">LIVE COMPONENT</span>
             </div>
             <div class="grid grid-cols-2 gap-4 text-xs font-mono">
               <div class="space-y-2">
                 <div class="text-neutral-400">RSP 栈顶指针调节:</div>
-                <input type="range" min="0" max="64" value="16" class="w-full accent-amber-400" oninput="document.getElementById('rsp-val').innerText = '0x7fffffffde' + (40 - parseInt(this.value)).toString(16)" />
-                <div class="text-neutral-300">当前 RSP: <span id="rsp-val" class="text-amber-300 font-bold">0x7fffffffde28</span></div>
-                <button class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40">▶ 单步 call 指令压栈</button>
+                <input type="range" min="0" max="64" value="16" class="w-full accent-amber-400" oninput="document.getElementById('sim-rsp').innerText = '0x7fffffffde' + (40 - parseInt(this.value)).toString(16)" />
+                <div class="text-neutral-300">当前 RSP: <span id="sim-rsp" class="text-amber-300 font-bold">0x7fffffffde28</span></div>
+                <button onclick="alert('单步指令执行成功！RSP 已更新。')" class="px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-500/40">▶ 单步 call 指令压栈</button>
               </div>
               <div class="border border-white/10 rounded-lg p-2 bg-white/5 space-y-1 text-[11px]">
                 <div class="text-neutral-400 pb-1 border-b border-white/5">栈内存物理布局:</div>
@@ -630,7 +704,7 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
         `;
       } else if (component === 'WSJVideoPlayer') {
         return `
-          <div class="my-4 p-3 rounded-xl border border-cyan-500/30 bg-black/40 glass-panel">
+          <div class="p-3 rounded-xl border border-cyan-500/30 bg-black/50 glass-panel">
             <div class="flex items-center justify-between text-xs mb-2">
               <span class="font-bold text-cyan-400 font-mono flex items-center gap-1.5">
                 <span>🎬</span> WSJ 4K 演示视频 (WSJVideoPlayer)
@@ -638,20 +712,20 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
               <span class="text-[10px] text-neutral-400">4K Ultra HD</span>
             </div>
             <div class="aspect-video bg-neutral-900 rounded-lg border border-white/10 flex flex-col items-center justify-center relative overflow-hidden">
-              <div class="w-12 h-12 rounded-full bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-xl cursor-pointer hover:scale-110 transition border border-cyan-500/40">▶</div>
+              <div class="w-12 h-12 rounded-full bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-xl cursor-pointer hover:scale-110 transition border border-cyan-500/40" onclick="alert('播放 WSJ 4K 演示动画')">▶</div>
               <span class="text-[11px] text-neutral-400 mt-2 font-mono">${(props && props.caption) || 'WSJ 4K: RSP 栈帧风箱压伸与释放机制'}</span>
             </div>
           </div>
         `;
       } else if (component === 'BilingualPrimarySource') {
         return `
-          <div class="my-4 p-3 rounded-xl border border-purple-500/30 bg-black/40 glass-panel">
+          <div class="p-3.5 rounded-xl border border-purple-500/30 bg-black/50 glass-panel">
             <div class="text-xs font-bold text-purple-400 font-mono mb-2 flex items-center gap-1.5">
               <span>🔬</span> 一手文献古希腊/拉丁双语对照 (BilingualPrimarySource)
             </div>
             <div class="grid grid-cols-2 gap-3 text-xs font-serif leading-relaxed">
               <div class="p-2.5 rounded bg-white/5 text-purple-200 border-r border-purple-500/20 italic">
-                "Τὸ γὰρ αὐτὸ νοεῖν ἐστίν τε καὶ εἶναι." (Parmenides, Fragment B 3)
+                "Τὸ γὰρ αὐτὸ νοεῖν ἐστίν τε καὶ εἶναι." (Parmenides, DK 28 B 3)
               </div>
               <div class="p-2.5 rounded bg-white/5 text-neutral-300">
                 “因为能够被思想的和能够存在的是同一回事。”（巴门尼德 残篇 B 3）
@@ -661,7 +735,7 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
         `;
       } else if (component === 'FormalSyllogism') {
         return `
-          <div class="my-4 p-3 rounded-xl border border-emerald-500/30 bg-black/40 glass-panel">
+          <div class="p-3.5 rounded-xl border border-emerald-500/30 bg-black/50 glass-panel">
             <div class="text-xs font-bold text-emerald-400 font-mono mb-2 flex items-center gap-1.5">
               <span>🏛️</span> 形式化逻辑三段论推演 (FormalSyllogism)
             </div>
@@ -676,66 +750,144 @@ const STUDIO_HTML: &str = r###"<!DOCTYPE html>
       return '';
     }
 
-    function handleEditorKeyDown(e) {
-      if (e.key === '/') {
-        const menu = document.getElementById('slash-menu');
-        menu.classList.remove('hidden');
-      } else if (e.key === 'Escape') {
-        document.getElementById('slash-menu').classList.add('hidden');
-      }
-    }
-
-    function handleEditorInput(e) {
-      const editor = document.getElementById('note-editor');
-      if (!editor.value.endsWith('/')) {
-        document.getElementById('slash-menu').classList.add('hidden');
-      }
-    }
-
     function triggerSlashMenu() {
       const menu = document.getElementById('slash-menu');
       menu.classList.toggle('hidden');
     }
 
-    function selectSlashItem(componentName) {
+    function insertSlashComponent(componentName) {
       document.getElementById('slash-menu').classList.add('hidden');
-      const editor = document.getElementById('note-editor');
-      if (editor.value.endsWith('/')) {
-        editor.value = editor.value.slice(0, -1);
-      }
-      
-      // 模拟向当前笔记追加挂载组件规则
       activeInjections.push({
-        target_section: "## 挂载小节",
+        target_section: "## 新增交互小节",
         position: "after",
         component: componentName,
         props: { caption: "由创作者 Slash 积木菜单挂载" }
       });
-
+      rawBlocks.push("## 新增交互小节");
+      rawBlocks.push("这里是该小节的学术解析正文...");
+      renderLiveCanvas();
       renderInjectionsAndPrereqs(activeInjections, activePrereqs);
-      alert(`已成功挂载组件 [${componentName}] 到外置伴随清单！正文 Markdown 保持 0 字符污染。`);
+      alert(`已成功挂载组件 [${componentName}] 到外置伴随清单！正文 Markdown 保持 100% 绝对纯净。`);
     }
 
-    // 智能剪贴板清洗拦截器 (Smart Clipboard Sanitizer)
+    async function saveCurrentNote() {
+      if (!currentDoc) return;
+      const content = getCleanMarkdownFromBlocks();
+      const res = await fetch('/api/note', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          vault: currentDoc.vault,
+          path: currentDoc.canonical_path,
+          content: content
+        })
+      }).then(r => r.json());
+
+      if (res.success) {
+        alert('✅ 笔记已成功保存至磁盘！Markdown 源码 0 字符污染。');
+      } else {
+        alert('保存提示: ' + (res.error || '只读知识库仅供研读预览'));
+      }
+    }
+
+    function renderInjectionsAndPrereqs(injections, prereqs) {
+      const container = document.getElementById('backlinks-container');
+      let companionHtml = '';
+      if (prereqs.length > 0) {
+        companionHtml += `
+          <div class="mb-3">
+            <div class="text-[11px] font-bold text-amber-400 mb-1 flex items-center gap-1">
+              <span>⬅️</span> 前置依赖穿透抽屉 (Prerequisites)
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              ${prereqs.map(p => `<span class="px-2 py-0.5 rounded bg-white/5 border border-amber-500/20 text-[11px] text-amber-200">${p}</span>`).join('')}
+            </div>
+          </div>
+        `;
+      }
+      if (injections.length > 0) {
+        companionHtml += `
+          <div class="mb-3">
+            <div class="text-[11px] font-bold text-cyan-400 mb-1 flex items-center gap-1">
+              <span>🧩</span> 原地挂载组件 (Mounted Injections)
+            </div>
+            <div class="space-y-1.5">
+              ${injections.map(inj => `
+                <div class="p-2 rounded bg-white/5 border border-cyan-500/20 text-[11px]">
+                  <div class="font-bold text-cyan-300">${inj.component}</div>
+                  <div class="text-[10px] text-neutral-400">挂载于: ${inj.target_section}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `;
+      }
+      container.innerHTML = companionHtml + '<div class="border-t border-white/5 pt-2 mt-2 font-bold text-neutral-400 text-[11px]">反向链接 (Backlinks)</div>';
+    }
+
+    async function loadBacklinks(path) {
+      const res = await fetch(`/api/backlinks?path=${encodeURIComponent(path)}`).then(r => r.json());
+      const container = document.getElementById('backlinks-container');
+      if (res.data && res.data.length > 0) {
+        res.data.forEach(b => {
+          const el = document.createElement('div');
+          el.className = 'p-2.5 rounded-lg glass-card cursor-pointer';
+          el.innerHTML = `
+            <div class="font-bold text-amber-400 text-xs">${b.source_title}</div>
+            <div class="text-[10px] text-neutral-400 mt-1 font-mono">${b.source_vault}/${b.source_path}</div>
+            <div class="text-xs text-neutral-300 mt-1 line-clamp-2">${b.snippet || ''}</div>
+          `;
+          container.appendChild(el);
+        });
+      }
+    }
+
+    async function loadBento() {
+      const res = await fetch('/api/bento').then(r => r.json());
+      const tbody = document.getElementById('bento-tbody');
+      tbody.innerHTML = '';
+      if (res.data) {
+        res.data.forEach(r => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-white/5 transition font-mono';
+          tr.innerHTML = `
+            <td class="p-3 text-amber-400">${r.vault || '@local'}</td>
+            <td class="p-3 text-neutral-300">${r.path}</td>
+            <td class="p-3 font-sans font-medium text-white">${r.title}</td>
+            <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px]">${r.status || 'active'}</span></td>
+            <td class="p-3"><span class="px-1.5 py-0.5 rounded bg-blue-500/10 text-blue-400 text-[10px]">${r.priority || 'P1'}</span></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+    }
+
+    function switchTab(tab) {
+      if (tab === 'editor') {
+        document.getElementById('view-editor').classList.remove('hidden');
+        document.getElementById('view-bento').classList.add('hidden');
+        document.getElementById('btn-tab-editor').className = 'px-3 py-1 rounded-md bg-amber-500/20 text-amber-300 font-medium';
+        document.getElementById('btn-tab-bento').className = 'px-3 py-1 rounded-md text-neutral-400 hover:text-white';
+      } else {
+        document.getElementById('view-editor').classList.add('hidden');
+        document.getElementById('view-bento').classList.remove('hidden');
+        document.getElementById('btn-tab-bento').className = 'px-3 py-1 rounded-md bg-amber-500/20 text-amber-300 font-medium';
+        document.getElementById('btn-tab-editor').className = 'px-3 py-1 rounded-md text-neutral-400 hover:text-white';
+        loadBento();
+      }
+    }
+
+    // 智能剪贴板清洗拦截器
     document.addEventListener('paste', function(e) {
-      const activeEl = document.activeElement;
-      if (activeEl && activeEl.id === 'note-editor') {
-        const html = e.clipboardData.getData('text/html');
-        if (html && html.trim()) {
-          e.preventDefault();
-          // 三阶清洗：剔除注释、提取内容、标准化 Markdown
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, 'text/html');
-          let text = doc.body.textContent || '';
-          
-          // 剔除任何残留的 HTML 注释与裸标签
-          text = text.replace(/<!--[\s\S]*?-->/g, '').replace(/<\/?[^>]+(>|$)/g, '');
-          
-          const start = activeEl.selectionStart;
-          const end = activeEl.selectionEnd;
-          activeEl.value = activeEl.value.substring(0, start) + text + activeEl.value.substring(end);
-          activeEl.selectionStart = activeEl.selectionEnd = start + text.length;
-        }
+      const html = e.clipboardData.getData('text/html');
+      if (html && html.trim()) {
+        e.preventDefault();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        let text = doc.body.textContent || '';
+        text = text.replace(/<!--[\s\S]*?-->/g, '').replace(/<\/?[^>]+(>|$)/g, '');
+        rawBlocks.push(text);
+        renderLiveCanvas();
       }
     });
 

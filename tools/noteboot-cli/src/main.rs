@@ -330,7 +330,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
         Commands::Studio { vault_path, port } => {
             let vault_buf = PathBuf::from(&vault_path);
-            let _ = sync_vault(&vault_path);
+            let vault_clone = vault_path.clone();
+            tokio::spawn(async move {
+                let _ = tokio::task::spawn_blocking(move || {
+                    let _ = sync_vault(&vault_clone);
+                }).await;
+            });
             studio_server::start_studio_server(vault_buf, port).await?;
         }
     }
