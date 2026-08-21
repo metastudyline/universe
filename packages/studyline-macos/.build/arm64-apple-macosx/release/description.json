@@ -1,0 +1,570 @@
+{
+  "builtTestProducts" : [
+
+  ],
+  "copyCommands" : {
+
+  },
+  "explicitTargetDependencyImportCheckingMode" : {
+    "none" : {
+
+    }
+  },
+  "generatedSourceTargetSet" : [
+
+  ],
+  "pluginDescriptions" : [
+
+  ],
+  "swiftCommands" : {
+    "C.StudyLine-arm64-apple-macosx-release.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/sources",
+      "importPath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/StudyLine/StudyLineEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/CStudyLine.build/shim.c.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/sources"
+        }
+      ],
+      "isLibrary" : true,
+      "moduleName" : "StudyLine",
+      "moduleOutputPath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/Modules/StudyLine.swiftmodule",
+      "objects" : [
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/StudyLineEngine.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx13.0",
+        "-whole-module-optimization",
+        "-num-threads",
+        "18",
+        "-serialize-diagnostics",
+        "-O",
+        "-j18",
+        "-DSWIFT_PACKAGE",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-Xcc",
+        "-fmodule-map-file=/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/CStudyLine/include/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/CStudyLine/include",
+        "-module-cache-path",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/ModuleCache",
+        "-parseable-output",
+        "-parse-as-library",
+        "-emit-objc-header",
+        "-emit-objc-header-path",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/include/StudyLine-Swift.h",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "studyline_swift"
+      ],
+      "outputFileMapPath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/StudyLineEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/Modules/StudyLine.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/StudyLine/StudyLineEngine.swift"
+      ],
+      "tempsPath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build",
+      "wholeModuleOptimization" : true
+    },
+    "C.StudyLineApp-arm64-apple-macosx-release.module" : {
+      "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "fileList" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/sources",
+      "importPath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/Modules",
+      "inputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/StudyLineApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/DailyEpigramEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineTheme.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/AppNavigationShell.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/ExitExamModalView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/LectureWorkbenchView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/MainSplitView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/UniverseHomeView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/Modules/StudyLine.swiftmodule"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/sources"
+        }
+      ],
+      "isLibrary" : false,
+      "moduleName" : "StudyLineApp",
+      "moduleOutputPath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/Modules/StudyLineApp.swiftmodule",
+      "objects" : [
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineApp.swift.o",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/DailyEpigramEngine.swift.o",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineTheme.swift.o",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/AppNavigationShell.swift.o",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/ExitExamModalView.swift.o",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/LectureWorkbenchView.swift.o",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/MainSplitView.swift.o",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/UniverseHomeView.swift.o"
+      ],
+      "otherArguments" : [
+        "-target",
+        "arm64-apple-macosx14.0",
+        "-whole-module-optimization",
+        "-num-threads",
+        "18",
+        "-serialize-diagnostics",
+        "-O",
+        "-j18",
+        "-DSWIFT_PACKAGE",
+        "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+        "-Xcc",
+        "-fmodule-map-file=/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/CStudyLine/include/module.modulemap",
+        "-Xcc",
+        "-I",
+        "-Xcc",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/CStudyLine/include",
+        "-module-cache-path",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/ModuleCache",
+        "-parseable-output",
+        "-Xfrontend",
+        "-entry-point-function-name",
+        "-Xfrontend",
+        "StudyLineApp_main",
+        "-swift-version",
+        "5",
+        "-plugin-path",
+        "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+        "-sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-F",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-I",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-L",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+        "-g",
+        "-Xcc",
+        "-isysroot",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+        "-Xcc",
+        "-F",
+        "-Xcc",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+        "-Xcc",
+        "-fPIC",
+        "-Xcc",
+        "-g",
+        "-package-name",
+        "studyline_macos"
+      ],
+      "outputFileMapPath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/output-file-map.json",
+      "outputs" : [
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/DailyEpigramEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineTheme.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/AppNavigationShell.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/ExitExamModalView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/LectureWorkbenchView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/MainSplitView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/UniverseHomeView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/Modules/StudyLineApp.swiftmodule"
+        }
+      ],
+      "prepareForIndexing" : false,
+      "sources" : [
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/StudyLineApp.swift",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/DailyEpigramEngine.swift",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineTheme.swift",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/AppNavigationShell.swift",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/ExitExamModalView.swift",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/LectureWorkbenchView.swift",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/MainSplitView.swift",
+        "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/UniverseHomeView.swift"
+      ],
+      "tempsPath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build",
+      "wholeModuleOptimization" : true
+    }
+  },
+  "swiftFrontendCommands" : {
+
+  },
+  "swiftTargetScanArgs" : {
+    "StudyLine" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "StudyLine",
+      "-package-name",
+      "studyline_swift",
+      "-c",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/StudyLine/StudyLineEngine.swift",
+      "-I",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/Modules",
+      "-target",
+      "arm64-apple-macosx13.0",
+      "-whole-module-optimization",
+      "-num-threads",
+      "18",
+      "-serialize-diagnostics",
+      "-O",
+      "-j18",
+      "-DSWIFT_PACKAGE",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-Xcc",
+      "-fmodule-map-file=/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/CStudyLine/include/module.modulemap",
+      "-Xcc",
+      "-I",
+      "-Xcc",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/CStudyLine/include",
+      "-module-cache-path",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/ModuleCache",
+      "-parseable-output",
+      "-parse-as-library",
+      "-emit-objc-header",
+      "-emit-objc-header-path",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/include/StudyLine-Swift.h",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "studyline_swift",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ],
+    "StudyLineApp" : [
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
+      "-module-name",
+      "StudyLineApp",
+      "-package-name",
+      "studyline_macos",
+      "-c",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/StudyLineApp.swift",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/DailyEpigramEngine.swift",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineTheme.swift",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/AppNavigationShell.swift",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/ExitExamModalView.swift",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/LectureWorkbenchView.swift",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/MainSplitView.swift",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/UniverseHomeView.swift",
+      "-I",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/Modules",
+      "-target",
+      "arm64-apple-macosx14.0",
+      "-whole-module-optimization",
+      "-num-threads",
+      "18",
+      "-serialize-diagnostics",
+      "-O",
+      "-j18",
+      "-DSWIFT_PACKAGE",
+      "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
+      "-Xcc",
+      "-fmodule-map-file=/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/CStudyLine/include/module.modulemap",
+      "-Xcc",
+      "-I",
+      "-Xcc",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/CStudyLine/include",
+      "-module-cache-path",
+      "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/ModuleCache",
+      "-parseable-output",
+      "-Xfrontend",
+      "-entry-point-function-name",
+      "-Xfrontend",
+      "StudyLineApp_main",
+      "-swift-version",
+      "5",
+      "-plugin-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
+      "-sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-F",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-I",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-L",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
+      "-g",
+      "-Xcc",
+      "-isysroot",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.5.sdk",
+      "-Xcc",
+      "-F",
+      "-Xcc",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
+      "-Xcc",
+      "-fPIC",
+      "-Xcc",
+      "-g",
+      "-package-name",
+      "studyline_macos",
+      "-driver-use-frontend-path",
+      "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    ]
+  },
+  "targetDependencyMap" : {
+    "CStudyLine" : [
+
+    ],
+    "StudyLine" : [
+      "CStudyLine"
+    ],
+    "StudyLineApp" : [
+      "StudyLine",
+      "CStudyLine"
+    ]
+  },
+  "testDiscoveryCommands" : {
+
+  },
+  "testEntryPointCommands" : {
+
+  },
+  "traitConfiguration" : {
+    "default" : {
+
+    }
+  },
+  "writeCommands" : {
+    "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/StudyLine/StudyLineEngine.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/sources"
+    },
+    "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/sources" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<sources-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/StudyLineApp.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/DailyEpigramEngine.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Theme/StudyLineTheme.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/AppNavigationShell.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/ExitExamModalView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/LectureWorkbenchView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/MainSplitView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/Sources/StudyLineApp/Views/UniverseHomeView.swift"
+        }
+      ],
+      "outputFilePath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/sources"
+    },
+    "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.product/Objects.LinkFileList" : {
+      "alwaysOutOfDate" : false,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<link-file-list>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/CStudyLine.build/shim.c.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/StudyLineEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/AppNavigationShell.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/DailyEpigramEngine.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/ExitExamModalView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/LectureWorkbenchView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/MainSplitView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineApp.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/StudyLineTheme.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.build/UniverseHomeView.swift.o"
+        }
+      ],
+      "outputFilePath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLineApp.product/Objects.LinkFileList"
+    },
+    "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt" : {
+      "alwaysOutOfDate" : true,
+      "inputs" : [
+        {
+          "kind" : "virtual",
+          "name" : "<swift-get-version>"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+        }
+      ],
+      "outputFilePath" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+    }
+  }
+}

@@ -9,12 +9,12 @@
         "packageRef" : {
           "identity" : "studyline-swift",
           "kind" : "fileSystem",
-          "location" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift",
+          "location" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift",
           "name" : "StudyLineSwift"
         },
         "state" : {
           "name" : "fileSystem",
-          "path" : "/Users/kevintung/Documents/dev/life-coach/packages/studyline-swift"
+          "path" : "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift"
         },
         "subpath" : "studyline-swift"
       }

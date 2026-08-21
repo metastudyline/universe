@@ -1,0 +1,13 @@
+{
+  "": {
+    "dependencies": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/StudyLine.d",
+    "object": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/StudyLine.o",
+    "swift-dependencies": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/primary.swiftdeps"
+  },
+  "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-swift/Sources/StudyLine/StudyLineEngine.swift": {
+    "object": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/StudyLineEngine.swift.o",
+    "swiftmodule": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/StudyLineEngine~partial.swiftmodule",
+    "swift-dependencies": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/StudyLineEngine.swiftdeps",
+    "diagnostics": "/Users/kevintung/Documents/dev/metastudyline/universe/packages/studyline-macos/.build/arm64-apple-macosx/release/StudyLine.build/StudyLineEngine.dia"
+  }
+}
