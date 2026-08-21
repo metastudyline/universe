@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# ✦ Local-First Pre-Commit Gate (100% Offline · Zero Quota Cost · Fast)
+set -euo pipefail
+
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+cd "$ROOT_DIR"
+
+if [ -f "$ROOT_DIR/tools/ci-gatekeeper.sh" ]; then
+    bash "$ROOT_DIR/tools/ci-gatekeeper.sh" --fast
+fi
