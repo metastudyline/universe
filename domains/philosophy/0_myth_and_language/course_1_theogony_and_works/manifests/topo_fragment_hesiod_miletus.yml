@@ -1,0 +1,21 @@
+fragment_id: "topo.hesiod_to_miletus"
+title: "拓扑片段：赫西俄德宇宙生成论 ➔ 米利都学派自然哲学本原论"
+source_stage: "0_myth_and_language"
+target_stage: "A_ancient_greece"
+
+edges:
+  - from_node: "philosophy.stage0.theogony"
+    to_node: "philosophy.ancient-greek.arche"
+    relation_type: "strict"
+    min_mastery_level: 3
+    pedagogical_bridge:
+      greek_concept: "Χάος ➔ ἀρχή"
+      transformation: "从拟人化神祇的谱系生成（Genealogy）跃迁为去拟人化的物理本原（Arche / Physis）。泰勒斯保留了赫西俄德关于'世界有其开端生成'的提问框架，但用自然物（水）替换了俄刻阿诺斯与卡俄斯。"
+
+  - from_node: "philosophy.stage0.works-and-days"
+    to_node: "philosophy.ancient-greek.anaximander"
+    relation_type: "strict"
+    min_mastery_level: 4
+    pedagogical_bridge:
+      greek_concept: "δίκη / ὕβρις ➔ 阿那克西曼德残篇 B1"
+      transformation: "阿那克西曼德'万物由此生成，复归于此……依照时间的裁定相互补偿其不义（διδόναι γὰρ αὐτὰ δίκην καὶ τίσιν ἀλλήλοις τῆς ἀδικίας κατὰ τὴν τοῦ χρόνου τάξιν）'，直接将赫西俄德在司法判决中确立的 dike 概念投射为统治整个物理宇宙元素相生相克的法则。"

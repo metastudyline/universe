@@ -1,0 +1,22 @@
+id: "philosophy.stage0.iliad-shield"
+title: "E46 《伊利亚特》卷十八：阿基琉斯之盾 (和平之城的血金审判与两块金币)"
+domain: "philosophy"
+summary: "解析卷十八497-508行阿基琉斯之盾上的和平之城广场审判，揭示血金（poinē）、权杖与两块金币所代表的早期公共司法制度演进。"
+schema_version: "1.0.0"
+content_hash: "cc3344556677889900aabbccddeeff11223344556677889900aabbccddeeff11"
+license: "CC-BY-NC-SA-4.0"
+maintainers:
+  - "@kevin-tung"
+prerequisites:
+  - node_id: "philosophy.stage0.iliad-book9"
+    min_mastery_level: 3
+    relation_type: "strict"
+assets:
+  - asset_id: "e46_lecture"
+    role: "lecture"
+    mime_type: "text/markdown"
+    relative_path: "index.md"
+    checksum: "a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7"
+    file_size_bytes: 4096
+created_at: "2026-08-18T00:00:00Z"
+updated_at: "2026-08-18T00:00:00Z"

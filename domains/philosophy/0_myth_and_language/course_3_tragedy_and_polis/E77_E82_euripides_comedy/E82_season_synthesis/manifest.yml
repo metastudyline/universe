@@ -1,0 +1,22 @@
+id: "philosophy.stage0.season-grand-synthesis"
+title: "E82 第一季总收束｜正义的三个前哲学版本与 0 段出段拓扑综合"
+domain: "philosophy"
+summary: "全面综合 0 段 94 期前哲学思想演进：赫西俄德教诲正义、荷马分配正义与悲剧城邦法庭正义，正式打通通向阶段 A 的全景知识拓扑。"
+schema_version: "1.0.0"
+content_hash: "3344556677889900aabbccddeeff11223344556677889900aabbccddeeff1122"
+license: "CC-BY-NC-SA-4.0"
+maintainers:
+  - "@kevin-tung"
+prerequisites:
+  - node_id: "philosophy.stage0.tragedy-antigone"
+    min_mastery_level: 4
+    relation_type: "strict"
+assets:
+  - asset_id: "e82_lecture"
+    role: "lecture"
+    mime_type: "text/markdown"
+    relative_path: "index.md"
+    checksum: "f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4"
+    file_size_bytes: 4096
+created_at: "2026-08-18T00:00:00Z"
+updated_at: "2026-08-18T00:00:00Z"

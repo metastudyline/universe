@@ -78,15 +78,21 @@ public struct AppNavigationShell: View {
                     .opacity(currentTab == .workbench ? 1 : 0)
                     .allowsHitTesting(currentTab == .workbench)
 
-                    topologyPlaceholderView
-                        .opacity(currentTab == .topology ? 1 : 0)
-                        .allowsHitTesting(currentTab == .topology)
+                    KnowledgeNebulaView(
+                        selectedNodeId: $selectedNodeId,
+                        currentTab: $currentTab
+                    )
+                    .opacity(currentTab == .topology ? 1 : 0)
+                    .allowsHitTesting(currentTab == .topology)
 
-                    examArenaPlaceholderView
-                        .opacity(currentTab == .exam ? 1 : 0)
-                        .allowsHitTesting(currentTab == .exam)
+                    ExitExamCenterView(
+                        selectedNodeId: $selectedNodeId,
+                        isExamPresented: $isExamPresented
+                    )
+                    .opacity(currentTab == .exam ? 1 : 0)
+                    .allowsHitTesting(currentTab == .exam)
 
-                    settingsPlaceholderView
+                    EngineSettingsView()
                         .opacity(currentTab == .settings ? 1 : 0)
                         .allowsHitTesting(currentTab == .settings)
                 }

@@ -1,0 +1,21 @@
+fragment_id: "topo.homer_to_ethics"
+title: "拓扑片段：荷马荣誉与份额分配 ➔ 亚里士多德《尼各马可伦理学》卷五分配正义"
+source_stage: "0_myth_and_language"
+target_stage: "A_ancient_greece"
+
+edges:
+  - from_node: "philosophy.stage0.homer-iliad-distributive"
+    to_node: "philosophy.ancient-greek.aristotle-justice"
+    relation_type: "strict"
+    min_mastery_level: 4
+    pedagogical_bridge:
+      greek_concept: "τιμή / γέρας ➔ διανεμητικὸν δίκαιον (分配正义)"
+      transformation: "荷马史诗中'战功与战利品对等（geras ∝ aretē）'的朴素诉求，在亚里士多德《尼各马可伦理学》卷五第3章中被形式化为'几何比例正义（Geometric Proportion）'——城邦荣誉（timē）与公共财产的分配必须严格按照成员的德性与贡献比例分配（A:B = C:D）。阿基琉斯对阿伽门农的控诉，构成了亚氏正义论最早的历史案例。"
+
+  - from_node: "philosophy.stage0.homer-psyche"
+    to_node: "philosophy.ancient-greek.plato-phaedo"
+    relation_type: "strict"
+    min_mastery_level: 3
+    pedagogical_bridge:
+      greek_concept: "ψυχή (游魂/活命之息) ➔ ψυχή (不朽理性实体)"
+      transformation: "荷马《奥德赛》卷十一中无意识、需饮血方能发声的虚弱暗影（eidolon），在柏拉图《斐多篇》与《理想国》中发生彻底倒转：肉体反沦为灵魂的监狱（soma-sema），灵魂（psyche）被升华为永恒不灭、能够直面理念世界的真正自我。"

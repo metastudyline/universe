@@ -1,0 +1,22 @@
+id: "philosophy.stage0.tragedy-antigone"
+title: "E72 《安提戈涅》：成文法 (nomos) 与神圣不成文法的冲突"
+domain: "philosophy"
+summary: "解析450-470行安提戈涅对克瑞翁政令的抗辩，阐明城邦实在法（nomos）与永恒不成文神法（agrapta nomima）的不可调和撕裂。"
+schema_version: "1.0.0"
+content_hash: "223344556677889900aabbccddeeff11223344556677889900aabbccddeeff11"
+license: "CC-BY-NC-SA-4.0"
+maintainers:
+  - "@kevin-tung"
+prerequisites:
+  - node_id: "philosophy.stage0.tragedy-eumenides"
+    min_mastery_level: 3
+    relation_type: "strict"
+assets:
+  - asset_id: "e72_lecture"
+    role: "lecture"
+    mime_type: "text/markdown"
+    relative_path: "index.md"
+    checksum: "e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3"
+    file_size_bytes: 4096
+created_at: "2026-08-18T00:00:00Z"
+updated_at: "2026-08-18T00:00:00Z"

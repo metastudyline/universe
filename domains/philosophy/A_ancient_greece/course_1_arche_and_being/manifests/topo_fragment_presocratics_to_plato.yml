@@ -1,0 +1,21 @@
+fragment_id: "topo.presocratics_to_plato"
+title: "拓扑片段：前苏格拉底流变与存在论 ➔ 柏拉图理念论与两重世界模型"
+source_stage: "A_ancient_greece"
+target_stage: "A_ancient_greece"
+
+edges:
+  - from_node: "philosophy.stageA.heraclitus-flow"
+    to_node: "philosophy.ancient-greek.plato-forms"
+    relation_type: "strict"
+    min_mastery_level: 4
+    pedagogical_bridge:
+      greek_concept: "πάντα ῥεῖ (万物皆流) ➔ αἰσθητόν (可见感官世界)"
+      transformation: "柏拉图完全接受了赫拉克利特的判断：感官世界（可见世界）确实处于永恒的生灭流变中，因此无法为我们提供关于'善、正义、美'的永恒确定知识。"
+
+  - from_node: "philosophy.stageA.parmenides-being"
+    to_node: "philosophy.ancient-greek.plato-forms"
+    relation_type: "strict"
+    min_mastery_level: 5
+    pedagogical_bridge:
+      greek_concept: "τὸ ἐόν (不生不灭的存在) ➔ ἰδέα / εἶδος (理念/相)"
+      transformation: "为了挽救知识的确定性，柏拉图将巴门尼德'不生不灭、不动、单一完满'的存在论属性赋予了超感官的理念世界（可知世界），通过两重世界模型（Two-Worlds Model）完成了流变与存在的伟大综合。"

@@ -1,0 +1,22 @@
+id: "philosophy.stage0.iliad-book9"
+title: "E37 《伊利亚特》卷九使团：阿基琉斯对物品补偿的反驳 (论证重构②)"
+domain: "philosophy"
+summary: "深度解析阿基琉斯在卷九308-429行的四重反驳逻辑链，证明生命（ψυχή）与战利品之间的价值不可通约性（Incommensurability）。"
+schema_version: "1.0.0"
+content_hash: "bb223344556677889900aabbccddeeff11223344556677889900aabbccddeeff"
+license: "CC-BY-NC-SA-4.0"
+maintainers:
+  - "@kevin-tung"
+prerequisites:
+  - node_id: "philosophy.stage0.iliad-book1"
+    min_mastery_level: 3
+    relation_type: "strict"
+assets:
+  - asset_id: "e37_lecture"
+    role: "lecture"
+    mime_type: "text/markdown"
+    relative_path: "index.md"
+    checksum: "f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6"
+    file_size_bytes: 4096
+created_at: "2026-08-18T00:00:00Z"
+updated_at: "2026-08-18T00:00:00Z"

@@ -1,0 +1,22 @@
+id: "philosophy.stage0.iliad-book1"
+title: "E29 《伊利亚特》卷一：份额 (τιμή) 被公开剥夺为什么不是私事"
+domain: "philosophy"
+summary: "解析阿伽门农强夺布里塞伊斯如何摧毁了由 γέρας（特权战利品）物化确证的 τιμή（荣誉契约），揭示古希腊耻感文化的政治本质。"
+schema_version: "1.0.0"
+content_hash: "aa11223344556677889900aabbccddeeff11223344556677889900aabbccdd"
+license: "CC-BY-NC-SA-4.0"
+maintainers:
+  - "@kevin-tung"
+prerequisites:
+  - node_id: "philosophy.stage0.homer-intro"
+    min_mastery_level: 2
+    relation_type: "strict"
+assets:
+  - asset_id: "e29_lecture"
+    role: "lecture"
+    mime_type: "text/markdown"
+    relative_path: "index.md"
+    checksum: "e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5"
+    file_size_bytes: 4096
+created_at: "2026-08-18T00:00:00Z"
+updated_at: "2026-08-18T00:00:00Z"

@@ -1,0 +1,72 @@
+stage_id: "0_myth_and_language"
+stage_name: "第一阶段：语言起步与神话思维 (94期)"
+mastery_baseline: "认读级 (见字能拼、知晓字面义、默写谱系与三种正义演进)"
+
+courses:
+  - id: "course_1"
+    name: "课程一《世界从混沌里长出来》"
+    episodes_count: 31
+    lead_episodes: ["E01", "E02", "E05", "E18"]
+    synthesis_episodes: ["E04", "E17", "E27"]
+    spinoffs: ["X01", "X02", "X03", "X04"]
+
+  - id: "course_2"
+    name: "课程二《愤怒、荣誉与命运》"
+    episodes_count: 36
+    lead_episodes: ["E28", "E55"]
+    synthesis_episodes: ["E53", "E54", "E58"]
+    spinoffs: ["X05", "X06", "X07", "X08", "X09"]
+
+  - id: "course_3"
+    name: "课程三《城邦的裂缝》"
+    episodes_count: 27
+    lead_episodes: ["E59", "E68", "E71", "E74", "E77"]
+    synthesis_episodes: ["E67", "E80", "E81", "E82"]
+    spinoffs: ["X10", "X11", "X12"]
+
+edges:
+  # 课程一内部依赖
+  - from: "philosophy.stage0.meta-planning"
+    to: "philosophy.stage0.greek-literacy"
+    type: "strict"
+    min_level: 2
+  - from: "philosophy.stage0.greek-literacy"
+    to: "philosophy.stage0.theogony"
+    type: "strict"
+    min_level: 2
+  - from: "philosophy.stage0.theogony"
+    to: "philosophy.stage0.works-and-days"
+    type: "strict"
+    min_level: 3
+
+  # 课程二依赖
+  - from: "philosophy.stage0.greek-literacy"
+    to: "philosophy.stage0.iliad"
+    type: "strict"
+    min_level: 2
+  - from: "philosophy.stage0.iliad"
+    to: "philosophy.stage0.odyssey"
+    type: "supporting"
+    min_level: 2
+
+  # 课程三依赖
+  - from: "philosophy.stage0.works-and-days"
+    to: "philosophy.stage0.greek-tragedy"
+    type: "strict"
+    min_level: 3
+  - from: "philosophy.stage0.iliad"
+    to: "philosophy.stage0.greek-tragedy"
+    type: "strict"
+    min_level: 3
+
+  # 0段向 A段 (前苏格拉底) 输出接口
+  - from: "philosophy.stage0.theogony"
+    to: "philosophy.ancient-greek.arche"
+    type: "strict"
+    min_level: 3
+    rationale: "米利都水本原说直接是对《神谱》宇宙生成秩序的理性去神话化替换"
+  - from: "philosophy.stage0.works-and-days"
+    to: "philosophy.ancient-greek.anaximander"
+    type: "strict"
+    min_level: 3
+    rationale: "阿那克西曼德'相互补偿其不义'直接继承赫西俄德 dike 司法概念"

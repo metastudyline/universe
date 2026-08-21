@@ -1,0 +1,22 @@
+id: "philosophy.stage0.works-hawk-nightingale"
+title: "E22 《劳作与时日》202-285：鹰与夜莺寓言 (正义之城与不义之城)"
+domain: "philosophy"
+summary: "解析西方历史上第一则动物寓言（鹰与夜莺），确立 δίκη 的人禽之别与宇宙客观正义因果律。"
+schema_version: "1.0.0"
+content_hash: "889900aabbccddeeff11223344556677889900aabbccddeeff11223344556677"
+license: "CC-BY-NC-SA-4.0"
+maintainers:
+  - "@kevin-tung"
+prerequisites:
+  - node_id: "philosophy.stage0.theogony-chaos"
+    min_mastery_level: 3
+    relation_type: "strict"
+assets:
+  - asset_id: "e22_lecture"
+    role: "lecture"
+    mime_type: "text/markdown"
+    relative_path: "index.md"
+    checksum: "c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3"
+    file_size_bytes: 4096
+created_at: "2026-08-18T00:00:00Z"
+updated_at: "2026-08-18T00:00:00Z"

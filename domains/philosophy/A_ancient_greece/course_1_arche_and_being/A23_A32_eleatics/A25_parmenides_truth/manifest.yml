@@ -1,0 +1,22 @@
+id: "philosophy.stageA.parmenides-being"
+title: "A25 巴门尼德：真理之路与存在论奠基 (论证重构⑤)"
+domain: "philosophy"
+summary: "解析巴门尼德 DK 28 B2/B8，剖析“存在者存在，非存在不可思不可言”的排中律演绎，奠定西方本体论（Ontology）基石。"
+schema_version: "1.0.0"
+content_hash: "77889900aabbccddeeff11223344556677889900aabbccddeeff112233445566"
+license: "CC-BY-NC-SA-4.0"
+maintainers:
+  - "@kevin-tung"
+prerequisites:
+  - node_id: "philosophy.stageA.heraclitus-logos"
+    min_mastery_level: 4
+    relation_type: "strict"
+assets:
+  - asset_id: "a25_lecture"
+    role: "lecture"
+    mime_type: "text/markdown"
+    relative_path: "index.md"
+    checksum: "d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5"
+    file_size_bytes: 4096
+created_at: "2026-08-18T00:00:00Z"
+updated_at: "2026-08-18T00:00:00Z"

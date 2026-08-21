@@ -1,0 +1,32 @@
+schema_version: "1.0.0"
+node_id: "M01"
+title: "47 秒危机：动态注意力、斯金纳箱与认知负荷理论"
+domain: "meta_learning"
+stage: "01·觉醒：注意力"
+estimated_minutes: 25
+strict_prerequisites: []
+soft_prerequisites: []
+learning_objectives:
+  - "理解 Gloria Mark 20 年注意力追踪实验数据与 47 秒碎片化真相"
+  - "掌握工作记忆 4 槽位限制（Cowan）与认知负荷理论（Sweller）"
+  - "解构注意力经济中的变量比率强化（斯金纳箱）与自我打断生理机制"
+exit_criteria:
+  quiz_questions:
+    - id: "M01_Q1"
+      type: "single_choice"
+      prompt: "加州大学 Gloria Mark 教授追踪 20 年发现的知识工作者屏幕停留时间变化是？"
+      options:
+        - "从 2004 年的 150 秒下降至当代的 47 秒"
+        - "始终稳定在 8 秒（金鱼记忆）"
+        - "由于 AI 工具普及上升至 10 分钟"
+        - "在任何时代都没有显著差异"
+      correct_answer: "从 2004 年的 150 秒下降至当代的 47 秒"
+    - id: "M01_Q2"
+      type: "single_choice"
+      prompt: "为什么短视频下拉刷新和社交红点会导致极高成瘾性？"
+      options:
+        - "基于行为心理学的变量比率强化（Variable Ratio Reinforcement），模拟斯金纳箱随机奖励机制"
+        - "因为人脑天生不需要休息"
+        - "因为手机屏幕刷新率过低"
+        - "因为网络延迟造成的生理依赖"
+      correct_answer: "基于行为心理学的变量比率强化（Variable Ratio Reinforcement），模拟斯金纳箱随机奖励机制"

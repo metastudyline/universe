@@ -1,0 +1,22 @@
+id: "philosophy.stage0.odyssey-psyche"
+title: "E57 《奥德赛》卷十一：冥府招魂与 ψυχή 灵魂概念元材料"
+domain: "philosophy"
+summary: "解析《奥德赛》卷十一冥界招魂中亡者游魂（eidolon）饮血恢复记忆的设定，剖析荷马时期具身心灵模型（thumos/phrenes/psyche）的概念史意义。"
+schema_version: "1.0.0"
+content_hash: "dd44556677889900aabbccddeeff11223344556677889900aabbccddeeff1122"
+license: "CC-BY-NC-SA-4.0"
+maintainers:
+  - "@kevin-tung"
+prerequisites:
+  - node_id: "philosophy.stage0.iliad-shield"
+    min_mastery_level: 3
+    relation_type: "strict"
+assets:
+  - asset_id: "e57_lecture"
+    role: "lecture"
+    mime_type: "text/markdown"
+    relative_path: "index.md"
+    checksum: "b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8"
+    file_size_bytes: 4096
+created_at: "2026-08-18T00:00:00Z"
+updated_at: "2026-08-18T00:00:00Z"

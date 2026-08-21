@@ -1,0 +1,24 @@
+schema_version: "1.0.0"
+node_id: "M02"
+title: "注意力的道德史：从斯多葛 Prosochē 城墙到奥古斯丁的撕裂"
+domain: "meta_learning"
+stage: "01·觉醒：注意力"
+estimated_minutes: 25
+strict_prerequisites:
+  - "M01"
+soft_prerequisites: []
+learning_objectives:
+  - "掌握斯多葛学派核心修行技术 Prosochē 的三层注意力审查架构"
+  - "理解王阳明元认知克治与认知行为疗法（CBT）的古今同构"
+  - "建立现代环境下的多道主动注意力防火墙"
+exit_criteria:
+  quiz_questions:
+    - id: "M02_Q1"
+      type: "single_choice"
+      prompt: "斯多葛派 Prosochē 三层审查机制中，对外部输入印象进行拦截审查的是哪一层？"
+      options:
+        - "prosochē tōn phantasiōn（对表象/印象的审查）"
+        - "prosochē ton logismōn（对思想的监控）"
+        - "prosochē ton hormōn（对冲动的管理）"
+        - "随意接受所有外部信息"
+      correct_answer: "prosochē tōn phantasiōn（对表象/印象的审查）"

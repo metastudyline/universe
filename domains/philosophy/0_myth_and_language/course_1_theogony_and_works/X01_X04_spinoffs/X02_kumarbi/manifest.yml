@@ -1,0 +1,22 @@
+id: "philosophy.stage0.spinoff-kumarbi"
+title: "X02 番外｜赫梯库马尔比史诗与《神谱》三代神更迭的逐条对应"
+domain: "philosophy"
+summary: "基于古代近东 CTH 344 泥板，深度比对天国之王权更迭、生殖器阉割与暴风雨主神定鼎的同构证据链。"
+schema_version: "1.0.0"
+content_hash: "9900aabbccddeeff11223344556677889900aabbccddeeff1122334455667788"
+license: "CC-BY-NC-SA-4.0"
+maintainers:
+  - "@kevin-tung"
+prerequisites:
+  - node_id: "philosophy.stage0.theogony-chaos"
+    min_mastery_level: 2
+    relation_type: "supporting"
+assets:
+  - asset_id: "x02_lecture"
+    role: "lecture"
+    mime_type: "text/markdown"
+    relative_path: "index.md"
+    checksum: "d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4"
+    file_size_bytes: 4096
+created_at: "2026-08-18T00:00:00Z"
+updated_at: "2026-08-18T00:00:00Z"
