@@ -90,6 +90,45 @@
         }
       },
       "additionalProperties": false
+    },
+    "injections": {
+      "type": "array",
+      "description": "运行时挂载的非侵入式伴随组件列表（In-Place Sidecar Injections）",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target_section",
+          "position",
+          "component",
+          "props"
+        ],
+        "properties": {
+          "target_section": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Markdown 目标小节标题或锚点标识符"
+          },
+          "position": {
+            "type": "string",
+            "enum": ["before", "after"],
+            "description": "组件相对挂载位置"
+          },
+          "component": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^[A-Za-z0-9_.-]+$",
+            "description": "已注册的组件类型标识符"
+          },
+          "props": {
+            "type": "object",
+            "description": "传递给挂载组件的属性载荷",
+            "additionalProperties": true
+          }
+        }
+      }
     }
   },
   "additionalProperties": false

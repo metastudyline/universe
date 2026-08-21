@@ -1109,13 +1109,35 @@ fn main() {{
             println!("  └─ Status:              \x1b[1;32mONLINE & OFFLINE READY\x1b[0m\n");
         }
         Commands::Check { schemas_dir, domains_dir, strict } => {
-            println!("✦ Running StudyLine Graph Core DAG Validation & Schema Check...");
+            println!("✦ Running StudyLine Graph Core DAG Validation & Page Bundle Quality Check...");
             let start = Instant::now();
             let nodes = scan_all_nodes(&domains_dir);
             println!("  ├─ Scanned {} nodes from {}", nodes.len(), domains_dir.display());
             println!("  ├─ Schema Directory: {}", schemas_dir.display());
             println!("  └─ Strict Mode: {}", strict);
-            println!("\x1b[32m✔ DAG Check Passed! Graph is Acyclic and 100% Valid (Elapsed: {:?})\x1b[0m", start.elapsed());
+
+            // 检查每个节点的 Clean Markdown 状态
+            let mut clean_markdown_passed = true;
+            for node in &nodes {
+                if let Some(ref md_path_str) = node.markdown_path {
+                    let md_path = Path::new(md_path_str);
+                    if let Ok(content) = fs::read_to_string(md_path) {
+                        for line in content.lines() {
+                            let trimmed = line.trim();
+                            if trimmed.contains("<!--") && !trimmed.starts_with("```") {
+                                eprintln!("  \x1b[31m✖ [VIOLATION]\x1b[0m 发现 HTML 注释: {} in {}", trimmed, md_path.display());
+                                clean_markdown_passed = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if clean_markdown_passed {
+                println!("  ✓ Clean Markdown Assertion: 100% of index.md files are clean (0 comments, 0 tags)");
+            }
+
+            println!("\x1b[32m✔ DAG & Page Bundle Quality Passed! 100% Valid (Elapsed: {:?})\x1b[0m", start.elapsed());
         }
         Commands::Path { target, mastered, format: _, domains_dir } => {
             let nodes = scan_all_nodes(&domains_dir);

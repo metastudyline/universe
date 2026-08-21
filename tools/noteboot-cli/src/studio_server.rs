@@ -122,10 +122,17 @@ pub struct ScannedDocumentDto {
     pub is_archive: bool,
 }
 
+#[derive(Serialize)]
+pub struct NoteDetailDto {
+    pub content: String,
+    pub injections: Vec<serde_json::Value>,
+    pub prerequisites: Vec<String>,
+}
+
 async fn read_note_handler(
     State(state): State<AppState>,
     Query(query): Query<NoteQuery>,
-) -> Json<ApiResponse<String>> {
+) -> Json<ApiResponse<NoteDetailDto>> {
     let docs = VirtualVaultScanner::scan_all(state.vault_dir.to_str().unwrap_or("."));
     let target_doc = docs.into_iter().find(|d| {
         if let Some(ref v) = query.vault {
@@ -137,11 +144,46 @@ async fn read_note_handler(
 
     if let Some(doc) = target_doc {
         match VirtualVaultScanner::read_document_content(&doc) {
-            Ok(content) => Json(ApiResponse {
-                success: true,
-                data: Some(content),
-                error: None,
-            }),
+            Ok(content) => {
+                // 尝试从物理文件同级目录寻找 node-manifest.yml
+                let mut injections = Vec::new();
+                let mut prerequisites = Vec::new();
+
+                let parent = doc.physical_path.parent();
+                if let Some(p) = parent {
+                    let manifest_path = p.join("node-manifest.yml");
+                    if manifest_path.exists() {
+                        if let Ok(manifest_str) = std::fs::read_to_string(&manifest_path) {
+                            if let Ok(yaml_val) = serde_yaml::from_str::<serde_yaml::Value>(&manifest_str) {
+                                if let Some(inj_arr) = yaml_val.get("injections").and_then(|v| v.as_sequence()) {
+                                    for inj in inj_arr {
+                                        if let Ok(json_v) = serde_json::to_value(inj) {
+                                            injections.push(json_v);
+                                        }
+                                    }
+                                }
+                                if let Some(prereq_arr) = yaml_val.get("strict_prerequisites").and_then(|v| v.as_sequence()) {
+                                    for pr in prereq_arr {
+                                        if let Some(s) = pr.as_str() {
+                                            prerequisites.push(s.to_string());
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Json(ApiResponse {
+                    success: true,
+                    data: Some(NoteDetailDto {
+                        content,
+                        injections,
+                        prerequisites,
+                    }),
+                    error: None,
+                })
+            }
             Err(e) => Json(ApiResponse {
                 success: false,
                 data: None,
@@ -442,9 +484,47 @@ const STUDIO_HTML: &str = r#"<!DOCTYPE html>
       currentDoc = doc;
       document.getElementById('active-note-label').innerText = `${doc.vault}/${doc.canonical_path}`;
       const res = await fetch(`/api/note?vault=${encodeURIComponent(doc.vault)}&path=${encodeURIComponent(doc.canonical_path)}`).then(r => r.json());
-      if (res.success) {
-        document.getElementById('note-editor').value = res.data;
+      if (res.success && res.data) {
+        document.getElementById('note-editor').value = res.data.content || '';
         loadBacklinks(doc.canonical_path);
+        renderInjectionsAndPrereqs(res.data.injections || [], res.data.prerequisites || []);
+      }
+    }
+
+    function renderInjectionsAndPrereqs(injections, prereqs) {
+      const container = document.getElementById('backlinks-container');
+      if (injections.length > 0 || prereqs.length > 0) {
+        let companionHtml = '';
+        if (prereqs.length > 0) {
+          companionHtml += `
+            <div class="mb-3">
+              <div class="text-[11px] font-bold text-amber-400 mb-1 flex items-center gap-1">
+                <span>⬅️</span> 前置依赖穿透 (Prerequisites)
+              </div>
+              <div class="flex flex-wrap gap-1.5">
+                ${prereqs.map(p => `<span class="px-2 py-0.5 rounded bg-white/5 border border-amber-500/20 text-[11px] text-amber-200">${p}</span>`).join('')}
+              </div>
+            </div>
+          `;
+        }
+        if (injections.length > 0) {
+          companionHtml += `
+            <div class="mb-3">
+              <div class="text-[11px] font-bold text-cyan-400 mb-1 flex items-center gap-1">
+                <span>🧩</span> 外置伴随组件 (Sidecar Injections)
+              </div>
+              <div class="space-y-1.5">
+                ${injections.map(inj => `
+                  <div class="p-2 rounded bg-white/5 border border-cyan-500/20 text-[11px]">
+                    <div class="font-bold text-cyan-300">${inj.component}</div>
+                    <div class="text-[10px] text-neutral-400">挂载于: ${inj.target_section} (${inj.position})</div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `;
+        }
+        container.innerHTML = companionHtml + '<div class="border-t border-white/5 pt-2 mt-2 font-bold text-neutral-400 text-[11px]">反向链接 (Backlinks)</div>';
       }
     }
 
