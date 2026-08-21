@@ -97,8 +97,8 @@ fn sync_vault(vault_dir: &str) -> Result<(), Box<dyn std::error::Error>> {
         if let Ok(content) = VirtualVaultScanner::read_document_content(&doc) {
             let metadata = doc.physical_path.metadata();
             let mtime = metadata
-                .and_then(|m| m.modified().map_err(|e| e))
-                .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e)))
+                .and_then(|m| m.modified())
+                .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).map_err(std::io::Error::other))
                 .map(|d| d.as_millis() as i64)
                 .unwrap_or(0);
 

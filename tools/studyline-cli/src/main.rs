@@ -348,7 +348,7 @@ impl InvertedBM25Index {
             let mut combined_text = format!("{} {} {}", node.title, node.summary, node.stage);
             if let Some(ref md_path) = node.markdown_path {
                 if let Ok(body) = fs::read_to_string(md_path) {
-                    combined_text.push_str(" ");
+                    combined_text.push(' ');
                     combined_text.push_str(&body);
                 }
             }
@@ -480,7 +480,7 @@ impl InvertedBM25Index {
         let lower_text = text.to_lowercase();
         if let Some(byte_pos) = lower_text.find(&q_clean) {
             let char_pos = text[..byte_pos].chars().count();
-            let start = if char_pos > 30 { char_pos - 30 } else { 0 };
+            let start = char_pos.saturating_sub(30);
             let end = (char_pos + q_clean.chars().count() + 40).min(total_chars);
             let snippet_raw: String = chars[start..end].iter().collect();
             let highlighted = snippet_raw.replace(&q_clean, &format!("\x1b[1;33m{}\x1b[0m", q_clean));
@@ -525,7 +525,7 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::Start { domain, domains_dir } => {
+        Commands::Start { domain: _, domains_dir } => {
             println!("\n  \x1b[1;33m╔═══════════════════════════════════════════════════════════════════════╗\x1b[0m");
             println!("  \x1b[1;33m║\x1b[0m        \x1b[1;37m✦  S T U D Y L I N E   O N B O A R D I N G  ✦\x1b[0m                  \x1b[1;33m║\x1b[0m");
             println!("  \x1b[1;33m║\x1b[0m      \x1b[36m小白零基础起跑向导 · 环境诊断 ➔ 5步保姆级教学 ➔ 动手通关\x1b[0m      \x1b[1;33m║\x1b[0m");

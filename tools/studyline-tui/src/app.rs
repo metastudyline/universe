@@ -54,6 +54,12 @@ pub struct TUIApp {
     pub should_quit: bool,
 }
 
+impl Default for TUIApp {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl TUIApp {
     pub fn new() -> Self {
         let nodes = vec![
@@ -171,10 +177,8 @@ impl TUIApp {
                     }
                 }
             }
-            KeyCode::Enter => {
-                if self.mode == AppMode::Exam && !self.exam_submitted {
-                    self.submit_exam();
-                }
+            KeyCode::Enter if self.mode == AppMode::Exam && !self.exam_submitted => {
+                self.submit_exam();
             }
             _ => {}
         }

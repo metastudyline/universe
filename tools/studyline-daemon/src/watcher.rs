@@ -1,5 +1,5 @@
 use anyhow::Result;
-use notify_debouncer_mini::{new_debouncer, notify::RecursiveMode, DebounceEventResult};
+use notify_debouncer_mini::{new_debouncer, notify::RecursiveMode};
 use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::Duration;

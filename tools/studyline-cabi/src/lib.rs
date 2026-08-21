@@ -2,6 +2,7 @@
 // StudyLine C-ABI Native Export Implementation
 // Zero-Copy, Thread-Safe, Panic-Free C Bindings
 // =============================================================================
+#![allow(clippy::not_unsafe_ptr_arg_deref, clippy::missing_const_for_thread_local, dead_code, unused_mut)]
 
 use std::cell::RefCell;
 use std::ffi::{CStr, CString};

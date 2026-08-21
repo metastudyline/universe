@@ -1,3 +1,5 @@
+#![allow(clippy::too_many_arguments, clippy::type_complexity)]
+
 use crate::parser::BlockAnchorInfo;
 use rusqlite::{params, Connection, Result};
 use std::path::Path;

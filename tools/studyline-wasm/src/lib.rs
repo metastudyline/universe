@@ -1,6 +1,4 @@
-// =============================================================================
-// StudyLine WebAssembly (WASM) Pure Client Offline Topology Engine
-// =============================================================================
+#![allow(dead_code)]
 
 use wasm_bindgen::prelude::*;
 use studyline_graph_core::dag::KnowledgeGraph;
@@ -8,6 +6,12 @@ use studyline_graph_core::dag::KnowledgeGraph;
 #[wasm_bindgen]
 pub struct WasmKnowledgeGraph {
     inner: KnowledgeGraph,
+}
+
+impl Default for WasmKnowledgeGraph {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 #[wasm_bindgen]

@@ -10,12 +10,12 @@ impl MermaidDiffExporter {
         mermaid.push_str("    classDef affected fill:#f1f8ff,stroke:#0366d6,stroke-dasharray: 3 3;\n\n");
 
         for direct in &result.direct_changed {
-            let sanitized = direct.replace('.', "_").replace('-', "_");
+            let sanitized = direct.replace(['.', '-'], "_");
             mermaid.push_str(&format!("    {}[\"[* 变动] {}\"]:::modified\n", sanitized, direct));
         }
 
         for aff in &result.affected_downstream {
-            let sanitized = aff.replace('.', "_").replace('-', "_");
+            let sanitized = aff.replace(['.', '-'], "_");
             mermaid.push_str(&format!("    {}[\"[~ 波及] {}\"]:::affected\n", sanitized, aff));
         }
 

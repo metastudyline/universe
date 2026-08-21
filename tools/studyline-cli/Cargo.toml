@@ -12,8 +12,6 @@ path = "src/main.rs"
 
 [dependencies]
 studyline-graph-core = { path = "../studyline-graph-core" }
-studyline-compiler = { path = "../studyline-compiler" }
-studyline-daemon = { path = "../studyline-daemon" }
 studyline-cabi = { path = "../studyline-cabi" }
 studyline-tui = { path = "../studyline-tui" }
 clap.workspace = true

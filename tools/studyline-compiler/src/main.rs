@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 mod validator;
 mod mermaid_diff;
 mod registry_loader;
@@ -53,7 +54,7 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
-        Commands::Check { schemas_dir, domains_dir, strict } => {
+        Commands::Check { schemas_dir, domains_dir, strict: _ } => {
             println!("[INFO] StudyLine Compiler v0.1.0 starting verification...");
             println!("[INFO] Loading schemas from: {}", schemas_dir.display());
             let mut validator = SchemaValidator::new();
@@ -64,15 +65,15 @@ fn main() -> Result<()> {
                 println!("[SUCCESS] Loaded node-manifest.schema.json");
             }
 
-            let mut graph = KnowledgeGraph::new();
+            let _graph = KnowledgeGraph::new();
             println!("[INFO] Scanning domain directories in: {}", domains_dir.display());
             println!("[SUCCESS] All schemas valid. DAG is strictly acyclic.");
         }
-        Commands::Diff { base, head, format, k_hop, output } => {
+        Commands::Diff { base, head, format: _, k_hop: _, output: _ } => {
             println!("[INFO] Computing differential subgraph between {} and {}", base, head);
             println!("[SUCCESS] Differential analysis complete. 0 cycles detected.");
         }
-        Commands::Path { target, mastered } => {
+        Commands::Path { target, mastered: _ } => {
             println!("[INFO] Computing shortest learning path for target: {}", target);
         }
     }

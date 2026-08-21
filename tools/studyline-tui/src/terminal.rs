@@ -2,7 +2,7 @@
 // StudyLine Terminal Guard & Panic Safe Restoration
 // =============================================================================
 
-use std::io::{self, stdout, Stdout};
+use std::io::{stdout, Stdout};
 use std::panic;
 use crossterm::{
     cursor,
