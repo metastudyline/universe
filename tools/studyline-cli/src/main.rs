@@ -95,6 +95,18 @@ enum Commands {
         #[arg(long, default_value = "2")]
         k_hop: usize,
     },
+    /// Sync latest domain lectures and DAG topology from remote Git Monorepo (git pull + verify)
+    Sync {
+        #[arg(short, long, default_value = ".")]
+        repo_dir: PathBuf,
+    },
+    /// Clone a remote StudyLine knowledge universe repository to local disk
+    Clone {
+        #[arg(default_value = "https://github.com/metastudyline/universe.git")]
+        url: String,
+        #[arg(default_value = "universe")]
+        dest: PathBuf,
+    },
     /// Start high-performance local daemon bridge and file watcher
     Daemon {
         #[arg(short, long, default_value = "127.0.0.1:3001")]
@@ -346,6 +358,45 @@ fn main() -> Result<()> {
             let magic = b"SLARKYV\x01";
             fs::write(&output, magic)?;
             println!("\x1b[1;32m[SUCCESS] Zero-copy archive created at {} in {:?}\x1b[0m", output.display(), start.elapsed());
+        }
+        Commands::Sync { repo_dir } => {
+            let start = Instant::now();
+            println!("\x1b[1;36m  ╔═══════════════════════════════════════════════════════════════════╗\x1b[0m");
+            println!("\x1b[1;36m  ║         ✦ StudyLine Git Knowledge Monorepo Sync Engine            ║\x1b[0m");
+            println!("\x1b[1;36m  ╚═══════════════════════════════════════════════════════════════════╝\x1b[0m");
+            println!("[INFO] 🌐 Checking remote Git knowledge updates for: {:?}", repo_dir);
+
+            let status = std::process::Command::new("git")
+                .args(["pull", "--rebase", "origin", "main"])
+                .current_dir(&repo_dir)
+                .status();
+
+            match status {
+                Ok(s) if s.success() => {
+                    println!("\x1b[1;32m[SUCCESS] Git repository synced with remote origin.\x1b[0m");
+                    let domains = repo_dir.join("domains");
+                    let nodes = scan_all_nodes(&domains);
+                    println!("\x1b[1;33m[INFO] 本地离线知识库总计已就绪: {} 篇真实学术讲义 (100% 离线直读)\x1b[0m", nodes.len());
+                    println!("✓ Synchronized in {:?}", start.elapsed());
+                }
+                _ => {
+                    println!("[WARN] Git pull failed or not a git repository. Operating in 100% local-offline mode.");
+                }
+            }
+        }
+        Commands::Clone { url, dest } => {
+            let start = Instant::now();
+            println!("\x1b[1;36m[INFO] 🚀 Cloning StudyLine Knowledge Monorepo from {} into {:?}...\x1b[0m", url, dest);
+            let status = std::process::Command::new("git")
+                .args(["clone", "--depth", "1", &url, dest.to_string_lossy().as_ref()])
+                .status()?;
+
+            if status.success() {
+                println!("\x1b[1;32m[SUCCESS] Knowledge Monorepo cloned successfully into {:?} in {:?}!\x1b[0m", dest, start.elapsed());
+                println!("提示: 运行 \x1b[36mstudyline syllabus rust --domains-dir {:?}/domains\x1b[0m 开始离线研读。", dest);
+            } else {
+                println!("[ERROR] Failed to clone knowledge monorepo.");
+            }
         }
         Commands::Daemon { bind, domains_dir } => {
             println!("======================================================");
