@@ -11,6 +11,17 @@ learning_objectives:
   - "掌握函数调用时栈帧的 Prologue 与 Epilogue 汇编指令生成"
   - "理解 System V AMD64 调用规约（RDI, RSI, RDX, RCX, R8, R9 传参）"
   - "证明栈上局部变量随 RSP 回弹实现 100% 确定性销毁的物理机制"
+injections:
+  - target_section: "## 1. 物理事实：栈是一段连续的线性高地址向低地址生长的内存"
+    position: "after"
+    component: "StackFrameSimulator"
+    props:
+      caption: "硬件栈帧压伸与 RSP 实时计算仿真器"
+  - target_section: "## 2. 汇编级函数调用发生学：Prologue 与 Epilogue"
+    position: "after"
+    component: "WSJVideoPlayer"
+    props:
+      caption: "WSJ 4K: 函数调用与栈帧物理回弹动画"
 exit_criteria:
   quiz_questions:
     - id: "R03_Q1"

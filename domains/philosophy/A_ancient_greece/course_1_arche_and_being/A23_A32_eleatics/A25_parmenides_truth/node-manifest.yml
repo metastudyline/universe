@@ -1,0 +1,37 @@
+schema_version: "1.0.0"
+node_id: "philosophy.stageA.parmenides-being"
+title: "A25 巴门尼德：真理之路与存在论奠基 (论证重构⑤)"
+domain: "philosophy"
+stage: "A段·古希腊早期哲学"
+estimated_minutes: 30
+strict_prerequisites: []
+soft_prerequisites: []
+learning_objectives:
+  - "深入理解 DK 28 B2/B3/B8 存在论第一公理"
+  - "掌握存在不生不灭、唯一静止的排中律严格形式化推演"
+injections:
+  - target_section: "## 一、 一手文本锚点 (DK 28 B2 & B3 & B8)"
+    position: "after"
+    component: "BilingualPrimarySource"
+    props:
+      source_ref: "DK 28 B 3"
+      original_lang: "grc"
+      target_lang: "zh"
+  - target_section: "## 二、 存在的五大征象演绎"
+    position: "after"
+    component: "FormalSyllogism"
+    props:
+      premise_major: "若存在有生成，则必须产生自非存在。"
+      premise_minor: "非存在不可思、不可言、无充足理由产生。"
+      conclusion: "因此存在不生不灭，当下全在。"
+exit_criteria:
+  quiz_questions:
+    - id: "PHIL_A25_Q1"
+      type: "single_choice"
+      prompt: "巴门尼德在残篇 B 3 中提出「思想与存在是同一的」（τὸ γὰρ αὐτὸ νοεῖν ἐστίν τε καὶ εἶναι），其核心哲学意涵是什么？"
+      options:
+        - "凡是能够被真正构想的，必定指向真实的存在；不可思的非存在无法构成认知对象"
+        - "人脑中的幻觉就是物理宇宙中的实体"
+        - "世界是由物质构成的，精神不存在"
+        - "万物皆流，无物常驻"
+      correct_answer: "凡是能够被真正构想的，必定指向真实的存在；不可思的非存在无法构成认知对象"
