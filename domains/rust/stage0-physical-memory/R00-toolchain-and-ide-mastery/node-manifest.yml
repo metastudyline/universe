@@ -1,0 +1,59 @@
+schema_version: "1.0.0"
+node_id: "R00-toolchain"
+title: "全景 Rust 工具链与工业级 IDE 终极实战指南"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 30
+strict_prerequisites: []
+soft_prerequisites: []
+learning_objectives:
+  - "掌握四大现代 IDE（VS Code、RustRover、Zed、Neovim）的权威选型与黄金配置"
+  - "掌握 `rust-analyzer`（Inlay Hints, checkOnSave）与 `CodeLLDB` 原生断点调试"
+  - "熟练运用 5 大工业级 CLI 武器：clippy, rustfmt, miri, cargo-expand, cargo-flamegraph"
+beginner_scaffold:
+  intuitive_metaphor:
+    headline: "工欲善其事，必先利其器：现代 Rust 军火库"
+    everyday_scene: "写 Rust 就如同驾驶超音速战机，编译器是你的智能副驾，IDE 是你的 HUD 抬头显示器，而 clippy 和 miri 是起飞前的地勤安全雷达。"
+    mapping_table:
+      - real_world_concept: "战机驾驶舱 HUD 抬头显示"
+        rust_concept: "rust-analyzer Inlay Hints（类型推导与生命周期提示）"
+        why_it_protects_you: "无需手动查阅文档，一眼看清每个变量的真实类型和所有权状态"
+      - real_world_concept: "起飞前地勤安全雷达"
+        rust_concept: "cargo clippy 静态分析"
+        why_it_protects_you: "提前消灭 90% 的性能损耗、代码异味与隐蔽 bug"
+  runnable_example:
+    source_code: |
+      fn main() {
+          let tools = vec!["rustup", "cargo", "rust-analyzer", "clippy", "CodeLLDB"];
+          println!("✦ 现代 Rust 工业级核心工具链矩阵:");
+          for (i, tool) in tools.iter().enumerate() {
+              println!("  {:02}. 🚀 {}", i + 1, tool);
+          }
+      }
+    expected_stdout: "✦ 现代 Rust 工业级核心工具链矩阵:\n  01. 🚀 rustup\n  02. 🚀 cargo\n  03. 🚀 rust-analyzer\n  04. 🚀 clippy\n  05. 🚀 CodeLLDB"
+  deliberate_error:
+    broken_code: |
+      fn main() {
+          let mut list = Vec::new();
+          list.push(1); // 编译器提示：可以推导出类型 Vec<i32>
+      }
+    compiler_error_code: "WARNING_UNUSED_MUT"
+    plain_human_explanation: "变量声明了 mut 但后续没有修改，clippy 会温柔地提醒你移除不必要的 mut。"
+    fix_recipe: "遵循 clippy 建议保持代码极简规范"
+  micro_quest:
+    quest_id: "R00_TOOL_1"
+    prompt: "运行 `studyline doctor` 诊断你的本地环境，并安装缺失的 clippy 或 rustfmt。"
+    starter_code: "// 运行 studyline doctor"
+    pass_assertion: "doctor 诊断全绿"
+exit_criteria:
+  quiz_questions:
+    - id: "R00_TOOL_Q1"
+      type: "single_choice"
+      prompt: "在 VS Code 中配置 Rust 开发环境时，官方推荐的语言服务器插件是？"
+      options:
+        - "rust-analyzer (官方顶级语言服务器)"
+        - "RLS (已废弃)"
+        - "C/C++ Extension Pack"
+        - "Python Language Server"
+      correct_answer: "rust-analyzer (官方顶级语言服务器)"
+      explanation: "rust-analyzer 是目前 Rust 官方唯一推荐并主导维护的高性能语言服务器。"

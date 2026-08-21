@@ -132,7 +132,10 @@ public struct LectureWorkbenchView: View {
                     }
                     .studylineLiquidGlass(cornerRadius: 14, padding: 20)
 
-                    // 5. 底部连贯学线跳转按钮 (Previous / Next Lesson)
+                    // 5. 实时编程沙盒与运行控制台 (Live Code Playground)
+                    LiveCodePlaygroundView(nodeId: selectedNodeId)
+
+                    // 6. 底部连贯学线跳转按钮 (Previous / Next Lesson)
                     HStack {
                         if nodeIndex > 0 {
                             Button(action: {

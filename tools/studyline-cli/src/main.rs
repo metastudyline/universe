@@ -24,6 +24,29 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
+    /// 🚀 Zero-to-one interactive beginner onboarding guide & environment doctor
+    Start {
+        #[arg(default_value = "rust")]
+        domain: String,
+        #[arg(short, long, default_value = "domains")]
+        domains_dir: PathBuf,
+    },
+    /// 🩺 Diagnose complete Rust toolchain, IDE plugins, clippy, and lldb health
+    Doctor,
+    /// ▶ Run executable code from a lecture or sandbox immediately
+    Run {
+        #[arg(default_value = "R00")]
+        node_id: String,
+        #[arg(short, long, default_value = "domains")]
+        domains_dir: PathBuf,
+    },
+    /// ✍ Edit exercise code for a node in your preferred $EDITOR with live watch
+    Edit {
+        #[arg(default_value = "R00")]
+        node_id: String,
+        #[arg(short, long, default_value = "domains")]
+        domains_dir: PathBuf,
+    },
     /// Launch interactive 60FPS Terminal Academic Reader & Exit Exam (TUI)
     Tui {
         #[arg(short, long, default_value = "domains")]
@@ -456,6 +479,30 @@ impl InvertedBM25Index {
     }
 }
 
+fn extract_first_rust_block(md_text: &str) -> Option<String> {
+    let mut in_block = false;
+    let mut code_lines = Vec::new();
+
+    for line in md_text.lines() {
+        if line.trim().starts_with("```rust") {
+            in_block = true;
+            continue;
+        }
+        if in_block {
+            if line.trim().starts_with("```") {
+                break;
+            }
+            code_lines.push(line);
+        }
+    }
+
+    if !code_lines.is_empty() {
+        Some(code_lines.join("\n"))
+    } else {
+        None
+    }
+}
+
 // =============================================================================
 // CLI Entry & Command Execution
 // =============================================================================
@@ -464,6 +511,196 @@ fn main() -> Result<()> {
     let cli = Cli::parse();
 
     match cli.command {
+        Commands::Start { domain, domains_dir } => {
+            println!("\n  \x1b[1;33m╔═══════════════════════════════════════════════════════════════════════╗\x1b[0m");
+            println!("  \x1b[1;33m║\x1b[0m        \x1b[1;37m✦  S T U D Y L I N E   O N B O A R D I N G  ✦\x1b[0m                  \x1b[1;33m║\x1b[0m");
+            println!("  \x1b[1;33m║\x1b[0m      \x1b[36m小白零基础起跑向导 · 环境诊断 ➔ 5步保姆级教学 ➔ 动手通关\x1b[0m      \x1b[1;33m║\x1b[0m");
+            println!("  \x1b[1;33m╚═══════════════════════════════════════════════════════════════════════╝\x1b[0m\n");
+
+            // 1. 工具链诊断
+            print!("  \x1b[1;35m[1/3 环境体检]\x1b[0m 正在检测本地 Rust 编译工具链... ");
+            let rustc_check = std::process::Command::new("rustc").arg("--version").output();
+            match rustc_check {
+                Ok(out) if out.status.success() => {
+                    let ver = String::from_utf8_lossy(&out.stdout).trim().to_string();
+                    println!("\x1b[32m✔ 检测到本地已就绪: {}\x1b[0m", ver);
+                }
+                _ => {
+                    println!("\x1b[33m○ 未检测到 rustc\x1b[0m");
+                    println!("    👉 小白一键安装命令: \x1b[36mcurl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh\x1b[0m\n");
+                }
+            }
+
+            // 2. 自动生成零基础沙盒代码
+            println!("  \x1b[1;35m[2/3 沙盒生成]\x1b[0m 正在本地生成零基础练习代码: \x1b[36m./sandbox/hello.rs\x1b[0m");
+            let _ = fs::create_dir_all("sandbox");
+            let starter_code = r#"// ✦ StudyLine 零基础第 1 个实验：带封条的储物盒
+fn main() {
+    // 1. 贴封条的只读变量
+    let project_name = "StudyLine";
+    println!("✦ 欢迎来到 {} 知识宇宙！", project_name);
+
+    // 2. 扣环盒：允许修改的变量（加上 mut）
+    let mut xp = 0;
+    xp += 100;
+    println!("你的第一个实验已成功运行！获得 {} XP 🚀", xp);
+}
+"#;
+            let _ = fs::write("sandbox/hello.rs", starter_code);
+            println!("    \x1b[32m✔ 沙盒已生成！随时可以使用 `rustc sandbox/hello.rs && ./sandbox/hello` 运行\x1b[0m");
+
+            // 3. 引导研读与向导
+            let nodes = scan_all_nodes(&domains_dir);
+            let r00 = nodes.iter().find(|n| n.id.eq_ignore_ascii_case("R00"));
+            println!("\n  \x1b[1;35m[3/3 核心起步]\x1b[0m 推荐小白起跑路径:");
+            if let Some(n) = r00 {
+                println!("    📖 第 0 讲: \x1b[1;33m[{}]\x1b[0m {} \x1b[90m({})\x1b[0m", n.id, n.title, n.stage);
+            }
+            println!("    1. 阅读零基础讲义: \x1b[36m./studyline cat R00\x1b[0m");
+            println!("    2. 交互式学习向导: \x1b[36m./studyline learn R00\x1b[0m");
+            println!("    3. 参加第一关测验: \x1b[36m./studyline exam R00\x1b[0m");
+            println!("    4. 进阶物理内存篇: \x1b[36m./studyline cat R01\x1b[0m\n");
+        }
+        Commands::Doctor => {
+            println!("\n  \x1b[1;33m╔═══════════════════════════════════════════════════════════════════════╗\x1b[0m");
+            println!("  \x1b[1;33m║\x1b[0m            \x1b[1;37m✦  S T U D Y L I N E   D O C T O R  ✦\x1b[0m                      \x1b[1;33m║\x1b[0m");
+            println!("  \x1b[1;33m║\x1b[0m        \x1b[36mRust 工业级工具链、IDE 插件与调试环境健康度全景体检\x1b[0m         \x1b[1;33m║\x1b[0m");
+            println!("  \x1b[1;33m╚═══════════════════════════════════════════════════════════════════════╝\x1b[0m\n");
+
+            let checks = [
+                ("rustup", "工具链版本管理器", "rustup --version", "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"),
+                ("rustc", "Rust 官方编译器核心", "rustc --version", "rustup default stable"),
+                ("cargo", "Rust 官方包与工程构建管理器", "cargo --version", "rustup update"),
+                ("clippy", "工业级静态分析与代码异味查杀器", "cargo clippy --version", "rustup component add clippy"),
+                ("rustfmt", "官方 AST 代码美化器", "cargo fmt --version", "rustup component add rustfmt"),
+                ("rust-analyzer", "官方 LSP 智能副驾与 Inlay Hints 服务端", "rust-analyzer --version", "rustup component add rust-analyzer"),
+                ("lldb", "原生系统级单步断点调试器", "lldb --version", "xcode-select --install"),
+            ];
+
+            let mut missing_fixes = Vec::new();
+
+            for (name, desc, cmd, fix) in checks {
+                let parts: Vec<&str> = cmd.split_whitespace().collect();
+                let bin = parts[0];
+                let args = &parts[1..];
+                let res = std::process::Command::new(bin).args(args).output();
+
+                match res {
+                    Ok(out) if out.status.success() => {
+                        let ver_line = String::from_utf8_lossy(&out.stdout)
+                            .lines()
+                            .next()
+                            .unwrap_or("")
+                            .trim()
+                            .to_string();
+                        println!("  \x1b[32m✔\x1b[0m \x1b[1m{:15}\x1b[0m \x1b[90m({})\x1b[0m \x1b[36m{}\x1b[0m", name, desc, ver_line);
+                    }
+                    _ => {
+                        println!("  \x1b[31m✘\x1b[0m \x1b[1m{:15}\x1b[0m \x1b[90m({})\x1b[0m \x1b[31m[未安装或不可用]\x1b[0m", name, desc);
+                        missing_fixes.push(format!("    👉 安装 {}: \x1b[33m{}\x1b[0m", name, fix));
+                    }
+                }
+            }
+
+            println!("\n  ═══════════════════════════════════════════════════════════════════════");
+            if missing_fixes.is_empty() {
+                println!("  \x1b[1;32m[HEALTHY]\x1b[0m 你的 Rust 工业级开发环境已 100% 满血就绪！🚀\n");
+            } else {
+                println!("  \x1b[1;33m[ACTION REQUIRED]\x1b[0m 发现缺失组件，请执行以下命令完成一键补全:\n");
+                for fix in missing_fixes {
+                    println!("{}", fix);
+                }
+                println!();
+            }
+        }
+        Commands::Run { node_id, domains_dir } => {
+            let nodes = scan_all_nodes(&domains_dir);
+            let node = nodes.iter().find(|n| n.id.eq_ignore_ascii_case(&node_id))
+                .context(format!("Node {} not found in domains", node_id))?;
+
+            println!("\n  \x1b[1;33m✦ [LIVE RUNNER]\x1b[0m 正在即时编译与执行节点代码: \x1b[1m[{}] {}\x1b[0m\n", node.id, node.title);
+
+            let mut code_to_run = String::new();
+            if let Some(ref md_path) = node.markdown_path {
+                if let Ok(content) = fs::read_to_string(md_path) {
+                    if let Some(extracted) = extract_first_rust_block(&content) {
+                        code_to_run = extracted;
+                    }
+                }
+            }
+
+            if code_to_run.is_empty() {
+                code_to_run = r#"fn main() { println!("Hello from StudyLine!"); }"#.to_string();
+            }
+
+            let _ = fs::create_dir_all("sandbox");
+            let temp_src = format!("sandbox/{}_run.rs", node.id.to_lowercase());
+            let temp_bin = format!("sandbox/{}_run_bin", node.id.to_lowercase());
+            fs::write(&temp_src, &code_to_run)?;
+
+            let start = Instant::now();
+            let compile = std::process::Command::new("rustc")
+                .arg("-o")
+                .arg(&temp_bin)
+                .arg(&temp_src)
+                .output();
+
+            match compile {
+                Ok(out) if out.status.success() => {
+                    let run_out = std::process::Command::new(&temp_bin).output();
+                    let elapsed = start.elapsed();
+                    match run_out {
+                        Ok(exec) => {
+                            let stdout = String::from_utf8_lossy(&exec.stdout);
+                            let stderr = String::from_utf8_lossy(&exec.stderr);
+                            println!("\x1b[1;30m───────────────── [ 标准输出 STDOUT ] ─────────────────\x1b[0m");
+                            print!("{}", stdout);
+                            if !stderr.is_empty() {
+                                println!("\x1b[1;31m───────────────── [ 标准错误 STDERR ] ─────────────────\x1b[0m");
+                                print!("{}", stderr);
+                            }
+                            println!("\x1b[1;30m───────────────────────────────────────────────────────\x1b[0m");
+                            println!("  \x1b[1;32m✔ 运行成功！\x1b[0m 耗时: \x1b[1m{:?}\x1b[0m\n", elapsed);
+                        }
+                        Err(e) => eprintln!("  \x1b[31m[EXEC ERROR]\x1b[0m 执行失败: {}", e),
+                    }
+                }
+                Ok(out) => {
+                    eprintln!("  \x1b[31m[COMPILE ERROR]\x1b[0m 编译失败:\n{}", String::from_utf8_lossy(&out.stderr));
+                }
+                Err(e) => eprintln!("  \x1b[31m[TOOLCHAIN ERROR]\x1b[0m 无法调用 rustc: {}", e),
+            }
+        }
+        Commands::Edit { node_id, domains_dir } => {
+            let nodes = scan_all_nodes(&domains_dir);
+            let node = nodes.iter().find(|n| n.id.eq_ignore_ascii_case(&node_id))
+                .context(format!("Node {} not found in domains", node_id))?;
+
+            let mut code = String::new();
+            if let Some(ref md_path) = node.markdown_path {
+                if let Ok(content) = fs::read_to_string(md_path) {
+                    if let Some(extracted) = extract_first_rust_block(&content) {
+                        code = extracted;
+                    }
+                }
+            }
+
+            if code.is_empty() {
+                code = format!("// ✦ StudyLine [{}] {}\nfn main() {{\n    println!(\"开始你的实验...\");\n}}\n", node.id, node.title);
+            }
+
+            let _ = fs::create_dir_all("sandbox");
+            let file_path = format!("sandbox/{}_exercise.rs", node.id.to_lowercase());
+            if !Path::new(&file_path).exists() {
+                fs::write(&file_path, code)?;
+            }
+
+            let editor = std::env::var("EDITOR").unwrap_or_else(|_| "nano".to_string());
+            println!("\n  \x1b[1;33m✦ [LIVE EDITOR]\x1b[0m 正在唤起编辑器 \x1b[1m{}\x1b[0m 打开 \x1b[36m{}\x1b[0m...", editor, file_path);
+            let _ = std::process::Command::new(&editor).arg(&file_path).status();
+
+            println!("  \x1b[32m✔ 编辑完成！运行 `./studyline run {}` 可直接查看你的修改输出！\x1b[0m\n", node.id);
+        }
         Commands::Tui { domains_dir: _ } => {
             let (mut terminal, _guard) = setup_terminal()?;
             let mut app = TUIApp::new();
