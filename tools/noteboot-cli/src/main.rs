@@ -1,6 +1,7 @@
 mod db;
 mod mount;
 mod parser;
+mod studio_server;
 
 use clap::{Parser, Subcommand};
 use db::Database;
@@ -77,6 +78,13 @@ enum Commands {
         #[arg(default_value = ".")]
         vault_path: String,
     },
+    /// 启动 NoteBoot Studio 现代化交互工作台 (支持原生毛玻璃 / 双链编辑 / Bento 多维表格)
+    Studio {
+        #[arg(default_value = ".")]
+        vault_path: String,
+        #[arg(short, long, default_value = "3888")]
+        port: u16,
+    },
 }
 
 fn get_db_path(vault: &str) -> PathBuf {
@@ -145,7 +153,8 @@ fn md5_hash(input: &str) -> u128 {
     hash
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let cli = Cli::parse();
 
     match cli.command {
@@ -290,6 +299,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
             println!("  ║  存储引擎  : {:52}║", "SQLite 3 (WAL + FTS5 + JSON1 + Virtual Mounts)");
             println!("  ╚═══════════════════════════════════════════════════════════════════════╝\n");
+        }
+        Commands::Studio { vault_path, port } => {
+            let vault_buf = PathBuf::from(&vault_path);
+            let _ = sync_vault(&vault_path);
+            studio_server::start_studio_server(vault_buf, port).await?;
         }
     }
 
