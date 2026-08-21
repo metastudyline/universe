@@ -1,0 +1,69 @@
+schema_version: "1.0.0"
+node_id: "R00"
+title: "零基础起跑：从安装、Hello World 到内存沙盒的第一步"
+domain: "rust"
+stage: "0段·物理内存"
+estimated_minutes: 20
+strict_prerequisites: []
+soft_prerequisites: []
+learning_objectives:
+  - "掌握本地 Rust 工具链（rustup、rustc、cargo）的一键配置与环境诊断"
+  - "理解 `fn main()`、`println!` 宏与 Rust 程序入口的执行过程"
+  - "理解「变量与不可变性」的生活隐喻（带封条的储物盒），建立写第一行代码的信心"
+beginner_scaffold:
+  intuitive_metaphor:
+    headline: "带封条的储物盒与可开合扣环盒"
+    everyday_scene: "在 Rust 中，声明一个变量 `let x = 5;` 就像把数字 5 放进一个透明储物盒并贴上封条。你可以随时透过玻璃看它（读取），但不能再塞新东西。如果你想以后能换东西，必须撕掉封条换成扣环盒 `let mut x = 5;`。"
+    mapping_table:
+      - real_world_concept: "贴封条的透明储物盒"
+        rust_concept: "默认不可变变量 `let x = 5;`"
+        why_it_protects_you: "防止程序其他地方无意中篡改了重要数据，产生莫名其妙的 bug"
+      - real_world_concept: "可随时打开的扣环盒"
+        rust_concept: "可变变量 `let mut x = 5;`"
+        why_it_protects_you: "显式声明这是会变化的状态，方便自己和团队一眼识别"
+  runnable_example:
+    source_code: |
+      fn main() {
+          // 1. 贴封条的只读储物盒
+          let greeting = "Hello, StudyLine!";
+          println!("小白的第一声问候: {}", greeting);
+
+          // 2. 扣环盒：允许修改的变量
+          let mut score = 0;
+          println!("初始经验值: {}", score);
+          score += 100;
+          println!("完成第一个实验后经验值: {}", score);
+      }
+    expected_stdout: "小白的第一声问候: Hello, StudyLine!\n初始经验值: 0\n完成第一个实验后经验值: 100"
+  deliberate_error:
+    broken_code: |
+      fn main() {
+        let money = 100;
+        money = 200; // 💥 试图往贴了封条的盒子里硬塞新东西！
+      }
+    compiler_error_code: "E0384"
+    plain_human_explanation: "你把 money 声明成了不可变盒子（没有加 mut），但后面又试图给它赋新值 200，编译器果断拦住了你！"
+    fix_recipe: "在第 2 行将 `let money = 100;` 改为 `let mut money = 100;`"
+  micro_quest:
+    quest_id: "R00_QUEST_1"
+    prompt: "请声明一个可变变量 `health` 初始值为 100，受到 20 点伤害后打印剩余生命值 80。"
+    starter_code: |
+      fn main() {
+          // TODO: 声明可变生命值 health
+          let health = 100;
+          // health -= 20;
+          println!("剩余生命值: {}", health);
+      }
+    pass_assertion: "输出包含 '剩余生命值: 80'"
+exit_criteria:
+  quiz_questions:
+    - id: "R00_Q1"
+      type: "single_choice"
+      prompt: "在 Rust 中，为什么变量默认是不可变的（Immutable）？"
+      options:
+        - "为了通过「默认安全（Safe by Default）」原则消除隐式状态篡改，让代码行为确定可控"
+        - "因为 Rust 不支持变量修改"
+        - "为了节省内存"
+        - "因为编译器不知道变量类型"
+      correct_answer: "为了通过「默认安全（Safe by Default）」原则消除隐式状态篡改，让代码行为确定可控"
+      explanation: "默认不可变是现代系统级语言最伟大的设计之一，强迫开发者在真正需要变化时才显式使用 mut。"
