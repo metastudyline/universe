@@ -1,186 +1,96 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://studyline.org/schemas/v1/node-manifest.schema.json",
-  "title": "StudyLineKnowledgeNodeManifest",
-  "description": "Schema for StudyLine Universal Knowledge Node Manifest (manifest.yml / spec.json)",
+  "title": "StudyLineGenericNodeManifest",
+  "description": "StudyLine 全域知识节点通用元数据与 DAG 拓扑契约",
   "type": "object",
-  "additionalProperties": false,
   "required": [
-    "id",
+    "schema_version",
+    "node_id",
     "title",
     "domain",
-    "summary",
-    "schema_version",
-    "content_hash",
-    "license",
-    "maintainers",
-    "prerequisites",
-    "assets",
-    "created_at",
-    "updated_at"
+    "stage",
+    "estimated_minutes",
+    "strict_prerequisites"
   ],
   "properties": {
-    "id": {
+    "schema_version": {
       "type": "string",
-      "pattern": "^[a-z0-9-]+(\\.[a-z0-9-]+)*$",
-      "description": "Global unique semantic URI for the knowledge node"
+      "enum": ["1.0.0"]
+    },
+    "node_id": {
+      "type": "string",
+      "description": "节点唯一标识符，如 R01, A04, E07, M01"
     },
     "title": {
       "type": "string",
-      "minLength": 2,
-      "maxLength": 120,
-      "description": "Display title of the knowledge node"
+      "minLength": 2
     },
     "domain": {
       "type": "string",
-      "enum": [
-        "philosophy",
-        "mathematics",
-        "computer_science",
-        "natural_science",
-        "life_hacker",
-        "social_science"
-      ],
-      "description": "Top-level academic/practical domain"
+      "enum": ["rust", "philosophy", "meta_learning", "life_hacker"]
+    },
+    "stage": {
+      "type": "string"
+    },
+    "estimated_minutes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 300
     },
     "summary": {
-      "type": "string",
-      "minLength": 10,
-      "maxLength": 500,
-      "description": "Concise pedagogical and academic summary"
+      "type": "string"
     },
-    "schema_version": {
-      "type": "string",
-      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
-      "description": "Semantic versioning of the manifest specification"
-    },
-    "content_hash": {
-      "type": "string",
-      "pattern": "^[a-f0-9]{64}$",
-      "description": "SHA-256 hash of all node bundle contents"
-    },
-    "license": {
-      "type": "string",
-      "minLength": 3,
-      "maxLength": 50,
-      "description": "Open knowledge license identifier (e.g. CC-BY-SA-4.0)"
-    },
-    "maintainers": {
+    "strict_prerequisites": {
       "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "string",
-        "pattern": "^@[a-zA-Z0-9_-]+$",
-        "description": "GitHub handle of responsible maintainer"
+      "items": { "type": "string" }
+    },
+    "soft_prerequisites": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "learning_objectives": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "exit_criteria": {
+      "type": "object",
+      "properties": {
+        "quiz_questions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "prompt", "options", "correct_answer", "explanation"],
+            "properties": {
+              "id": { "type": "string" },
+              "type": { "type": "string", "enum": ["single_choice", "multiple_choice", "sort_syllogism"] },
+              "prompt": { "type": "string" },
+              "options": {
+                "type": "array",
+                "items": { "type": "string" }
+              },
+              "correct_answer": {
+                "oneOf": [
+                  { "type": "string" },
+                  { "type": "array", "items": { "type": "string" } }
+                ]
+              },
+              "explanation": { "type": "string" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "practical_challenge": {
+          "type": "object",
+          "required": ["prompt", "verification_command"],
+          "properties": {
+            "prompt": { "type": "string" },
+            "verification_command": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
       },
-      "description": "List of domain maintainer handles for codeowner assignment"
-    },
-    "prerequisites": {
-      "type": "array",
-      "description": "Directed dependency edges pointing to prerequisite nodes",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "target_node_id",
-          "dependency_type",
-          "min_mastery_level"
-        ],
-        "properties": {
-          "target_node_id": {
-            "type": "string",
-            "pattern": "^[a-z0-9-]+(\\.[a-z0-9-]+)*$",
-            "description": "URI of the prerequisite knowledge node"
-          },
-          "dependency_type": {
-            "type": "string",
-            "enum": ["strict", "supporting"],
-            "description": "Strictness of prerequisite relationship"
-          },
-          "min_mastery_level": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 5,
-            "description": "Minimum mastery level required: 0(Ignorance), 1(Unknown), 2(Awareness), 3(Application), 4(Mastery), 5(Internalization)"
-          },
-          "rationale": {
-            "type": "string",
-            "minLength": 5,
-            "maxLength": 300,
-            "description": "Pedagogical or logical justification for this edge"
-          }
-        }
-      }
-    },
-    "assets": {
-      "type": "array",
-      "minItems": 1,
-      "description": "Multimodal asset bundle entries associated with this node",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "asset_id",
-          "role",
-          "mime_type",
-          "relative_path",
-          "checksum",
-          "file_size_bytes"
-        ],
-        "properties": {
-          "asset_id": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 128,
-            "description": "Unique identifier or relative path for asset"
-          },
-          "role": {
-            "type": "string",
-            "enum": [
-              "lecture",
-              "proof",
-              "widget",
-              "dataset",
-              "notebook",
-              "raw_archive",
-              "media"
-            ],
-            "description": "Functional role of the multimodal asset"
-          },
-          "mime_type": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100,
-            "description": "Standard MIME type for renderer dispatch"
-          },
-          "relative_path": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 255,
-            "description": "Relative filesystem path within the node container"
-          },
-          "checksum": {
-            "type": "string",
-            "pattern": "^[a-f0-9]{64}$",
-            "description": "SHA-256 checksum of the asset file"
-          },
-          "file_size_bytes": {
-            "type": "integer",
-            "minimum": 0,
-            "description": "Size in bytes"
-          }
-        }
-      }
-    },
-    "created_at": {
-      "type": "string",
-      "format": "date-time",
-      "description": "ISO-8601 creation timestamp"
-    },
-    "updated_at": {
-      "type": "string",
-      "format": "date-time",
-      "description": "ISO-8601 update timestamp"
+      "additionalProperties": false
     }
-  }
+  },
+  "additionalProperties": false
 }
