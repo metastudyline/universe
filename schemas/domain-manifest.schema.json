@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://studyline.org/schemas/v1/domain-manifest.schema.json",
+  "title": "StudyLineDomainManifestSchema",
+  "description": "Schema for domain runtime manifest declaring pedagogical modes, blocks, and design palettes",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "domain",
+    "title",
+    "description",
+    "primary_mode",
+    "enabled_blocks",
+    "palette"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "enum": ["1.0.0"]
+    },
+    "domain": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "primary_mode": {
+      "type": "string",
+      "enum": [
+        "immersive_hermeneutics",
+        "live_engineering",
+        "workshop_tdd"
+      ]
+    },
+    "enabled_blocks": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "enum": [
+          "bilingual-source",
+          "formal-syllogism",
+          "memory-layout",
+          "rust:live",
+          "workshop-stepper",
+          "markdown-body"
+        ]
+      }
+    },
+    "palette": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["accent", "background_tone", "typography_style"],
+      "properties": {
+        "accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "secondary_accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "background_tone": {
+          "type": "string",
+          "enum": ["washi_paper", "deep_obsidian", "terminal_dark", "canvas_sand"]
+        },
+        "typography_style": {
+          "type": "string",
+          "enum": ["wsj_editorial_serif", "system_engineer_mono", "modern_sans"]
+        },
+        "card_blur_radius": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "border_alpha": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  }
+}

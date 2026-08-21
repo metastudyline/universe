@@ -1,0 +1,16 @@
+schema_version: "1.0.0"
+domain: "philosophy"
+title: "古希腊哲学史大系"
+description: "从神话语言到形而上学第一原则的一手文献发生学研读"
+primary_mode: "immersive_hermeneutics"
+enabled_blocks:
+  - "bilingual-source"
+  - "formal-syllogism"
+  - "markdown-body"
+palette:
+  accent: "#C5A059"
+  secondary_accent: "#8C2D19"
+  background_tone: "washi_paper"
+  typography_style: "wsj_editorial_serif"
+  card_blur_radius: 16.0
+  border_alpha: 0.25

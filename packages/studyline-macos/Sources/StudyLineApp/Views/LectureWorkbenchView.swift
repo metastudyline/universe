@@ -80,57 +80,9 @@ public struct LectureWorkbenchView: View {
                     }
                     .padding(.top, 16)
 
-                    // 2. 领域自适应卡片展示
-                    if currentNode?.domain == "philosophy" {
-                        // 哲学一手文献双语对照
-                        bilingualSourceBlock(
-                            greekText: "ἤτοι μὲν πρώτιστα Χάος γένετ' αὐτὰρ ἔπειτα\nΓαῖ' εὐρύστερνος, πάντων ἕδος ἀσφαλὲς αἰεὶ",
-                            translationText: "最初生成的是卡俄斯（原初裂开的虚空），接着是宽胸的大地（盖亚），万物永远稳固的居所。",
-                            citation: "赫西俄德 · 《神谱》116-118行 · Loeb Classical Library"
-                        )
-
-                        syllogismCard(
-                            p1: "大前提 (P1)：凡是能被思维和言说的对象，必须是某种‘存在者’（ἔστιν）；",
-                            p2: "小前提 (P2)：‘非存在（无）’既不可被感知，也不可在思维中呈现（οὐκ ἔστιν）；",
-                            reductio: "归谬推导 (R)：若主张‘非存在存在’或‘生成自非存在’，则必须思维‘无’，在逻辑上陷入自相矛盾；",
-                            conclusion: "结论 (C)：存在者不生不灭、完整单一、连续不动，它是万物唯一稳固的形而上学之锚。"
-                        )
-                    } else if currentNode?.domain == "rust" {
-                        // Rust 系统级第一性原理三段论
-                        syllogismCard(
-                            p1: "物理事实 (P1)：CPU 以 64 字节 Cache Line 访问内存，栈帧连续分配天然命中 L1 高速缓存；",
-                            p2: "系统约束 (P2)：C 语言允许指针任意别名与就地突变，引发 UAF 与数据竞争漏洞；",
-                            reductio: "归谬推导 (R)：若不引入编译期仿射类型系统，程序必须在运行期付出 GC STW 停顿或面临安全崩溃；",
-                            conclusion: "结论 (C)：Rust 的别名异或可变性定理在编译期同时锁死内存安全与零成本机器指令优化。"
-                        )
-                    }
-
-                    // 3. 真实物理 Markdown 讲义渲染区
-                    VStack(alignment: .leading, spacing: 14) {
-                        HStack {
-                            Image(systemName: "doc.text.fill")
-                                .font(.system(size: 12))
-                                .foregroundStyle(StudyLineTheme.cosmicUltramarine)
-                            Text("CANONICAL LECTURE TEXT (物理磁盘真实讲义)")
-                                .font(.system(size: 9, weight: .bold, design: .monospaced))
-                                .foregroundStyle(.secondary)
-                            Spacer()
-                            Text(currentNode?.markdownPath.components(separatedBy: "/").suffix(2).joined(separator: "/") ?? "index.md")
-                                .font(StudyLineTheme.Typography.codeCaption)
-                                .foregroundStyle(.tertiary)
-                        }
-
-                        Text(repo.loadNodeMarkdown(id: selectedNodeId))
-                            .font(StudyLineTheme.Typography.body)
-                            .lineSpacing(6)
-                            .foregroundStyle(.primary.opacity(0.92))
-                            .textSelection(.enabled)
-                    }
-                    .studylineLiquidGlass(cornerRadius: 14, padding: 20)
-
-                    // 4. 实时编程沙盒 (仅在编程/工坊领域动态挂载)
-                    if currentNode?.domain == "rust" {
-                        LiveCodePlaygroundView(nodeId: selectedNodeId)
+                    // 2. 动态教学语义块流式分发 (Polymorphic Pedagogical Blocks Stream)
+                    ForEach(generateBlocks(for: selectedNodeId)) { block in
+                        PedagogicalBlockFactoryView(block: block)
                     }
 
                     // 6. 底部连贯学线跳转按钮 (Previous / Next Lesson)
@@ -188,72 +140,85 @@ public struct LectureWorkbenchView: View {
         .background(Color.clear)
     }
 
-    // MARK: - 双语一手原典对照框
-    private func bilingualSourceBlock(greekText: String, translationText: String, citation: String) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                HStack(spacing: 6) {
-                    Image(systemName: "quote.opening")
-                        .font(.system(size: 11, weight: .bold))
-                        .foregroundStyle(StudyLineTheme.kintsugiGold)
-                    Text("一手原典双语对照 (PRIMARY SOURCE)")
-                        .font(.system(size: 9, weight: .bold, design: .serif))
-                        .tracking(2)
-                        .foregroundStyle(StudyLineTheme.kintsugiGold)
-                }
-                Spacer()
-                Text(citation)
-                    .font(StudyLineTheme.Typography.codeCaption)
-                    .foregroundStyle(.secondary)
-            }
+    // MARK: - 动态 AST Block 派发生成器
+    private func generateBlocks(for nodeId: String) -> [PedagogicalBlock] {
+        var blocks: [PedagogicalBlock] = []
+        let markdown = repo.loadNodeMarkdown(id: nodeId)
 
-            HStack(alignment: .top, spacing: 16) {
-                // 左侧原典
-                Text(greekText)
-                    .font(.system(size: 13, weight: .medium, design: .serif))
-                    .italic()
-                    .lineSpacing(4)
-                    .foregroundStyle(StudyLineTheme.kintsugiGold)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(12)
-                    .background(Color.primary.opacity(0.025))
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        if currentNode?.domain == "philosophy" {
+            // 哲学领域语义块
+            blocks.append(.bilingualSource(
+                id: "\(nodeId)-bilingual",
+                model: BilingualSourceModel(
+                    originalText: "ἤτοι μὲν πρώτιστα Χάος γένετ' αὐτὰρ ἔπειτα\nΓαῖ' εὐρύστερνος, πάντων ἕδος ἀσφαλὲς αἰεὶ",
+                    originalLang: "grc",
+                    translationText: "最初生成的是卡俄斯（原初裂开的虚空），接着是宽胸的大地（盖亚），万物永远稳固的居所。",
+                    translationLang: "zh",
+                    citation: "赫西俄德 · 《神谱》116-118行 · Loeb Classical Library"
+                )
+            ))
 
-                // 右侧中译
-                Text(translationText)
-                    .font(StudyLineTheme.Typography.body)
-                    .lineSpacing(4)
-                    .foregroundStyle(.primary)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(12)
-                    .background(Color.primary.opacity(0.02))
-                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-            }
+            blocks.append(.formalSyllogism(
+                id: "\(nodeId)-syllogism",
+                model: FormalSyllogismModel(
+                    title: "哲学第一原则论证三段论",
+                    p1: "大前提 (P1)：凡是能被思维和言说的对象，必须是某种‘存在者’（ἔστιν）；",
+                    p2: "小前提 (P2)：‘非存在（无）’既不可被感知，也不可在思维中呈现（οὐκ ἔστιν）；",
+                    reductio: "归谬推导 (R)：若主张‘非存在存在’或‘生成自非存在’，则必须思维‘无’，在逻辑上陷入自相矛盾；",
+                    conclusion: "结论 (C)：存在者不生不灭、完整单一、连续不动，它是万物唯一稳固的形而上学之锚。"
+                )
+            ))
+        } else if currentNode?.domain == "rust" {
+            // 系统编程领域语义块
+            blocks.append(.formalSyllogism(
+                id: "\(nodeId)-syllogism",
+                model: FormalSyllogismModel(
+                    title: "Rust 系统级第一性原理三段论",
+                    p1: "物理事实 (P1)：CPU 以 64 字节 Cache Line 访问内存，栈帧连续分配天然命中 L1 高速缓存；",
+                    p2: "系统约束 (P2)：C 语言允许指针任意别名与就地突变，引发 UAF 与数据竞争漏洞；",
+                    reductio: "归谬推导 (R)：若不引入编译期仿射类型系统，程序必须在运行期付出 GC STW 停顿或面临安全崩溃；",
+                    conclusion: "结论 (C)：Rust 的别名异或可变性定理在编译期同时锁死内存安全与零成本机器指令优化。"
+                )
+            ))
         }
-        .studylineLiquidGlass(cornerRadius: 14, padding: 18)
+
+        // 核心正文 Markdown 块
+        blocks.append(.markdown(id: "\(nodeId)-content", content: markdown))
+
+        // 可执行 Live Cell (仅在 Rust 编程节点自动提升)
+        if currentNode?.domain == "rust" {
+            let extractedCode = extractFirstRustSnippet(from: markdown)
+            blocks.append(.liveCell(
+                id: "\(nodeId)-livecell",
+                model: LiveCellModel(
+                    cellId: "\(nodeId)_main",
+                    initialCode: extractedCode.isEmpty ? "fn main() {\n    println!(\"✦ StudyLine Interactive Cell\");\n}" : extractedCode,
+                    language: "rust"
+                )
+            ))
+        }
+
+        return blocks
     }
 
-    // MARK: - 形式化三段论推演卡片
-    private func syllogismCard(p1: String, p2: String, reductio: String, conclusion: String) -> some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Image(systemName: "function")
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundStyle(StudyLineTheme.bambooGreen)
-                Text("形式化论证三段论 (FORMAL SYLLOGISM)")
-                    .font(.system(size: 9, weight: .bold, design: .monospaced))
-                    .tracking(2)
-                    .foregroundStyle(StudyLineTheme.bambooGreen)
-            }
+    private func extractFirstRustSnippet(from text: String) -> String {
+        let lines = text.components(separatedBy: "\n")
+        var inBlock = false
+        var snippetLines: [String] = []
 
-            VStack(alignment: .leading, spacing: 8) {
-                syllogismRow(tag: "P1", text: p1, color: StudyLineTheme.kintsugiGold)
-                syllogismRow(tag: "P2", text: p2, color: StudyLineTheme.kintsugiGold)
-                syllogismRow(tag: "R",  text: reductio, color: StudyLineTheme.cinnabarRed)
-                syllogismRow(tag: "C",  text: conclusion, color: StudyLineTheme.bambooGreen)
+        for line in lines {
+            if line.hasPrefix("```rust") || line.hasPrefix("```rs") {
+                inBlock = true
+                continue
+            }
+            if inBlock {
+                if line.hasPrefix("```") {
+                    break
+                }
+                snippetLines.append(line)
             }
         }
-        .studylineLiquidGlass(cornerRadius: 14, padding: 18)
+        return snippetLines.joined(separator: "\n")
     }
 
     private func syllogismRow(tag: String, text: String, color: Color) -> some View {
