@@ -1,0 +1,35 @@
+schema_version: "1.0.0"
+node_id: "R35"
+title: "生命周期子类型化与型变（Variance）：协变、逆变与 Invariance UAF 形式化证明"
+domain: "rust"
+stage: "阶段A·所有权与生命周期"
+estimated_minutes: 40
+strict_prerequisites:
+  - "R30"
+soft_prerequisites: []
+learning_objectives:
+  - "掌握生命周期子类型化（'a: 'b 即 'a <: 'b）与型变（Variance）三大类别"
+  - "彻底理解为什么 `&'a mut T` 对 T 必须严格保持不变性（Invariant），掌握构造性 UAF 反例"
+  - "掌握 `PhantomData<T>`、`PhantomData<*const T>` 与 `PhantomData<fn(T) -> T>` 在 DropCK 与型变控制中的标准用法"
+exit_criteria:
+  quiz_questions:
+    - id: "R35_Q1"
+      type: "single_choice"
+      prompt: "如果 Rust 允许 `&'a mut T` 对 `T` 协变（Covariant），将会引发什么灾难性后果？"
+      options:
+        - "允许向一个长生命周期容器（如 &mut &'static str）中写入短生命周期的局部引用，局部变量释放后导致全局指针悬垂，触发 Use-After-Free (UAF)"
+        - "编译速度变慢 10 倍"
+        - "无法调用任何泛型方法"
+        - "导致栈溢出"
+      correct_answer: "允许向一个长生命周期容器（如 &mut &'static str）中写入短生命周期的局部引用，局部变量释放后导致全局指针悬垂，触发 Use-After-Free (UAF)"
+      explanation: "可变引用不仅支持读取，还支持写入。若 T 协变，子类型转换将使得向长生命周期引用写入短生命周期引用成为可能，导致严重 UAF。"
+    - id: "R35_Q2"
+      type: "single_choice"
+      prompt: "在设计自定义无锁指针或 FFI 抽象时，如果希望结构体对泛型参数 `T` 保持不变性（Invariant）且在 Drop 检查中不被判定为拥有 `T`，应该使用哪种 PhantomData？"
+      options:
+        - "PhantomData<fn(T) -> T> 或 PhantomData<*mut T>"
+        - "PhantomData<T>"
+        - "PhantomData<*const T>"
+        - "PhantomData<&'static T>"
+      correct_answer: "PhantomData<fn(T) -> T> 或 PhantomData<*mut T>"
+      explanation: "`fn(T) -> T` 同时在入参（逆变）和返回值（协变）出现，根据类型系统推导为 Invariant，且函数指针不持有 T 的所有权，不会受到 DropCK 苛刻限制。"

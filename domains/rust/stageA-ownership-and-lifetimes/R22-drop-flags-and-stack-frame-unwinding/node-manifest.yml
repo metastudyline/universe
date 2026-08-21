@@ -1,0 +1,35 @@
+schema_version: "1.0.0"
+node_id: "R22"
+title: "Drop 特质与栈展开机制：Drop-Flag 编译期插桩与 ManuallyDrop 规避"
+domain: "rust"
+stage: "阶段A·所有权与生命周期"
+estimated_minutes: 30
+strict_prerequisites:
+  - "R21"
+soft_prerequisites: []
+learning_objectives:
+  - "掌握 `std::ops::Drop` 特质与 `drop_in_place` 递归析构原理"
+  - "理解条件移动分支中的 Drop-Flag 栈帧布尔插桩机制"
+  - "掌握 `std::mem::ManuallyDrop` 在 FFI 与并发无锁数据结构中的零成本内存所有权保护"
+exit_criteria:
+  quiz_questions:
+    - id: "R22_Q1"
+      type: "single_choice"
+      prompt: "当一个变量在 `if condition` 分支内被 Move，而在 `else` 分支内没有被 Move 时，Rust 编译器如何保证离开外层作用域时的正确析构？"
+      options:
+        - "在当前栈帧分配 1 字节 Drop-Flag 局部变量，在移动时置位，作用域退出时根据该 Flag 条件执行析构"
+        - "在运行时抛出 Panic"
+        - "禁止编写此类分支代码"
+        - "委托给操作系统垃圾回收线程"
+      correct_answer: "在当前栈帧分配 1 字节 Drop-Flag 局部变量，在移动时置位，作用域退出时根据该 Flag 条件执行析构"
+      explanation: "Rust 早期采用结构体内部 Drop-Flag，现代编译器已将其优化为仅在存在条件移动（Conditional Move）时在栈帧上分配极小局部布尔标志（Stack Drop-Flag）。"
+    - id: "R22_Q2"
+      type: "single_choice"
+      prompt: "为什么在编写需要精确控制内存释放的底层 Unsafe 代码时，推荐使用 `ManuallyDrop<T>` 替代 `std::mem::forget(x)`？"
+      options:
+        - "因为 ManuallyDrop 是透明包装器（#[repr(transparent)]），能安全阻止 Panic 栈展开时的意外 Drop，且支持显式通过 drop() 再次销毁"
+        - "因为 forget 会导致整个进程崩溃"
+        - "因为 ManuallyDrop 会加快 CPU 浮点运算"
+        - "两者没有任何区别"
+      correct_answer: "因为 ManuallyDrop 是透明包装器（#[repr(transparent)]），能安全阻止 Panic 栈展开时的意外 Drop，且支持显式通过 drop() 再次销毁"
+      explanation: "ManuallyDrop 提供了对析构时机的绝对控制，避免了 forget 在发生早退或 panic 时可能引发的双重释放或内存悬垂漏洞。"

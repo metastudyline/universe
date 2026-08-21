@@ -1,0 +1,35 @@
+schema_version: "1.0.0"
+node_id: "R30"
+title: "非词法作用域生命周期 (NLL) 与 Polonius：CFG 点集、活性分析与图可达性"
+domain: "rust"
+stage: "阶段A·所有权与生命周期"
+estimated_minutes: 35
+strict_prerequisites:
+  - "R25"
+soft_prerequisites: []
+learning_objectives:
+  - "掌握 NLL (RFC 2094) 基于控制流图（CFG）与活性分析（Liveness）的生命周期求解原理"
+  - "理解下一代借用检查器 Polonius 如何将借用检查重构为 Datalog 图可达性问题"
+  - "掌握分支条件返回借用（Returning Borrow Problem）的根本解法"
+exit_criteria:
+  quiz_questions:
+    - id: "R30_Q1"
+      type: "single_choice"
+      prompt: "在 NLL（Non-Lexical Lifetimes）中，一个引用的生命周期是如何被形式化定义的？"
+      options:
+        - "作为控制流图（CFG）上的点集（Set of CFG Points），由引用的最后一次真实使用点（Liveness）决定，而非词法大括号作用域"
+        - "作为从变量声明到整个程序结束的全部物理时钟"
+        - "作为操作系统的进程生命周期"
+        - "由运行时的垃圾回收周期动态决定"
+      correct_answer: "作为控制流图（CFG）上的点集（Set of CFG Points），由引用的最后一次真实使用点（Liveness）决定，而非词法大括号作用域"
+      explanation: "NLL 彻底将生命周期从 AST 语法树解耦，映射为控制流图（CFG）上的点集集合与活性区间。"
+    - id: "R30_Q2"
+      type: "single_choice"
+      prompt: "Polonius 借用检查器相比当前 NLL 的最大突破是什么？"
+      options:
+        - "将生命周期形式化为「借用（Loan）的集合」，利用 Datalog 关系推导消除分支条件返回借用时的虚假冲突"
+        - "允许在没有 Unsafe 的情况下解引用野指针"
+        - "把 Rust 代码直接编译为 JavaScript"
+        - "关闭所有的编译期检查"
+      correct_answer: "将生命周期形式化为「借用（Loan）的集合」，利用 Datalog 关系推导消除分支条件返回借用时的虚假冲突"
+      explanation: "Polonius 将 Origin 抽象为 Loans 的集合，在未返回借用的分支上切断可达性，彻底消除了 HashMap get_mut/insert 经典误报。"

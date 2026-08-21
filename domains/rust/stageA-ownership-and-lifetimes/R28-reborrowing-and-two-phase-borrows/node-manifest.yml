@@ -1,0 +1,35 @@
+schema_version: "1.0.0"
+node_id: "R28"
+title: "重借用（Reborrowing）与两阶段借用：`&mut *r` 解引用与方法调用隐式升级"
+domain: "rust"
+stage: "阶段A·所有权与生命周期"
+estimated_minutes: 30
+strict_prerequisites:
+  - "R25"
+soft_prerequisites: []
+learning_objectives:
+  - "理解可变借用的重借用（Reborrowing `&mut *r`）机制及其与所有权 Move 的根本区别"
+  - "掌握两阶段借用（Two-Phase Borrows）在 `vec.push(vec.len())` 经典场景下的去语法糖展开"
+  - "掌握跨函数传递 `&mut T` 时保留原借用有效性的关键技巧"
+exit_criteria:
+  quiz_questions:
+    - id: "R28_Q1"
+      type: "single_choice"
+      prompt: "为什么在 Rust 中 `vec.push(vec.len());` 能够成功编译，而不会报错「同时存在不可变借用与可变借用」？"
+      options:
+        - "因为编译器引入了两阶段借用（Two-Phase Borrows），在求值 `vec.len()` 参数时，`vec.push` 的可变借用处于预留状态（Reserved），直到参数求值完毕真正调用时才激活为活动借用（Active）"
+        - "因为 vec.len() 是宏展开"
+        - "因为 push() 绕过了借用检查器"
+        - "因为编译器自动克隆了 vec"
+      correct_answer: "因为编译器引入了两阶段借用（Two-Phase Borrows），在求值 `vec.len()` 参数时，`vec.push` 的可变借用处于预留状态（Reserved），直到参数求值完毕真正调用时才激活为活动借用（Active）"
+      explanation: "RFC 2094 引入的两阶段借用将可变借用解耦为「保留态」与「激活态」，极大地提升了方法链式调用的表达力。"
+    - id: "R28_Q2"
+      type: "single_choice"
+      prompt: "当把一个可变引用 `r: &mut T` 作为参数传递给函数 `foo(r)` 时，为什么之后仍然可以使用 `r`？"
+      options:
+        - "因为 Rust 自动执行了重借用（Reborrowing，等价于 `foo(&mut *r)`），派生出一个更短生命周期的临时可变借用，而没有 Move 走 r 本身的所有权"
+        - "因为可变引用自动实现了 Copy 特质"
+        - "因为 r 被分配在全局静态内存区"
+        - "因为编译器在函数返回时重新构造了 r"
+      correct_answer: "因为 Rust 自动执行了重借用（Reborrowing，等价于 `foo(&mut *r)`），派生出一个更短生命周期的临时可变借用，而没有 Move 走 r 本身的所有权"
+      explanation: "`&mut T` 没有实现 Copy 特质，但编译器在参数传递时会隐式解引用并重借用（Reborrow），从而允许后续继续使用原可变引用。"

@@ -1,56 +1,55 @@
 # R21: 所有权三大定律与 Move 语义底层汇编：寄存器传递与零成本 Relocation
 
-> **一手文献与源码锚点**：Rust 标准库 `library/core/src/mem/mod.rs` · `library/core/src/mem/manually_drop.rs` · System V AMD64 ABI 寄存器分配规约
+> **一手标准库源码与编译器锚点**：`core::mem::forget` · `alloc::raw_vec::RawVec` · LLVM IR `load`/`store` SROA 标量替换优化
 
 ---
 
-## 1. 一手源码考据：`core::mem::forget` 的真正实现
+## 1. 历史语境与问题发生学
 
-在 Rust 标准库中，`mem::forget` 是如何做到“阻止析构函数运行”的？
+在 C/C++ 的传统心智模型中，资源的管理被分裂在两端：要么通过手工的 `malloc/free`、`new/delete` 依赖程序员的大脑记忆；要么通过 C++11 的移动构造函数（Move Constructor）与右值引用（`std::move`）进行代偿。
 
-```rust
-// library/core/src/mem/mod.rs
-#[inline]
-#[stable(feature = "rust1", since = "1.0.0")]
-#[rustc_const_stable(feature = "const_forget", since = "1.46.0")]
-pub const fn forget<T>(t: T) {
-    let _ = ManuallyDrop::new(t);
-}
+然而，C++ 的 Move 是**非破坏性移动（Non-destructive Move）**——移动后源对象依然存活，析构函数依然会被调用，必须显式将指针置为 `nullptr` 以防 Double Free。这在硬件层面产生了沉重的分支检查与运行时代偿。
 
-// library/core/src/mem/manually_drop.rs
-#[lang = "manually_drop"]
-#[derive(Copy, Clone, Debug, Default, PartialEq, Eq, PartialOrd, Ord, Hash)]
-#[repr(transparent)]
-pub struct ManuallyDrop<T: ?Sized> {
-    value: T,
-}
+Rust 提出了计算机体系结构史上最纯粹的解法：**破坏性移动（Destructive Move）**。
+
 ```
-
-- **物理本质**：`ManuallyDrop<T>` 是一个带有编译器语言项 `#[lang = "manually_drop"]` 的透明包装结构体。
-- **编译器行为**：Drop Elaboration（析构展开 Pass）在生成 MIR 时，**明确跳过该类型，不为其发射任何 Drop Glue 析构指令，也不为其分配 Drop Flag**。结构体所在的栈帧在函数返回时随 `RSP` 指针正常回弹，但其管理的堆内存不会被释放。
++-------------------------------------------------------------+
+| Rust 所有权三大基本公理 (The Three Laws of Ownership)         |
++-------------------------------------------------------------+
+|  Axiom 1: Rust 中每一个值都有一个被称为其「拥有者」的变量。      |
+|  Axiom 2: 在任何给定时刻，一个值有且仅有一个拥有者 (Single Owner)|
+|  Axiom 3: 当拥有者离开其词法/生命周期作用域时，该值将被自动释放。|
++-------------------------------------------------------------+
+```
 
 ---
 
-## 2. 所有权三大定律的底层汇编映射
+## 2. 硬件与汇编机理：Move 到底做了什么？
 
-```assembly
-# Rust: fn consume(p: Point) -> u64
-# struct Point { x: u64, y: u64 }
-consume:
-    movq %rdi, %rax     # 第一个 8 字节通过 %rdi 传递
-    addq %rsi, %rax     # 第二个 8 字节通过 %rsi 传递
-    ret                 # 零内存分配，零 memcpy，直接在 CPU 寄存器内完成 Move！
+当执行 `let b = a;` 时（假设 `a: Vec<u8>`）：
+
+```
+栈帧 Stack Frame (AArch64 寄存器布局):
++-------------------------------------------------------------+
+| a: [ ptr: 0x1000, cap: 8, len: 4 ] (24 字节)                |
++-------------------------------------------------------------+
+                          ⬇ Move
++-------------------------------------------------------------+
+| b: [ ptr: 0x1000, cap: 8, len: 4 ] (24 字节)                |
+| a: [ 标记为未初始化 UNINITIALIZED ] (编译期静态剥夺访问权)    |
++-------------------------------------------------------------+
 ```
 
-1. **第一定律**：Rust 中每一个值都有一个被称为其**所有者（Owner）**的变量；
-2. **第二定律**：同一时间内，一个值只能拥有**唯一所有者**；
-3. **第三定律**：当所有者离开作用域时，该值将被**自动丢弃（Dropped via Drop Glue）**。
+在机器汇编层面：
+1. `x0, x1, x2` 三个 64 位寄存器直接复制 24 字节指针三元组；
+2. 经过 LLVM 的 **SROA（Scalar Replacement of Aggregates）** 优化后，根本不发生任何内存拷贝，直接在寄存器中复用；
+3. 运行期没有多耗费一个 CPU 周期，没有多分配一字节内存。
 
 ---
 
 ## 3. 形式化论证三段论 (Formal Syllogism)
 
-- **大前提 ($P_1$)**：若语言要求资源在离开作用域时自动且确定性地释放（RAII），则必须在静态编译期杜绝多个所有者重复释放（Double Free）的可能性。
-- **小前提 ($P_2$)**：Rust 所有权规则规定变量赋值默认执行所有权转移（Move），并在类型系统中作废原变量绑定符号。
-- **归谬 ($R$)**：若 Move 操作需要隐式调用运行期深拷贝或构造函数，则高频数据传递将带来不可控的 CPU 吞吐量惩罚。
-- **结论 ($C$)**：∴ Rust 将 Move 约束为编译期符号失效加硬件级平凡浅拷贝（Trivially Relocatable / Register Passing），实现了真正的零成本所有权管理。
+- **大前提 ($P_1$)**：任何动态堆内存或系统资源必须在且仅在其最后一次使用后被释放恰好一次，多重释放会导致堆破坏，不释放会导致内存泄漏。
+- **小前提 ($P_2$)**：破坏性移动（Destructive Move）保证了资源所有权的单一确定性转移，并在编译期剥夺旧拥有者的析构权利。
+- **归谬 ($R$)**：若允许一个资源拥有多个可变的所有者或在移动后仍允许使用旧变量，则由于无法静态判定哪个分支最后退出，必然引发野指针（UAF）或重复释放（Double Free）。
+- **结论 ($C$)**：∴ 所有权三大定律与破坏性 Move 语义构成了现代系统级编程内存安全与零成本抽象的充要基石。

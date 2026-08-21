@@ -8,17 +8,28 @@ strict_prerequisites:
   - "R13"
 soft_prerequisites: []
 learning_objectives:
-  - "掌握所有权三大核心公理与变量绑定生命周期"
-  - "从 System V AMD64 ABI 汇编层面证明 Move 语义的零开销本质（Bitwise Copy / SROA）"
-  - "深度考据 core::mem::forget 与 ManuallyDrop 抑制 Drop Glue 的机制"
+  - "掌握 Rust 所有权三大基本公理（独占拥有者、单一拥有者、超出作用域即 Drop）"
+  - "理解 Move 语义在 LLVM IR 和机器汇编层面对应的寄存器传递与 memcpy 消除"
+  - "理解 Destructive Move 与 C++ 拷贝构造函数/移动构造函数的本质代偿差异"
 exit_criteria:
   quiz_questions:
     - id: "R21_Q1"
       type: "single_choice"
-      prompt: "在 Rust 中，为什么小结构体（<= 16 字节）的 Move 操作是绝对零内存开销的？"
+      prompt: "在没有实现 Copy 特质的结构体发生赋值 `let b = a;` 时，Rust 编译器在汇编层面做了什么？"
       options:
-        - "因为它们通过 CPU 寄存器（如 %rdi, %rsi）直接传递，无需任何栈内存拷贝"
-        - "因为 Rust 运行时的垃圾回收器在后台进行了内存复用"
-        - "因为编译器生成了虚表指针"
-        - "因为操作系统对栈指针进行了自动缓存"
-      correct_answer: "因为它们通过 CPU 寄存器（如 %rdi, %rsi）直接传递，无需任何栈内存拷贝"
+        - "执行按位浅拷贝（Bitwise Copy），并在编译期将 a 标记为未初始化，运行期零额外开销"
+        - "在堆上深拷贝整块内存"
+        - "为 a 和 b 增加原子引用计数"
+        - "自动生成垃圾回收根指针"
+      correct_answer: "执行按位浅拷贝（Bitwise Copy），并在编译期将 a 标记为未初始化，运行期零额外开销"
+      explanation: "Rust 的 Move 语义是破坏性移动（Destructive Move），编译期静态标记所有权转移，LLVM 会将浅拷贝优化为寄存器直接传递。"
+    - id: "R21_Q2"
+      type: "single_choice"
+      prompt: "为什么 Rust 不允许在拥有者离开作用域后继续访问被 Move 的变量？"
+      options:
+        - "为了保证单一所有权与确定性单一析构，彻底消灭 Double Free 与 UAF 漏洞"
+        - "为了节省 CPU 寄存器"
+        - "为了兼容 C 语言宏展开"
+        - "因为栈空间不允许重复读取"
+      correct_answer: "为了保证单一所有权与确定性单一析构，彻底消灭 Double Free 与 UAF 漏洞"
+      explanation: "单一所有权公理保证了任何一块资源在任何时刻都有且仅有一个确定性的负责人，离开作用域时精准析构一次。"
